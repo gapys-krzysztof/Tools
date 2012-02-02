@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="TextureAtlas">
+      <UniqueIdentifier>{d75721a9-60be-4e85-b5ec-064dcc4aae17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextureAtlas\zlib">
+      <UniqueIdentifier>{bc3c6cbb-6794-42b4-9ddb-6268a91773ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextureAtlas\libpng">
+      <UniqueIdentifier>{997de788-4339-4690-bd72-8dbf7c7a29e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Application.cpp">
+      <Filter>TextureAtlas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\png.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngerror.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngget.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngmem.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngpread.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngread.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngrio.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngrtran.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngrutil.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngset.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngtrans.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngwio.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngwrite.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngwtran.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\libpng\pngwutil.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\adler32.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\compress.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\crc32.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\deflate.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\gzlib.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\infback.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\inffast.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\inflate.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\inftrees.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\trees.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\uncompr.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\zlib\zutil.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bitmap.cpp">
+      <Filter>TextureAtlas</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\libpng\png.h">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\libpng\pngconf.h">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\libpng\pngdebug.h">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\libpng\pnginfo.h">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\libpng\pngpriv.h">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\libpng\pngstruct.h">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\crc32.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\deflate.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\gzguts.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\inffast.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\inffixed.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\inflate.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\inftrees.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\trees.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\zconf.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\zlib.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\zlib\zutil.h">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bitmap.hpp">
+      <Filter>TextureAtlas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Types.hpp">
+      <Filter>TextureAtlas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Vector.hpp">
+      <Filter>TextureAtlas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Rect.hpp">
+      <Filter>TextureAtlas</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
