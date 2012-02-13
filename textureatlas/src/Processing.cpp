@@ -21,16 +21,16 @@ void SplashFill( Bitmap* bmp )
     {
         int modified = 0;
 
+        Bitmap old( *tmp );
+        uint32* src = old.Data() + s.x + 1;
         uint32* ptr = tmp->Data() + s.x + 1;
 
         for( int i=1; i<s.y-1; i++ )
         {
             for( int j=1; j<s.x-1; j++ )
             {
-                if( ( *ptr & 0xFF000000 ) == 0 )
+                if( ( *ptr & 0xFF000000 ) != 0xFF000000 )
                 {
-                    modified++;
-
                     int t = 0;
                     uint32 r = 0;
                     uint32 g = 0;
@@ -38,8 +38,8 @@ void SplashFill( Bitmap* bmp )
 
                     for( int k=0; k < sizeof( offsetTable ) / sizeof( int32 ); k++ )
                     {
-                        uint32* p = ptr + offsetTable[k];
-                        if( ( *p & 0xFF000000 ) == 0xFF000000 )
+                        uint32* p = src + offsetTable[k];
+                        if( ( *p & 0xFF000000 ) != 0 )
                         {
                             t++;
                             r += *p & 0x00FF0000;
@@ -53,28 +53,21 @@ void SplashFill( Bitmap* bmp )
                         r = ( r/t ) & 0x00FF0000;
                         g = ( g/t ) & 0x0000FF00;
                         b = ( b/t ) & 0x000000FF;
-                        *ptr = 0x88000000 | r | g | b;
+                        *ptr = ( ( *ptr & 0xFF000000 ) + 0x11000000 ) | r | g | b;
+                        modified++;
                     }
                 }
 
                 ptr++;
+                src++;
             }
             ptr += 2;
+            src += 2;
         }
 
         if( modified == 0 )
         {
             break;
-        }
-
-        ptr = tmp->Data();
-        for( int i=0; i<s.x*s.y; i++ )
-        {
-            if( ( *ptr & 0xFF000000 ) == 0x88000000 )
-            {
-                *ptr = 0xFF000000 | ( *ptr & 0x00FFFFFF );
-            }
-            ptr++;
         }
     }
 
