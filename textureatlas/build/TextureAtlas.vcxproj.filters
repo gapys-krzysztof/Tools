@@ -99,6 +99,9 @@
     <ClCompile Include="..\src\Bitmap.cpp">
       <Filter>TextureAtlas</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Processing.cpp">
+      <Filter>TextureAtlas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\libpng\png.h">
@@ -162,6 +165,9 @@
       <Filter>TextureAtlas</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Rect.hpp">
+      <Filter>TextureAtlas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Processing.hpp">
       <Filter>TextureAtlas</Filter>
     </ClInclude>
   </ItemGroup>
