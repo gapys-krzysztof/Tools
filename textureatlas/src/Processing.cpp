@@ -17,11 +17,12 @@ void SplashFill( Bitmap* bmp )
         ptr++;
     }
 
+    Bitmap old( *tmp );
+
     for(;;)
     {
         int modified = 0;
 
-        Bitmap old( *tmp );
         uint32* src = old.Data() + s.x + 1;
         uint32* ptr = tmp->Data() + s.x + 1;
 
@@ -69,6 +70,8 @@ void SplashFill( Bitmap* bmp )
         {
             break;
         }
+
+        old = *tmp;
     }
 
     ptr = tmp->Data();
