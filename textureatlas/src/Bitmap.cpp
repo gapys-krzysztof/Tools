@@ -88,7 +88,7 @@ Bitmap::~Bitmap()
     delete[] m_data;
 }
 
-bool Bitmap::Write( const char* fn )
+bool Bitmap::Write( const char* fn, bool alpha )
 {
     FILE* f = fopen( fn, "wb" );
     if( !f ) return false;
@@ -98,9 +98,14 @@ bool Bitmap::Write( const char* fn )
     setjmp( png_jmpbuf( png_ptr ) );
     png_init_io( png_ptr, f );
 
-    png_set_IHDR( png_ptr, info_ptr, m_size.x, m_size.y, 8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE );
+    png_set_IHDR( png_ptr, info_ptr, m_size.x, m_size.y, 8, alpha ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE );
 
     png_write_info( png_ptr, info_ptr );
+
+    if( !alpha )
+    {
+        png_set_filler( png_ptr, 0, PNG_FILLER_AFTER );
+    }
 
     uint32* ptr = m_data;
     for( int i=0; i<m_size.y; i++ )
