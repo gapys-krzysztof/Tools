@@ -130,10 +130,13 @@ bool Bitmap::Write( const char* fn, bool alpha )
 
 Bitmap& Bitmap::operator=( const Bitmap& bmp )
 {
-    delete[] m_data;
+    if( m_size != bmp.m_size )
+    {
+        m_size = bmp.m_size;
+        delete[] m_data;
+        m_data = new uint32[m_size.x*m_size.y];
+    }
 
-    m_size = bmp.m_size;
-    m_data = new uint32[m_size.x*m_size.y];
     memcpy( m_data, bmp.m_data, sizeof( uint32 ) * m_size.x * m_size.y );
 
     return *this;
