@@ -7,6 +7,7 @@
 class Bitmap
 {
 public:
+    Bitmap( int x, int y );
     Bitmap( const char* fn );
     ~Bitmap();
 

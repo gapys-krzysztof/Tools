@@ -5,6 +5,13 @@
 
 #include "Bitmap.hpp"
 
+Bitmap::Bitmap( int x, int y )
+    : m_data( new uint32[x*y] )
+    , m_size( x, y )
+{
+    memset( m_data, 0, sizeof( uint32 ) * x * y );
+}
+
 Bitmap::Bitmap( const char* fn )
     : m_data( NULL )
 {
