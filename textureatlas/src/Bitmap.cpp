@@ -12,6 +12,13 @@ Bitmap::Bitmap( int x, int y )
     memset( m_data, 0, sizeof( uint32 ) * x * y );
 }
 
+Bitmap::Bitmap( const Bitmap& bmp )
+    : m_data( new uint32[bmp.m_size.x*bmp.m_size.y] )
+    , m_size( bmp.m_size )
+{
+    memcpy( m_data, bmp.m_data, sizeof( uint32 ) * m_size.x * m_size.y );
+}
+
 Bitmap::Bitmap( const char* fn )
     : m_data( NULL )
 {
@@ -119,4 +126,15 @@ bool Bitmap::Write( const char* fn, bool alpha )
 
     fclose( f );
     return true;
+}
+
+Bitmap& Bitmap::operator=( const Bitmap& bmp )
+{
+    delete[] m_data;
+
+    m_size = bmp.m_size;
+    m_data = new uint32[m_size.x*m_size.y];
+    memcpy( m_data, bmp.m_data, sizeof( uint32 ) * m_size.x * m_size.y );
+
+    return *this;
 }

@@ -8,6 +8,7 @@ class Bitmap
 {
 public:
     Bitmap( int x, int y );
+    Bitmap( const Bitmap& bmp );
     Bitmap( const char* fn );
     ~Bitmap();
 
@@ -15,6 +16,8 @@ public:
 
     uint32* Data() const { return m_data; }
     const v2i& Size() const { return m_size; }
+
+    Bitmap& operator=( const Bitmap& bmp );
 
 private:
     uint32* m_data;
