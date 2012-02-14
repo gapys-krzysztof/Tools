@@ -16,11 +16,12 @@ struct Rect
 
 struct BRect
 {
-    BRect( uint16 _x, uint16 _y, uint16 _w, uint16 _h, Bitmap* _b, const std::string& _name ) : x( _x ), y( _y ), w( _w ), h( _h ), b( _b ), name( _name ) {}
+    BRect( uint16 _x, uint16 _y, uint16 _w, uint16 _h, Bitmap* _b, const std::string& _name ) : x( _x ), y( _y ), w( _w ), h( _h ), b( _b ), name( _name ), flip( false ) {}
 
     uint16 x, y, w, h;
     Bitmap* b;
     std::string name;
+    bool flip;
 };
 
 #endif

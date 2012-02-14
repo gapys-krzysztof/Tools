@@ -15,7 +15,6 @@ std::string input;
 std::string output( "." );
 int size = 1024;
 std::string name( "atlas" );
-std::string sortby( "height" );
 int edges = 0;
 int path = -1;
 bool potw = false;
@@ -65,41 +64,29 @@ void SortImages( std::vector<BRect>& images )
     {
         bool operator()( const BRect& i1, const BRect& i2 )
         {
-            int a1 = i1.w * i1.h;
-            int a2 = i2.w * i2.h;
-            if( a1 != a2 ) return a1 > a2;
-            if( i1.w != i2.w ) return i1.w > i2.w;
-            return i1.h > i2.h;
+            if( i1.h != i2.h )
+            {
+                return i1.h > i2.h;
+            }
+            else
+            {
+                return i1.w > i2.w;
+            }
         }
-    } AreaComparator;
-    struct
-    {
-        bool operator()( const BRect& i1, const BRect& i2 )
-        {
-            if( i1.w != i2.w ) return i1.w > i2.w;
-            return i1.h > i2.h;
-        }
-    } WidthComparator;
-    struct
-    {
-        bool operator()( const BRect& i1, const BRect& i2 )
-        {
-            if( i1.h != i2.h ) return i1.h > i2.h;
-            return i1.w > i2.w;
-        }
-    } HeightComparator;
+    } Comparator;
 
-    if( sortby == "height" )
+    std::sort( images.begin(), images.end(), Comparator );
+}
+
+void FindFlipped( std::vector<BRect>& images )
+{
+    for( std::vector<BRect>::iterator it = images.begin(); it != images.end(); ++it )
     {
-        std::sort( images.begin(), images.end(), HeightComparator );
-    }
-    else if( sortby == "width" )
-    {
-        std::sort( images.begin(), images.end(), WidthComparator );
-    }
-    else
-    {
-        std::sort( images.begin(), images.end(), AreaComparator );
+        if( it->h > it->w )
+        {
+            it->flip = true;
+            std::swap( it->h, it->w );
+        }
     }
 }
 
@@ -121,6 +108,7 @@ bool DoWork()
     fclose( f );
 
     std::vector<BRect> images( LoadImages( pngnames, names, rectnames ) );
+    FindFlipped( images );
     SortImages( images );
 
     Bitmap* b = new Bitmap( size, size );
@@ -162,7 +150,6 @@ void Usage()
     printf( "-e, --edges        duplicate image edges (default: 0)\n" );
     printf( "-b, --border       generate border around non-transparent areas\n" );
     printf( "-n, --name         name of generated files (default: atlas)\n" );
-    printf( "-S, --sortby       sort type, possible values: area, width, height (default: height)\n" );
     printf( "-w, --show         opens generated atlas image in default editor\n" );
     printf( "-h, --help         prints this message\n" );
     printf( "-P, --path         path strip depth\n" );
@@ -210,15 +197,6 @@ int main( int argc, char** argv )
         {
             name = argv[i+1];
             i++;
-        }
-        else if( CSTR( "-S" ) || CSTR( "--sortby" ) )
-        {
-            i++;
-            if( !( CSTR( "area" ) || CSTR( "width" ) || CSTR( "height" ) ) )
-            {
-                Error();
-            }
-            sortby = argv[i];
         }
         else if( CSTR( "-h" ) || CSTR( "--help" ) )
         {
