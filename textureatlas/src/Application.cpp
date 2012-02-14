@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "Bitmap.hpp"
+#include "Node.hpp"
 #include "Rect.hpp"
 #include "String.hpp"
 
@@ -25,25 +26,25 @@ bool square = false;
 bool noalpha = false;
 
 
-std::vector<Rect> LoadImages( const std::list<std::string> pngs )
+std::vector<BRect> LoadImages( const std::list<std::string> pngs )
 {
-    std::vector<Rect> ret;
+    std::vector<BRect> ret;
 
     ret.reserve( pngs.size() );
     for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it )
     {
         Bitmap* b = new Bitmap( it->c_str() );
-        ret.push_back( Rect( 0, 0, b->Size().x, b->Size().y, b ) );
+        ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b ) );
     }
 
     return ret;
 }
 
-void SortImages( std::vector<Rect>& images )
+void SortImages( std::vector<BRect>& images )
 {
     struct
     {
-        bool operator()( const Rect& i1, const Rect& i2 )
+        bool operator()( const BRect& i1, const BRect& i2 )
         {
             int a1 = i1.b->Size().x * i1.b->Size().y;
             int a2 = i2.b->Size().x * i2.b->Size().y;
@@ -54,7 +55,7 @@ void SortImages( std::vector<Rect>& images )
     } AreaComparator;
     struct
     {
-        bool operator()( const Rect& i1, const Rect& i2 )
+        bool operator()( const BRect& i1, const BRect& i2 )
         {
             if( i1.b->Size().x != i2.b->Size().x ) return i1.b->Size().x > i2.b->Size().x;
             return i1.b->Size().y > i2.b->Size().y;
@@ -62,7 +63,7 @@ void SortImages( std::vector<Rect>& images )
     } WidthComparator;
     struct
     {
-        bool operator()( const Rect& i1, const Rect& i2 )
+        bool operator()( const BRect& i1, const BRect& i2 )
         {
             if( i1.b->Size().y != i2.b->Size().y ) return i1.b->Size().y > i2.b->Size().y;
             return i1.b->Size().x > i2.b->Size().x;
@@ -98,8 +99,11 @@ bool DoWork()
         line.clear();
     }
 
-    std::vector<Rect> images( LoadImages( pngnames ) );
+    std::vector<BRect> images( LoadImages( pngnames ) );
     SortImages( images );
+
+    Bitmap* b = new Bitmap( size, size );
+
 
     return true;
 }

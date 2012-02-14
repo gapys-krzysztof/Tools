@@ -86,6 +86,7 @@
     <ClCompile Include="..\src\libpng\pngwrite.c" />
     <ClCompile Include="..\src\libpng\pngwtran.c" />
     <ClCompile Include="..\src\libpng\pngwutil.c" />
+    <ClCompile Include="..\src\Node.cpp" />
     <ClCompile Include="..\src\Processing.cpp" />
     <ClCompile Include="..\src\String.cpp" />
     <ClCompile Include="..\src\zlib\adler32.c" />
@@ -109,6 +110,7 @@
     <ClInclude Include="..\src\libpng\pnginfo.h" />
     <ClInclude Include="..\src\libpng\pngpriv.h" />
     <ClInclude Include="..\src\libpng\pngstruct.h" />
+    <ClInclude Include="..\src\Node.hpp" />
     <ClInclude Include="..\src\Processing.hpp" />
     <ClInclude Include="..\src\Rect.hpp" />
     <ClInclude Include="..\src\String.hpp" />
