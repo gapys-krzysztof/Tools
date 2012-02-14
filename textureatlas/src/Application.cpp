@@ -48,27 +48,27 @@ void SortImages( std::vector<BRect>& images )
     {
         bool operator()( const BRect& i1, const BRect& i2 )
         {
-            int a1 = i1.b->Size().x * i1.b->Size().y;
-            int a2 = i2.b->Size().x * i2.b->Size().y;
+            int a1 = i1.w * i1.h;
+            int a2 = i2.w * i2.h;
             if( a1 != a2 ) return a1 > a2;
-            if( i1.b->Size().x != i2.b->Size().x ) return i1.b->Size().x > i2.b->Size().x;
-            return i1.b->Size().y > i2.b->Size().y;
+            if( i1.w != i2.w ) return i1.w > i2.w;
+            return i1.h > i2.h;
         }
     } AreaComparator;
     struct
     {
         bool operator()( const BRect& i1, const BRect& i2 )
         {
-            if( i1.b->Size().x != i2.b->Size().x ) return i1.b->Size().x > i2.b->Size().x;
-            return i1.b->Size().y > i2.b->Size().y;
+            if( i1.w != i2.w ) return i1.w > i2.w;
+            return i1.h > i2.h;
         }
     } WidthComparator;
     struct
     {
         bool operator()( const BRect& i1, const BRect& i2 )
         {
-            if( i1.b->Size().y != i2.b->Size().y ) return i1.b->Size().y > i2.b->Size().y;
-            return i1.b->Size().x > i2.b->Size().x;
+            if( i1.h != i2.h ) return i1.h > i2.h;
+            return i1.w > i2.w;
         }
     } HeightComparator;
 
