@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "Bitmap.hpp"
+#include "Rect.hpp"
 #include "String.hpp"
 
 std::string input;
@@ -25,32 +26,33 @@ bool square = false;
 bool noalpha = false;
 
 
-std::vector<Bitmap*> LoadImages( const std::list<std::string> pngs )
+std::vector<Rect> LoadImages( const std::list<std::string> pngs )
 {
-    std::vector<Bitmap*> ret;
+    std::vector<Rect> ret;
 
     ret.reserve( pngs.size() );
     for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it )
     {
-        ret.push_back( new Bitmap( it->c_str() ) );
+        Bitmap* b = new Bitmap( it->c_str() );
+        ret.push_back( Rect( 0, 0, b->Size().x, b->Size().y, b ) );
     }
 
     return ret;
 }
 
-void SortImages( std::vector<Bitmap*>& images )
+void SortImages( std::vector<Rect>& images )
 {
     struct
     {
-        bool operator()( Bitmap* i1, Bitmap* i2 ) { return i1->Size().x * i1->Size().y > i2->Size().x * i2->Size().y; }
+        bool operator()( const Rect& i1, const Rect& i2 ) { return i1.b->Size().x * i1.b->Size().y > i2.b->Size().x * i2.b->Size().y; }
     } AreaComparator;
     struct
     {
-        bool operator()( Bitmap* i1, Bitmap* i2 ) { return i1->Size().x > i2->Size().x; }
+        bool operator()( const Rect& i1, const Rect& i2 ) { return i1.b->Size().x > i2.b->Size().x; }
     } WidthComparator;
     struct
     {
-        bool operator()( Bitmap* i1, Bitmap* i2 ) { return i1->Size().y > i2->Size().y; }
+        bool operator()( const Rect& i1, const Rect& i2 ) { return i1.b->Size().y > i2.b->Size().y; }
     } HeightComparator;
 
     if( sortby == "height" )
@@ -82,7 +84,7 @@ bool DoWork()
         line.clear();
     }
 
-    std::vector<Bitmap*> images( LoadImages( pngnames ) );
+    std::vector<Rect> images( LoadImages( pngnames ) );
     SortImages( images );
 
     return true;
