@@ -25,6 +25,6 @@ private:
     v2i m_size;
 };
 
-void Blit( Bitmap* dst, Bitmap* src, const Rect& rect );
+void Blit( Bitmap* dst, const BRect& src, const Rect& rect );
 
 #endif

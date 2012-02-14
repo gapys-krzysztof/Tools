@@ -128,7 +128,7 @@ bool DoWork()
             return false;
         }
 
-        Blit( b, it->b, uv->rect );
+        Blit( b, *it, uv->rect );
     }
 
     b->Write( "out.png" );
