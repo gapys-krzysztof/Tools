@@ -102,6 +102,9 @@
     <ClCompile Include="..\src\Processing.cpp">
       <Filter>TextureAtlas</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\String.cpp">
+      <Filter>TextureAtlas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\libpng\png.h">
@@ -168,6 +171,9 @@
       <Filter>TextureAtlas</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Processing.hpp">
+      <Filter>TextureAtlas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\String.hpp">
       <Filter>TextureAtlas</Filter>
     </ClInclude>
   </ItemGroup>
