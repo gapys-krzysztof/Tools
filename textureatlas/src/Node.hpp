@@ -8,7 +8,7 @@ struct Node
     Node( const Rect& rect ) : rect( rect ) { child[0] = NULL; child[1] = NULL; }
     ~Node() { delete child[0]; delete child[1]; }
 
-    Node* Insert( Node* area, bool align );
+    Node* Insert( const Rect& area, bool align );
 
     Node* child[2];
     Rect rect;

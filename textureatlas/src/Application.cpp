@@ -26,15 +26,17 @@ bool square = false;
 bool noalpha = false;
 
 
-std::vector<BRect> LoadImages( const std::list<std::string> pngs )
+std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::list<std::string> names )
 {
     std::vector<BRect> ret;
 
+    std::list<std::string>::const_iterator nit = names.begin();
+
     ret.reserve( pngs.size() );
-    for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it )
+    for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it, ++nit )
     {
         Bitmap* b = new Bitmap( it->c_str() );
-        ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b ) );
+        ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b, *nit ) );
     }
 
     return ret;
@@ -99,7 +101,7 @@ bool DoWork()
         line.clear();
     }
 
-    std::vector<BRect> images( LoadImages( pngnames ) );
+    std::vector<BRect> images( LoadImages( pngnames, names ) );
     SortImages( images );
 
     Bitmap* b = new Bitmap( size, size );
