@@ -15,7 +15,6 @@ std::string output( "." );
 int size = 512;
 std::string name( "atlas" );
 std::string sortby( "height" );
-std::string order( "desc" );
 int edges = 0;
 int path = -1;
 bool potw = false;
@@ -99,8 +98,7 @@ void Usage()
     printf( "-e, --edges        duplicate image edges (default: 0)\n" );
     printf( "-b, --border       generate border around non-transparent areas\n" );
     printf( "-n, --name         name of generated files (default: atlas)\n" );
-    printf( "-S, --sortby       sort type, possible values: area, width, height (default: area)\n" );
-    printf( "-O, --order        sort order, possible values: asc, desc (default: desc)\n" );
+    printf( "-S, --sortby       sort type, possible values: area, width, height (default: height)\n" );
     printf( "-w, --show         opens generated atlas image in default editor\n" );
     printf( "-h, --help         prints this message\n" );
     printf( "-P, --path         path strip depth\n" );
@@ -157,15 +155,6 @@ int main( int argc, char** argv )
                 Error();
             }
             sortby = argv[i];
-        }
-        else if( CSTR( "-O" ) || CSTR( "--order" ) )
-        {
-            i++;
-            if( !( CSTR( "asc" ) || CSTR( "desc" ) ) )
-            {
-                Error();
-            }
-            order = argv[i];
         }
         else if( CSTR( "-h" ) || CSTR( "--help" ) )
         {
