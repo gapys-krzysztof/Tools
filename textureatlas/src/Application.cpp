@@ -3,6 +3,8 @@
 #include <cstring>
 #include <string>
 #include <list>
+#include <vector>
+#include <algorithm>
 
 #include "Bitmap.hpp"
 #include "String.hpp"
@@ -36,6 +38,35 @@ std::vector<Bitmap*> LoadImages( const std::list<std::string> pngs )
     return ret;
 }
 
+void SortImages( std::vector<Bitmap*>& images )
+{
+    struct
+    {
+        bool operator()( Bitmap* i1, Bitmap* i2 ) { return i1->Size().x * i1->Size().y > i2->Size().x * i2->Size().y; }
+    } AreaComparator;
+    struct
+    {
+        bool operator()( Bitmap* i1, Bitmap* i2 ) { return i1->Size().x > i2->Size().x; }
+    } WidthComparator;
+    struct
+    {
+        bool operator()( Bitmap* i1, Bitmap* i2 ) { return i1->Size().y > i2->Size().y; }
+    } HeightComparator;
+
+    if( sortby == "height" )
+    {
+        std::sort( images.begin(), images.end(), HeightComparator );
+    }
+    else if( sortby == "width" )
+    {
+        std::sort( images.begin(), images.end(), WidthComparator );
+    }
+    else
+    {
+        std::sort( images.begin(), images.end(), AreaComparator );
+    }
+}
+
 bool DoWork()
 {
     FILE* f = fopen( input.c_str(), "r" );
@@ -52,6 +83,7 @@ bool DoWork()
     }
 
     std::vector<Bitmap*> images( LoadImages( pngnames ) );
+    SortImages( images );
 
     return true;
 }
