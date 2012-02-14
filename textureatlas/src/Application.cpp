@@ -2,8 +2,10 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include <list>
 
 #include "Bitmap.hpp"
+#include "String.hpp"
 
 std::string input;
 std::string output( "." );
@@ -19,6 +21,40 @@ bool align = false;
 std::string prepend;
 bool square = false;
 bool noalpha = false;
+
+
+std::vector<Bitmap*> LoadImages( const std::list<std::string> pngs )
+{
+    std::vector<Bitmap*> ret;
+
+    ret.reserve( pngs.size() );
+    for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it )
+    {
+        ret.push_back( new Bitmap( it->c_str() ) );
+    }
+
+    return ret;
+}
+
+bool DoWork()
+{
+    FILE* f = fopen( input.c_str(), "r" );
+    if( !f ) return false;
+
+    std::list<std::string> names, pngnames, rectnames;
+    std::string line;
+    while( ReadLine( f, line ) )
+    {
+        names.push_back( line );
+        pngnames.push_back( line.substr( 0, line.rfind( '.' ) ) + ".png" );
+        rectnames.push_back( line + ".csr" );
+        line.clear();
+    }
+
+    std::vector<Bitmap*> images( LoadImages( pngnames ) );
+
+    return true;
+}
 
 void Usage()
 {
@@ -140,6 +176,12 @@ int main( int argc, char** argv )
 
 #undef CSTR
 
-    Usage();
-    return 0;
+    if( !DoWork() )
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
