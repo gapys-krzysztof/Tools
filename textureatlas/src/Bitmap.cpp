@@ -141,3 +141,18 @@ Bitmap& Bitmap::operator=( const Bitmap& bmp )
 
     return *this;
 }
+
+
+void Blit( Bitmap* _dst, Bitmap* _src, const Rect& rect )
+{
+    uint32* src = _src->Data();
+    uint32* dst = _dst->Data() + rect.x + rect.y * _dst->Size().x;
+    int line = _dst->Size().x;
+
+    for( int y=0; y<rect.h; y++ )
+    {
+        memcpy( dst, src, sizeof( uint32 ) * rect.w );
+        dst += line;
+        src += rect.w;
+    }
+}

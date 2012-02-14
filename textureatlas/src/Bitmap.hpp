@@ -1,6 +1,7 @@
 #ifndef __DARKRL__BITMAP_HPP__
 #define __DARKRL__BITMAP_HPP__
 
+#include "Rect.hpp"
 #include "Types.hpp"
 #include "Vector.hpp"
 
@@ -23,5 +24,7 @@ private:
     uint32* m_data;
     v2i m_size;
 };
+
+void Blit( Bitmap* dst, Bitmap* src, const Rect& rect );
 
 #endif

@@ -3,8 +3,9 @@
 
 #include <string>
 
-#include "Bitmap.hpp"
 #include "Types.hpp"
+
+class Bitmap;
 
 struct Rect
 {
