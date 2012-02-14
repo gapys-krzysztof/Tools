@@ -26,17 +26,34 @@ bool square = false;
 bool noalpha = false;
 
 
-std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::list<std::string> names )
+std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::list<std::string> names, const std::list<std::string> rectnames )
 {
     std::vector<BRect> ret;
 
     std::list<std::string>::const_iterator nit = names.begin();
+    std::list<std::string>::const_iterator rit = rectnames.begin();
 
     ret.reserve( pngs.size() );
-    for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it, ++nit )
+    for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it, ++nit, ++rit )
     {
         Bitmap* b = new Bitmap( it->c_str() );
-        ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b, *nit ) );
+        FILE* f = fopen( rit->c_str(), "rb" );
+        if( !f )
+        {
+            ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b, *nit ) );
+        }
+        else
+        {
+            int size;
+            fread( &size, 1, 4, f );
+            for( int i=0; i<size; i++ )
+            {
+                BRect r( 0, 0, 0, 0, b, *nit );
+                fread( &r, 1, sizeof( uint16 ) * 4, f );
+                ret.push_back( r );
+            }
+            fclose( f );
+        }
     }
 
     return ret;
@@ -103,7 +120,7 @@ bool DoWork()
 
     fclose( f );
 
-    std::vector<BRect> images( LoadImages( pngnames, names ) );
+    std::vector<BRect> images( LoadImages( pngnames, names, rectnames ) );
     SortImages( images );
 
     Bitmap* b = new Bitmap( size, size );
@@ -114,13 +131,10 @@ bool DoWork()
 
     for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it )
     {
-        int ow = it->b->Size().x;
-        int oh = it->b->Size().y;
-
         if( edges != 0 ) {}
         if( align ) {}
 
-        Node* uv = tree->Insert( Rect( 0, 0, ow, oh ), align );
+        Node* uv = tree->Insert( Rect( 0, 0, it->w, it->h ), align );
         if( !uv )
         {
             delete b;
