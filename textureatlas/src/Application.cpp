@@ -43,15 +43,30 @@ void SortImages( std::vector<Rect>& images )
 {
     struct
     {
-        bool operator()( const Rect& i1, const Rect& i2 ) { return i1.b->Size().x * i1.b->Size().y > i2.b->Size().x * i2.b->Size().y; }
+        bool operator()( const Rect& i1, const Rect& i2 )
+        {
+            int a1 = i1.b->Size().x * i1.b->Size().y;
+            int a2 = i2.b->Size().x * i2.b->Size().y;
+            if( a1 != a2 ) return a1 > a2;
+            if( i1.b->Size().x != i2.b->Size().x ) return i1.b->Size().x > i2.b->Size().x;
+            return i1.b->Size().y > i2.b->Size().y;
+        }
     } AreaComparator;
     struct
     {
-        bool operator()( const Rect& i1, const Rect& i2 ) { return i1.b->Size().x > i2.b->Size().x; }
+        bool operator()( const Rect& i1, const Rect& i2 )
+        {
+            if( i1.b->Size().x != i2.b->Size().x ) return i1.b->Size().x > i2.b->Size().x;
+            return i1.b->Size().y > i2.b->Size().y;
+        }
     } WidthComparator;
     struct
     {
-        bool operator()( const Rect& i1, const Rect& i2 ) { return i1.b->Size().y > i2.b->Size().y; }
+        bool operator()( const Rect& i1, const Rect& i2 )
+        {
+            if( i1.b->Size().y != i2.b->Size().y ) return i1.b->Size().y > i2.b->Size().y;
+            return i1.b->Size().x > i2.b->Size().x;
+        }
     } HeightComparator;
 
     if( sortby == "height" )
