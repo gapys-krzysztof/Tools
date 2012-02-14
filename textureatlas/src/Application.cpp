@@ -13,7 +13,7 @@
 
 std::string input;
 std::string output( "." );
-int size = 512;
+int size = 1024;
 std::string name( "atlas" );
 std::string sortby( "height" );
 int edges = 0;
@@ -101,11 +101,40 @@ bool DoWork()
         line.clear();
     }
 
+    fclose( f );
+
     std::vector<BRect> images( LoadImages( pngnames, names ) );
     SortImages( images );
 
     Bitmap* b = new Bitmap( size, size );
+    Node* tree = new Node( Rect( 0, 0, size, size ) );
 
+    int maxWidth = 1;
+    int maxHeight = 1;
+
+    for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it )
+    {
+        int ow = it->b->Size().x;
+        int oh = it->b->Size().y;
+
+        if( edges != 0 ) {}
+        if( align ) {}
+
+        Node* uv = tree->Insert( Rect( 0, 0, ow, oh ), align );
+        if( !uv )
+        {
+            delete b;
+            delete tree;
+            return false;
+        }
+
+        Blit( b, it->b, uv->rect );
+    }
+
+    b->Write( "out.png" );
+
+    delete b;
+    delete tree;
 
     return true;
 }
