@@ -186,7 +186,7 @@ void Usage()
     printf( "Usage: TextureAtlas [options]\n\n" );
     printf( "-i, --input        input text file with input files list\n" );
     printf( "-o, --output       output path (default: current dir)\n" );
-    printf( "-s, --size         target atlas size (default: 512)\n" );
+    printf( "-s, --size         target atlas size (default: 1024)\n" );
     printf( "-e, --edges    *   duplicate image edges (default: 0)\n" );
     printf( "-n, --name         name of generated files (default: atlas)\n" );
     printf( "-h, --help         prints this message\n" );
