@@ -11,6 +11,7 @@
 #include "Node.hpp"
 #include "Rect.hpp"
 #include "String.hpp"
+#include "Processing.hpp"
 
 std::string input;
 std::string output( "." );
@@ -187,6 +188,7 @@ bool DoWork()
     fprintf( f, "</atlas>\n" );
     fclose( f );
 
+    SplashFill( b );
     b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
 
     delete b;
