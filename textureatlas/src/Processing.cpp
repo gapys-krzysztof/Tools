@@ -19,7 +19,7 @@ void SplashFill( Bitmap* bmp )
 
     Bitmap old( *tmp );
 
-    for(;;)
+    for( int iteration=0; iteration<128; iteration++ )
     {
         int modified = 0;
 
