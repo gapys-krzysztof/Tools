@@ -187,17 +187,15 @@ void Usage()
     printf( "-i, --input        input text file with input files list\n" );
     printf( "-o, --output       output path (default: current dir)\n" );
     printf( "-s, --size         target atlas size (default: 512)\n" );
-    printf( "-e, --edges        duplicate image edges (default: 0)\n" );
-    printf( "-b, --border       generate border around non-transparent areas\n" );
+    printf( "-e, --edges    *   duplicate image edges (default: 0)\n" );
     printf( "-n, --name         name of generated files (default: atlas)\n" );
-    printf( "-w, --show         opens generated atlas image in default editor\n" );
     printf( "-h, --help         prints this message\n" );
-    printf( "-P, --path         path strip depth\n" );
-    printf( "-W, --potw         make width of atlas a power of two\n" );
-    printf( "-H, --poth         make height of atlas a power of two\n" );
-    printf( "-a, --align        align textures to 4x4 blocks\n" );
-    printf( "-p, --prepend      prepend given string to all asset paths\n" );
-    printf( "-q, --square       make width equal to height\n" );
+    printf( "-P, --path     *   path strip depth\n" );
+    printf( "-W, --potw     *   make width of atlas a power of two\n" );
+    printf( "-H, --poth     *   make height of atlas a power of two\n" );
+    printf( "-a, --align    *   align textures to 4x4 blocks\n" );
+    printf( "-p, --prepend  *   prepend given string to all asset paths\n" );
+    printf( "-q, --square   *   make width equal to height\n" );
     printf( "-N, --noalpha      no alpha channel\n" );
 }
 
