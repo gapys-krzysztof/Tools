@@ -155,7 +155,7 @@ bool DoWork()
     fprintf( f, "<atlas height=\"%i\" width=\"%i\">\n", b->Size().x, b->Size().y );
     for( std::map<std::string, std::list<Data> >::const_iterator it = irmap.begin(); it != irmap.end(); ++it )
     {
-        fprintf( f, "  <asset id=\"%s\" rects=\"%i\">\n", it->first.c_str(), it->second.size() );
+        fprintf( f, "  <asset id=\"%s\" rects=\"%i\">\n", ( prepend + it->first ).c_str(), it->second.size() );
         for( std::list<Data>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit )
         {
             fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
@@ -194,7 +194,7 @@ void Usage()
     printf( "-W, --potw     *   make width of atlas a power of two\n" );
     printf( "-H, --poth     *   make height of atlas a power of two\n" );
     printf( "-a, --align    *   align textures to 4x4 blocks\n" );
-    printf( "-p, --prepend  *   prepend given string to all asset paths\n" );
+    printf( "-p, --prepend      prepend given string to all asset paths\n" );
     printf( "-q, --square   *   make width equal to height\n" );
     printf( "-N, --noalpha      no alpha channel\n" );
 }
