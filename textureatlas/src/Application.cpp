@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 #include "Bitmap.hpp"
 #include "Node.hpp"
@@ -117,6 +118,7 @@ bool DoWork()
     int maxWidth = 1;
     int maxHeight = 1;
 
+    std::vector<Rect> rects;
     for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it )
     {
         if( edges != 0 ) {}
@@ -130,8 +132,46 @@ bool DoWork()
             return false;
         }
 
+        rects.push_back( uv->rect );
         Blit( b, *it, uv->rect );
     }
+
+    struct Data
+    {
+        Data( const BRect* _br, const Rect* _pr ) : br( _br ), pr( _pr ) {}
+        const BRect* br;
+        const Rect* pr;
+    };
+
+    std::map<std::string, std::list<Data> > irmap;
+    std::vector<Rect>::const_iterator rit = rects.begin();
+    for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it, ++rit )
+    {
+        irmap[it->name].push_back( Data( &(*it), &(*rit) ) );
+    }
+
+    f = fopen( ( name + ".xml" ).c_str(), "w" );
+    fprintf( f, "<?xml version=\"1.0\"?>\n" );
+    fprintf( f, "<atlas height=\"%i\" width=\"%i\">\n", b->Size().x, b->Size().y );
+    for( std::map<std::string, std::list<Data> >::const_iterator it = irmap.begin(); it != irmap.end(); ++it )
+    {
+        fprintf( f, "  <asset id=\"%s\" rects=\"%i\">\n", it->first.c_str(), it->second.size() );
+        for( std::list<Data>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit )
+        {
+            fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
+                dit->br->flip ? 1 : 0,
+                dit->pr->x,
+                dit->pr->y,
+                dit->br->x,
+                dit->br->y,
+                dit->br->w,
+                dit->br->h
+                );
+        }
+        fprintf( f, "  </asset>\n" );
+    }
+    fprintf( f, "</atlas>\n" );
+    fclose( f );
 
     b->Write( "out.png" );
 
