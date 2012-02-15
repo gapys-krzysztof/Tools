@@ -155,7 +155,21 @@ bool DoWork()
     fprintf( f, "<atlas height=\"%i\" width=\"%i\">\n", b->Size().x, b->Size().y );
     for( std::map<std::string, std::list<Data> >::const_iterator it = irmap.begin(); it != irmap.end(); ++it )
     {
-        fprintf( f, "  <asset id=\"%s\" rects=\"%i\">\n", ( prepend + it->first ).c_str(), it->second.size() );
+        std::string id;
+        if( path == -1 )
+        {
+            id = prepend + it->first;
+        }
+        else
+        {
+            size_t pos = 0;
+            for( int i=0; i<path; i++ )
+            {
+                pos = it->first.find( '/', pos ) + 1;
+            }
+            id = prepend + it->first.substr( pos );
+        }
+        fprintf( f, "  <asset id=\"%s\" rects=\"%i\">\n", id.c_str(), it->second.size() );
         for( std::list<Data>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit )
         {
             fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
@@ -190,7 +204,7 @@ void Usage()
     printf( "-e, --edges    *   duplicate image edges (default: 0)\n" );
     printf( "-n, --name         name of generated files (default: atlas)\n" );
     printf( "-h, --help         prints this message\n" );
-    printf( "-P, --path     *   path strip depth\n" );
+    printf( "-P, --path         path strip depth\n" );
     printf( "-W, --potw     *   make width of atlas a power of two\n" );
     printf( "-H, --poth     *   make height of atlas a power of two\n" );
     printf( "-a, --align    *   align textures to 4x4 blocks\n" );
