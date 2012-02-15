@@ -173,7 +173,7 @@ bool DoWork()
     fprintf( f, "</atlas>\n" );
     fclose( f );
 
-    b->Write( ( output + "/" + name + ".png" ).c_str() );
+    b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
 
     delete b;
     delete tree;
