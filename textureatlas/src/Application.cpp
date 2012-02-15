@@ -170,7 +170,7 @@ bool DoWork()
             }
             id = prepend + it->first.substr( pos );
         }
-        fprintf( f, "  <asset id=\"%s\" rects=\"%i\">\n", id.c_str(), it->second.size() );
+        fprintf( f, "  <asset id=\"%s\" rects=\"%i\" w=\"%i\" h=\"%i\">\n", id.c_str(), it->second.size(), it->second.begin()->br->b->Size().x, it->second.begin()->br->b->Size().y );
         for( std::list<Data>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit )
         {
             fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
