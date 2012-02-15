@@ -150,7 +150,7 @@ bool DoWork()
         irmap[it->name].push_back( Data( &(*it), &(*rit) ) );
     }
 
-    f = fopen( ( name + ".xml" ).c_str(), "w" );
+    f = fopen( ( output + "/" + name + ".xml" ).c_str(), "w" );
     fprintf( f, "<?xml version=\"1.0\"?>\n" );
     fprintf( f, "<atlas height=\"%i\" width=\"%i\">\n", b->Size().x, b->Size().y );
     for( std::map<std::string, std::list<Data> >::const_iterator it = irmap.begin(); it != irmap.end(); ++it )
@@ -173,7 +173,7 @@ bool DoWork()
     fprintf( f, "</atlas>\n" );
     fclose( f );
 
-    b->Write( "out.png" );
+    b->Write( ( output + "/" + name + ".png" ).c_str() );
 
     delete b;
     delete tree;
