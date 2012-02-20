@@ -135,6 +135,52 @@ bool DoWork()
 
         rects.push_back( uv->rect );
         Blit( b, *it, uv->rect );
+        for( int i=0; i<edges; i++ )
+        {
+            BRect br( *it );
+            if( br.flip )
+            {
+                br.y = std::max( 0, it->y - i - 1 );
+            }
+            else
+            {
+                br.x = std::max( 0, it->x - i - 1 );
+            }
+            Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y, 1, uv->rect.h ) );
+
+            if( br.flip )
+            {
+                br.y = std::min( it->b->Size().y - 1, it->y + it->w + i );
+            }
+            else
+            {
+                br.x = std::min( it->b->Size().x - 1, it->x + it->w + i );
+            }
+            Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y, 1, uv->rect.h ) );
+        }
+        for( int i=0; i<edges; i++ )
+        {
+            BRect br( *it );
+            if( br.flip )
+            {
+                br.x = std::max( 0, it->x - i - 1 );
+            }
+            else
+            {
+                br.y = std::max( 0, it->y - i - 1 );
+            }
+            Blit( b, br, Rect( uv->rect.x, uv->rect.y - i - 1, uv->rect.w, 1 ) );
+
+            if( br.flip )
+            {
+                br.x = std::min( it->b->Size().x - 1, it->x + it->h + i );
+            }
+            else
+            {
+                br.y = std::min( it->b->Size().y - 1, it->y + it->h + i );
+            }
+            Blit( b, br, Rect( uv->rect.x, uv->rect.y + uv->rect.h + i, uv->rect.w, 1 ) );
+        }
     }
 
     struct Data
