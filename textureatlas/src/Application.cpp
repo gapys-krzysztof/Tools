@@ -179,8 +179,8 @@ bool DoWork()
                 dit->pr->y,
                 dit->br->x,
                 dit->br->y,
-                dit->br->w,
-                dit->br->h
+                dit->br->flip ? dit->br->h :dit->br->w,
+                dit->br->flip ? dit->br->w :dit->br->h
                 );
         }
         fprintf( f, "  </asset>\n" );
