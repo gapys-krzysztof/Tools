@@ -125,7 +125,7 @@ bool DoWork()
         if( edges != 0 ) {}
         if( align ) {}
 
-        Node* uv = tree->Insert( Rect( 0, 0, it->w, it->h ), align );
+        Node* uv = tree->Insert( Rect( edges, edges, it->w + edges * 2, it->h + edges * 2 ), align );
         if( !uv )
         {
             delete b;
@@ -203,7 +203,7 @@ void Usage()
     printf( "-i, --input        input text file with input files list\n" );
     printf( "-o, --output       output path (default: current dir)\n" );
     printf( "-s, --size         target atlas size (default: 1024)\n" );
-    printf( "-e, --edges    *   duplicate image edges (default: 0)\n" );
+    printf( "-e, --edges        duplicate image edges (default: 0)\n" );
     printf( "-n, --name         name of generated files (default: atlas)\n" );
     printf( "-h, --help         prints this message\n" );
     printf( "-P, --path         path strip depth\n" );

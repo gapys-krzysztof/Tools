@@ -26,7 +26,7 @@ Node* Node::Insert( const Rect& area, bool align )
             child[0] = new Node( Rect( rect.x + area.w, rect.y, rect.w - area.w, area.h ) );
             child[1] = new Node( Rect( rect.x, rect.y + area.h, rect.w, rect.h - area.h ) );
         }
-        rect = Rect( rect.x, rect.y, area.w, area.h );
+        rect = Rect( rect.x + area.x, rect.y + area.y, area.w - area.x * 2, area.h - area.y * 2 );
         ret = this;
     }
 
