@@ -15,7 +15,7 @@ std::vector<Rect> GenerateGrid( const v2i& size, int x, int y )
         }
     }
 
-    printf( "Generate %ix%i grid -> %i rects\n", x, y, ret.size() );
+    //printf( "Generate %ix%i grid -> %i rects\n", x, y, ret.size() );
 
     return ret;
 }

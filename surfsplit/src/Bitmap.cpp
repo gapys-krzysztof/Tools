@@ -67,7 +67,7 @@ Bitmap::Bitmap( const char* fn )
         goto cleanup;
     }
 
-    printf( "Bitmap %s %ix%i\n", fn, w, h );
+    //printf( "Bitmap %s %ix%i\n", fn, w, h );
 
     m_data = new uint32[w*h];
     uint32* ptr = m_data;

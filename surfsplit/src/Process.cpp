@@ -39,7 +39,7 @@ std::vector<Rect> RemoveEmpty( const std::vector<Rect>& rects, Bitmap* bmp )
         }
     }
 
-    printf( "Remove empty rects: %i -> %i\n", rects.size(), ret.size() );
+    //printf( "Remove empty rects: %i -> %i\n", rects.size(), ret.size() );
 
     return ret;
 }
@@ -174,7 +174,7 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
     }
 
     std::vector<Rect> ret( tmp.begin(), tmp.end() );
-    printf( "Merge horizontal: %i -> %i\n", rects.size(), ret.size() );
+    //printf( "Merge horizontal: %i -> %i\n", rects.size(), ret.size() );
     return ret;
 }
 
@@ -213,6 +213,6 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
     }
 
     std::vector<Rect> ret( tmp.begin(), tmp.end() );
-    printf( "Merge vertical: %i -> %i\n", rects.size(), ret.size() );
+    //printf( "Merge vertical: %i -> %i\n", rects.size(), ret.size() );
     return ret;
 }

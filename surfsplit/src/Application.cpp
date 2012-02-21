@@ -31,7 +31,7 @@ int main( int argc, char** argv )
     {
         std::vector<Rect> r;
         r.push_back( Rect( 0, 0, bmp.Size().x, bmp.Size().y ) );
-        printf( "Bitmap %s no alpha channel\n", argv[1] );
+        //printf( "Bitmap %s no alpha channel\n", argv[1] );
         Save( out.c_str(), r );
         return 0;
     }
@@ -42,7 +42,7 @@ int main( int argc, char** argv )
     r1 = MergeVertical( r1 );
     r = MergeVertical( r );
     r = MergeHorizontal( r );
-    printf( "H1: %i, V1: %i\n", r1.size(), r.size() );
+    //printf( "H1: %i, V1: %i\n", r1.size(), r.size() );
     if( r1.size() < r.size() )
     {
         r = r1;
@@ -54,7 +54,7 @@ int main( int argc, char** argv )
     {
         rarea += it->w * it->h;
     }
-    printf( "Reduction: %i -> %i (%.2f%%)\n", area, rarea, 100.f * rarea / area );
+    //printf( "Reduction: %i -> %i (%.2f%%)\n", area, rarea, 100.f * rarea / area );
     Save( out.c_str(), r );
     //ShowBitmap( &bmp, r );
 
