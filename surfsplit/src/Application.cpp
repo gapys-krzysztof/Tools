@@ -15,13 +15,29 @@ void Save( const char* fn, const std::vector<Rect>& rects )
     fclose( f );
 }
 
+bool viewData = false;
+
 int main( int argc, char** argv )
 {
-    if( argc != 2 )
+#define CSTR(x) strcmp( argv[i], x ) == 0
+
+    if( argc < 2 )
     {
-        fprintf( stderr, "No input file name given.\n" );
+        fprintf( stderr, "Usage: surfsplit filename.png [option]\n\n" );
+        fprintf( stderr, "Options:\n" );
+        fprintf( stderr, " -v     view data layout\n" );
         exit( 1 );
     }
+
+    for( int i=2; i<argc; i++ )
+    {
+        if( CSTR( "-v" ) )
+        {
+            viewData = true;
+        }
+    }
+
+#undef CSTR
 
     std::string out( argv[1] );
     out += ".csr";
@@ -56,7 +72,11 @@ int main( int argc, char** argv )
     }
     //printf( "Reduction: %i -> %i (%.2f%%)\n", area, rarea, 100.f * rarea / area );
     Save( out.c_str(), r );
-    //ShowBitmap( &bmp, r );
+
+    if( viewData )
+    {
+        ShowBitmap( &bmp, r );
+    }
 
     return 0;
 }
