@@ -1,5 +1,7 @@
 #include <cstdlib>
 #include <cstdio>
+#include <list>
+#include <map>
 
 #include "Bitmap.hpp"
 #include "Generators.hpp"
@@ -70,7 +72,14 @@ int main( int argc, char** argv )
 
     std::vector<Rect> r( GenerateGrid( bmp.Size(), blockSize, blockSize ) );
     r = RemoveEmpty( r, &bmp );
+
     std::vector<float> hist( CalcBroadDuplicates( r, &bmp ) );
+    std::map<float, std::list<int> > map;
+    for( int i=0; i<hist.size(); i++ )
+    {
+        map[hist[i]].push_back( i );
+    }
+
     std::vector<Rect> r1 = MergeHorizontal( r );
     r1 = MergeVertical( r1 );
     r = MergeVertical( r );
