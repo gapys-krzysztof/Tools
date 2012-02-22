@@ -15,4 +15,6 @@ std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp );
 std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects );
 std::vector<Rect> MergeVertical( const std::vector<Rect>& rects );
 
+std::vector<float> CalcBroadDuplicates( const std::vector<Rect>& rects, Bitmap* bmp );
+
 #endif

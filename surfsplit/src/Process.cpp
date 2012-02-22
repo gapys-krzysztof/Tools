@@ -216,3 +216,47 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
     //printf( "Merge vertical: %i -> %i\n", rects.size(), ret.size() );
     return ret;
 }
+
+float CalcHistogram( const Rect& rect, Bitmap* bmp )
+{
+    int bw = bmp->Size().x;
+    uint32* ptr = bmp->Data() + rect.x + rect.y * bw;
+    int h = rect.h;
+
+    float hist = 0;
+
+    while( h-- )
+    {
+        int w = rect.w;
+
+        while( w-- )
+        {
+            if( ( *ptr & 0xFF000000 ) != 0 )
+            {
+                float r = ( ( *ptr & 0x00FF0000 ) >> 16 ) / 255.f;
+                float g = ( ( *ptr & 0x0000FF00 ) >> 8  ) / 255.f;
+                float b = ( ( *ptr & 0x000000FF )       ) / 255.f;
+
+                hist += r * 0.3f + g * 0.59f + b * 0.11f;
+            }
+            ptr++;
+        }
+
+        ptr += bw - rect.w;
+    }
+
+    return hist;
+}
+
+std::vector<float> CalcBroadDuplicates( const std::vector<Rect>& rects, Bitmap* bmp )
+{
+    std::vector<float> ret;
+    ret.reserve( rects.size() );
+
+    for( std::vector<Rect>::const_iterator it = rects.begin(); it != rects.end(); ++it )
+    {
+        ret.push_back( CalcHistogram( *it, bmp ) );
+    }
+
+    return ret;
+}

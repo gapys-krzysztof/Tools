@@ -70,6 +70,7 @@ int main( int argc, char** argv )
 
     std::vector<Rect> r( GenerateGrid( bmp.Size(), blockSize, blockSize ) );
     r = RemoveEmpty( r, &bmp );
+    std::vector<float> hist( CalcBroadDuplicates( r, &bmp ) );
     std::vector<Rect> r1 = MergeHorizontal( r );
     r1 = MergeVertical( r1 );
     r = MergeVertical( r );
