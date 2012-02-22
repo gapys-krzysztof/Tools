@@ -15,7 +15,17 @@ void Save( const char* fn, const std::vector<Rect>& rects )
     fclose( f );
 }
 
+void Error()
+{
+    fprintf( stderr, "Usage: surfsplit filename.png [option]\n\n" );
+    fprintf( stderr, "Options:\n" );
+    fprintf( stderr, " -v     view data layout\n" );
+    fprintf( stderr, " -b     set block size (default: 8)\n" );
+    exit( 1 );
+}
+
 bool viewData = false;
+int blockSize = 8;
 
 int main( int argc, char** argv )
 {
@@ -23,10 +33,7 @@ int main( int argc, char** argv )
 
     if( argc < 2 )
     {
-        fprintf( stderr, "Usage: surfsplit filename.png [option]\n\n" );
-        fprintf( stderr, "Options:\n" );
-        fprintf( stderr, " -v     view data layout\n" );
-        exit( 1 );
+        Error();
     }
 
     for( int i=2; i<argc; i++ )
@@ -34,6 +41,15 @@ int main( int argc, char** argv )
         if( CSTR( "-v" ) )
         {
             viewData = true;
+        }
+        else if( CSTR( "-b" ) )
+        {
+            blockSize = atoi( argv[i+1] );
+            i++;
+        }
+        else
+        {
+            Error();
         }
     }
 
@@ -52,7 +68,7 @@ int main( int argc, char** argv )
         return 0;
     }
 
-    std::vector<Rect> r( GenerateGrid( bmp.Size(), 8, 8 ) );
+    std::vector<Rect> r( GenerateGrid( bmp.Size(), blockSize, blockSize ) );
     r = RemoveEmpty( r, &bmp );
     std::vector<Rect> r1 = MergeHorizontal( r );
     r1 = MergeVertical( r1 );
