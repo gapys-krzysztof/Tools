@@ -260,3 +260,31 @@ std::vector<float> CalcBroadDuplicates( const std::vector<Rect>& rects, Bitmap* 
 
     return ret;
 }
+
+bool AreExactDuplicates( const Rect& r1, const Rect& r2, Bitmap* bmp )
+{
+    if( r1.w != r2.w || r1.h != r2.h ) return false;
+
+    int bw = bmp->Size().x;
+    uint32* ptr1 = bmp->Data() + r1.x + r1.y * bw;
+    uint32* ptr2 = bmp->Data() + r2.x + r2.y * bw;
+    int h = r1.h;
+
+    while( h-- )
+    {
+        int w = r1.w;
+
+        while( w-- )
+        {
+            if( *ptr1++ != *ptr2++ )
+            {
+                return false;
+            }
+        }
+
+        ptr1 += bw - r1.w;
+        ptr2 += bw - r1.w;
+    }
+
+    return true;
+}

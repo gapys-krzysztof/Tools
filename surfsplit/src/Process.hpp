@@ -16,5 +16,6 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects );
 std::vector<Rect> MergeVertical( const std::vector<Rect>& rects );
 
 std::vector<float> CalcBroadDuplicates( const std::vector<Rect>& rects, Bitmap* bmp );
+bool AreExactDuplicates( const Rect& rect1, const Rect& rect2, Bitmap* bmp );
 
 #endif
