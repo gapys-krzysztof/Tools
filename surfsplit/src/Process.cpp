@@ -279,7 +279,7 @@ bool AreExactDuplicates( const Rect& r1, const Rect& r2, Bitmap* bmp )
             uint32 c1 = *ptr1++;
             uint32 c2 = *ptr2++;
 
-            if( ( ( c1 & 0xFF000000 ) | ( c2 & 0xFF000000 ) ) != 0 && c1 != c2 )
+            if( ( ( c1 | c2 ) & 0xFF000000 ) != 0 && c1 != c2 )
             {
                 return false;
             }
