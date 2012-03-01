@@ -45,26 +45,22 @@ Bitmap::Bitmap( const char* fn )
         png_set_gray_to_rgb(png_ptr);
     }
 
-    bool rgba = false;
     switch( color_type )
     {
     case PNG_COLOR_TYPE_PALETTE:
-        if( png_get_valid( png_ptr, info_ptr, PNG_INFO_tRNS ) )
+        if( !png_get_valid( png_ptr, info_ptr, PNG_INFO_tRNS ) )
         {
-            rgba = true;
+            png_set_filler( png_ptr, 0xff, PNG_FILLER_AFTER );
         }
         break;
     case PNG_COLOR_TYPE_GRAY_ALPHA:
-    case PNG_COLOR_TYPE_RGB_ALPHA:
-        rgba = true;
+        png_set_gray_to_rgb( png_ptr );
+        break;
+    case PNG_COLOR_TYPE_RGB:
+        png_set_filler( png_ptr, 0xff, PNG_FILLER_AFTER );
         break;
     default:
         break;
-    }
-
-    if( !rgba )
-    {
-        goto cleanup;
     }
 
     //printf( "Bitmap %s %ix%i\n", fn, w, h );
@@ -79,7 +75,6 @@ Bitmap::Bitmap( const char* fn )
 
     png_read_end( png_ptr, info_ptr );
 
-cleanup:
     png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
     fclose( f );
 }

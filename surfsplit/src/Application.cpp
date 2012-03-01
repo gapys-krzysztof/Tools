@@ -61,14 +61,6 @@ int main( int argc, char** argv )
     out += ".csr";
 
     Bitmap bmp( argv[1] );
-    if( !bmp.Data() )
-    {
-        std::vector<Rect> r;
-        r.push_back( Rect( 0, 0, bmp.Size().x, bmp.Size().y ) );
-        //printf( "Bitmap %s no alpha channel\n", argv[1] );
-        Save( out.c_str(), r );
-        return 0;
-    }
 
     std::vector<Rect> r( GenerateGrid( bmp.Size(), blockSize, blockSize ) );
     r = RemoveEmpty( r, &bmp );
