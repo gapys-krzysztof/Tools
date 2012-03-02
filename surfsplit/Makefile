@@ -1,4 +1,5 @@
 CFLAGS = -g3 -O3
+CXXFLAGS = $(CFLAGS) --std=c++0x
 DEFINES =
 INCLUDES = $(shell sdl-config --cflags)
 LIBS = $(shell sdl-config --libs) -lGL
@@ -10,7 +11,7 @@ OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 all: surfsplit
 
 %.o: %.cpp
-	$(CXX) -c $(INCLUDES) $(CFLAGS) $(DEFINES) $< -o $@
+	$(CXX) -c $(INCLUDES) $(CXXFLAGS) $(DEFINES) $< -o $@
 
 %.o: %.c
 	$(CC) -c $(INCLUDES) $(CFLAGS) $(DEFINES) $< -o $@
@@ -18,7 +19,7 @@ all: surfsplit
 %.d : %.cpp
 	@echo Resolving dependencies of $<
 	@mkdir -p $(@D)
-	@$(CXX) -MM $(INCLUDES) $(CFLAGS) $(DEFINES) $< > $@.$$$$; \
+	@$(CXX) -MM $(INCLUDES) $(CXXFLAGS) $(DEFINES) $< > $@.$$$$; \
 	sed 's,.*\.o[ :]*,$(<:.cpp=.o) $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
