@@ -162,48 +162,21 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
     std::list<Rect>::iterator it = tmp.begin();
     while( it != tmp.end() )
     {
-        std::list<Rect>::iterator tit = it;
-        std::list<Rect>::iterator end = tmp.begin();
-
         std::list<std::list<Rect>::iterator> del;
 
-        if( tit != end )
-        {
-            --tit;
-            while( tit->y == it->y )
-            {
-                if( tit->h == it->h && tit->x + tit->w == it->x )
-                {
-                    it->x -= tit->w;
-                    del.push_back( tit );
-                }
-                if( tit == end )
-                {
-                    break;
-                }
-                --tit;
-            }
-        }
+        std::list<Rect>::iterator tit = it;
+        std::list<Rect>::iterator end = tmp.end();
 
-        tit = it;
-        end = tmp.end();
         ++tit;
 
         int tx = it->x + it->w;
 
-        while( tit != end && tit->y == it->y && tit->x == tx )
+        while( tit != end && tit->y == it->y && tit->x == tx && tit->h == it->h )
         {
-            if( tit->h == it->h )
-            {
-                it->w += tit->w;
-                tx += tit->w;
-                del.push_back( tit );
-                ++tit;
-            }
-            else
-            {
-                break;
-            }
+            it->w += tit->w;
+            tx += tit->w;
+            del.push_back( tit );
+            ++tit;
         }
 
         for( std::list<std::list<Rect>::iterator>::const_iterator dit = del.begin(); dit != del.end(); ++dit )
@@ -232,48 +205,21 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
     std::list<Rect>::iterator it = tmp.begin();
     while( it != tmp.end() )
     {
-        std::list<Rect>::iterator tit = it;
-        std::list<Rect>::iterator end = tmp.begin();
-
         std::list<std::list<Rect>::iterator> del;
 
-        if( tit != end )
-        {
-            --tit;
-            while( tit->x == it->x )
-            {
-                if( tit->w == it->w && tit->y + tit->h == it->y )
-                {
-                    it->y -= tit->h;
-                    del.push_back( tit );
-                }
-                if( tit == end )
-                {
-                    break;
-                }
-                --tit;
-            }
-        }
+        std::list<Rect>::iterator tit = it;
+        std::list<Rect>::iterator end = tmp.end();
 
-        tit = it;
-        end = tmp.end();
         ++tit;
 
         int ty = it->y + it->h;
 
-        while( tit != end && tit->x == it->x && tit->y == ty )
+        while( tit != end && tit->x == it->x && tit->y == ty && tit->w == it->w )
         {
-            if( tit->w == it->w )
-            {
-                it->h += tit->h;
-                ty += tit->h;
-                del.push_back( tit );
-                ++tit;
-            }
-            else
-            {
-                break;
-            }
+            it->h += tit->h;
+            ty += tit->h;
+            del.push_back( tit );
+            ++tit;
         }
 
         for( std::list<std::list<Rect>::iterator>::const_iterator dit = del.begin(); dit != del.end(); ++dit )
