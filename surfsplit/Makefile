@@ -4,11 +4,13 @@ DEFINES =
 INCLUDES = $(shell sdl-config --cflags)
 LIBS = $(shell sdl-config --libs) -lGL
 
-SRC = $(shell egrep 'ClCompile.*cpp"' build/SurfSplit.vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
-CSRC = $(shell egrep 'ClCompile.*c"' build/SurfSplit.vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
+IMAGE = SurfSplit
+
+SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
+CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
 OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 
-all: surfsplit
+all: $(IMAGE)
 
 %.o: %.cpp
 	$(CXX) -c $(INCLUDES) $(CXXFLAGS) $(DEFINES) $< -o $@
@@ -30,12 +32,12 @@ all: surfsplit
 	sed 's,.*\.o[ :]*,$(<:.c=.o) $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
-surfsplit: $(OBJ)
+$(IMAGE): $(OBJ)
 	$(CXX) $(CFLAGS) $(DEFINES) $(OBJ) $(LIBS) -o $@
 
 -include $(SRC:.cpp=.d) $(CSRC:.c=.d)
 
 clean:
-	rm -f $(OBJ) $(SRC:.cpp=.d) $(CSRC:.c=.d) DarkRL
+	rm -f $(OBJ) $(SRC:.cpp=.d) $(CSRC:.c=.d) $(IMAGE)
 
 .PHONY: clean all
