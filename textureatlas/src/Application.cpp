@@ -25,6 +25,7 @@ bool align = false;
 std::string prepend;
 bool square = false;
 bool noalpha = false;
+bool splashfill = true;
 
 
 std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::list<std::string> names, const std::list<std::string> rectnames )
@@ -234,7 +235,11 @@ bool DoWork()
     fprintf( f, "</atlas>\n" );
     fclose( f );
 
-    SplashFill( b );
+    if( splashfill )
+    {
+        SplashFill( b );
+    }
+
     b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
 
     delete b;
@@ -259,6 +264,7 @@ void Usage()
     printf( "-p, --prepend      prepend given string to all asset paths\n" );
     printf( "-q, --square   *   make width equal to height\n" );
     printf( "-N, --noalpha      no alpha channel\n" );
+    printf( "--nosplashfill     disable splash fill\n" );
 }
 
 void Error()
@@ -332,6 +338,10 @@ int main( int argc, char** argv )
         else if( CSTR( "-N" ) || CSTR( "--noalpha" ) )
         {
             noalpha = true;
+        }
+        else if( CSTR( "--nosplashfill" ) )
+        {
+            splashfill = false;
         }
         else
         {
