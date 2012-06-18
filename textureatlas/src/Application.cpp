@@ -48,11 +48,18 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
         {
             int size;
             fread( &size, 1, 4, f );
-            for( int i=0; i<size; i++ )
+            if( size == 0 )
             {
-                BRect r( 0, 0, 0, 0, b, *nit );
-                fread( &r, 1, sizeof( uint16 ) * 4, f );
-                ret.push_back( r );
+                ret.push_back( BRect( 0, 0, 0, 0, b, *nit ) );
+            }
+            else
+            {
+                for( int i=0; i<size; i++ )
+                {
+                    BRect r( 0, 0, 0, 0, b, *nit );
+                    fread( &r, 1, sizeof( uint16 ) * 4, f );
+                    ret.push_back( r );
+                }
             }
             fclose( f );
         }
