@@ -124,15 +124,9 @@ bool DoWork()
     Bitmap* b = new Bitmap( size, size );
     Node* tree = new Node( Rect( 0, 0, size, size ) );
 
-    int maxWidth = 1;
-    int maxHeight = 1;
-
     std::vector<Rect> rects;
     for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it )
     {
-        if( edges != 0 ) {}
-        if( align ) {}
-
         Node* uv = tree->Insert( Rect( edges, edges, it->w + edges * 2, it->h + edges * 2 ), align );
         if( !uv )
         {
