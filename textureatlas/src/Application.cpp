@@ -28,6 +28,23 @@ bool noalpha = false;
 bool splashfill = true;
 
 
+template<typename T>
+inline T AlignPOT( T a )
+{
+    if( a == 0 )
+    {
+        return 1;
+    }
+
+    a--;
+    for( int i=1; i<sizeof(T)*8; i<<=1 )
+    {
+        a |= a >> i;
+    }
+    return a + 1;
+}
+
+
 std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::list<std::string> names, const std::list<std::string> rectnames )
 {
     std::vector<BRect> ret;
@@ -189,6 +206,15 @@ bool DoWork()
             }
             Blit( b, br, Rect( uv->rect.x, uv->rect.y + uv->rect.h + i, uv->rect.w, 1 ) );
         }
+    }
+
+    if( potw )
+    {
+        bw = AlignPOT( bw );
+    }
+    if( poth )
+    {
+        bh = AlignPOT( bh );
     }
 
     if( square )
