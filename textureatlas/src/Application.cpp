@@ -124,6 +124,9 @@ bool DoWork()
     Bitmap* b = new Bitmap( size, size );
     Node* tree = new Node( Rect( 0, 0, size, size ) );
 
+    int bw = 0;
+    int bh = 0;
+
     std::vector<Rect> rects;
     for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it )
     {
@@ -134,6 +137,9 @@ bool DoWork()
             delete tree;
             return false;
         }
+
+        bw = std::max( bw, uv->rect.x + uv->rect.w + edges );
+        bh = std::max( bh, uv->rect.y + uv->rect.h + edges );
 
         rects.push_back( uv->rect );
         Blit( b, *it, uv->rect );
@@ -183,6 +189,21 @@ bool DoWork()
             }
             Blit( b, br, Rect( uv->rect.x, uv->rect.y + uv->rect.h + i, uv->rect.w, 1 ) );
         }
+    }
+
+    if( square )
+    {
+        int sq = std::max( bw, bh );
+        bw = sq;
+        bh = sq;
+    }
+
+    if( b->Size().x != bw || b->Size().y != bh )
+    {
+        Bitmap* tmp = new Bitmap( bw, bh );
+        Blit( tmp, BRect( 0, 0, bw, bh, b, "" ), Rect( 0, 0, bw, bh ) );
+        delete b;
+        b = tmp;
     }
 
     struct Data
@@ -263,7 +284,7 @@ void Usage()
     printf( "-H, --poth     *   make height of atlas a power of two\n" );
     printf( "-a, --align    *   align textures to 4x4 blocks\n" );
     printf( "-p, --prepend      prepend given string to all asset paths\n" );
-    printf( "-q, --square   *   make width equal to height\n" );
+    printf( "-q, --square       make width equal to height\n" );
     printf( "-N, --noalpha      no alpha channel\n" );
     printf( "--nosplashfill     disable splash fill\n" );
 }
