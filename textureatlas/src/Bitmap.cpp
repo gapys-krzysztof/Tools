@@ -142,7 +142,6 @@ Bitmap& Bitmap::operator=( const Bitmap& bmp )
     return *this;
 }
 
-
 void Blit( Bitmap* _dst, const BRect& _src, const Rect& rect )
 {
     uint32* src = _src.b->Data() + _src.x + _src.y * _src.b->Size().x;
