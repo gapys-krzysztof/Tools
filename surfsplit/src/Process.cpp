@@ -2,6 +2,11 @@
 
 #include "Process.hpp"
 
+enum { AlphaMask = 0xFF000000 };
+enum { RedMask   = 0x00FF0000 };
+enum { GreenMask = 0x0000FF00 };
+enum { BlueMask  = 0x000000FF };
+
 bool IsEmpty( const Rect& rect, Bitmap* bmp )
 {
     int bw = bmp->Size().x;
@@ -14,7 +19,7 @@ bool IsEmpty( const Rect& rect, Bitmap* bmp )
 
         while( w-- )
         {
-            if( ( *ptr++ & 0xFF000000 ) != 0 )
+            if( ( *ptr++ & AlphaMask ) != 0 )
             {
                 return false;
             }
@@ -57,7 +62,7 @@ Rect CropEmpty( const Rect& rect, Bitmap* bmp )
         int w = ret.w;
         while( w-- )
         {
-            if( ( *ptr++ & 0xFF000000 ) != 0 )
+            if( ( *ptr++ & AlphaMask ) != 0 )
             {
                 goto next1;
             }
@@ -76,7 +81,7 @@ next1:
         int w = ret.w;
         while( w-- )
         {
-            if( ( *ptr++ & 0xFF000000 ) != 0 )
+            if( ( *ptr++ & AlphaMask ) != 0 )
             {
                 goto next2;
             }
@@ -93,7 +98,7 @@ next2:
         h = ret.h;
         while( h-- )
         {
-            if( ( *ptr & 0xFF000000 ) != 0 )
+            if( ( *ptr & AlphaMask ) != 0 )
             {
                 goto next3;
             }
@@ -112,7 +117,7 @@ next3:
         h = ret.h;
         while( h-- )
         {
-            if( ( *ptr & 0xFF000000 ) != 0 )
+            if( ( *ptr & AlphaMask ) != 0 )
             {
                 goto next4;
             }
@@ -231,11 +236,11 @@ float CalcHistogram( const Rect& rect, Bitmap* bmp )
 
         while( w-- )
         {
-            if( ( *ptr & 0xFF000000 ) != 0 )
+            if( ( *ptr & AlphaMask ) != 0 )
             {
-                float r = ( ( *ptr & 0x00FF0000 ) >> 16 ) / 255.f;
-                float g = ( ( *ptr & 0x0000FF00 ) >> 8  ) / 255.f;
-                float b = ( ( *ptr & 0x000000FF )       ) / 255.f;
+                float r = ( ( *ptr & RedMask   ) >> 16 ) / 255.f;
+                float g = ( ( *ptr & GreenMask ) >> 8  ) / 255.f;
+                float b = ( ( *ptr & BlueMask  )       ) / 255.f;
 
                 hist += r * 0.3f + g * 0.59f + b * 0.11f;
             }
@@ -279,7 +284,7 @@ bool AreExactDuplicates( const Rect& r1, const Rect& r2, Bitmap* bmp )
             uint32 c1 = *ptr1++;
             uint32 c2 = *ptr2++;
 
-            if( ( ( c1 | c2 ) & 0xFF000000 ) != 0 && c1 != c2 )
+            if( ( ( c1 | c2 ) & AlphaMask ) != 0 && c1 != c2 )
             {
                 return false;
             }
