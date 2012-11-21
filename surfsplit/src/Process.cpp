@@ -159,8 +159,7 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
     } Comparator;
     tmp.sort( Comparator );
 
-    auto it = begin( tmp );
-    while( it != end( tmp ) )
+    for( auto it = begin( tmp ); it != end( tmp ); ++it )
     {
         auto tit = it;
         ++tit;
@@ -173,8 +172,6 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
             tx += tit->w;
             tit = tmp.erase( tit );
         }
-
-        ++it;
     }
 
     std::vector<Rect> ret( tmp.begin(), tmp.end() );
@@ -192,8 +189,7 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
     } Comparator;
     tmp.sort( Comparator );
 
-    auto it = begin( tmp );
-    while( it != end( tmp ) )
+    for( auto it = begin( tmp ); it != end( tmp ); ++it )
     {
         auto tit = it;
         ++tit;
@@ -206,8 +202,6 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
             ty += tit->h;
             tit = tmp.erase( tit );
         }
-
-        ++it;
     }
 
     std::vector<Rect> ret( tmp.begin(), tmp.end() );
