@@ -162,8 +162,6 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
     auto it = begin( tmp );
     while( it != end( tmp ) )
     {
-        std::list<std::list<Rect>::iterator> del;
-
         auto tit = it;
         ++tit;
 
@@ -173,13 +171,7 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
         {
             it->w += tit->w;
             tx += tit->w;
-            del.push_back( tit );
-            ++tit;
-        }
-
-        for( auto dit = del.begin(); dit != del.end(); ++dit )
-        {
-            tmp.erase( *dit );
+            tit = tmp.erase( tit );
         }
 
         ++it;
@@ -203,8 +195,6 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
     auto it = begin( tmp );
     while( it != end( tmp ) )
     {
-        std::list<std::list<Rect>::iterator> del;
-
         auto tit = it;
         ++tit;
 
@@ -214,13 +204,7 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
         {
             it->h += tit->h;
             ty += tit->h;
-            del.push_back( tit );
-            ++tit;
-        }
-
-        for( auto dit = del.begin(); dit != del.end(); ++dit )
-        {
-            tmp.erase( *dit );
+            tit = tmp.erase( tit );
         }
 
         ++it;
