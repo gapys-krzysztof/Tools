@@ -2,10 +2,15 @@
 
 #include "Process.hpp"
 
-enum { AlphaMask = 0xFF000000 };
-enum { RedMask   = 0x00FF0000 };
+enum { RedMask   = 0x000000FF };
 enum { GreenMask = 0x0000FF00 };
-enum { BlueMask  = 0x000000FF };
+enum { BlueMask  = 0x00FF0000 };
+enum { AlphaMask = 0xFF000000 };
+
+enum { RedShift   = 0 };
+enum { GreenShift = 8 };
+enum { BlueShift  = 16 };
+enum { AlphaShift = 24 };
 
 bool IsEmpty( const Rect& rect, Bitmap* bmp )
 {
@@ -238,9 +243,9 @@ float CalcHistogram( const Rect& rect, Bitmap* bmp )
         {
             if( ( *ptr & AlphaMask ) != 0 )
             {
-                float r = ( ( *ptr & RedMask   ) >> 16 ) / 255.f;
-                float g = ( ( *ptr & GreenMask ) >> 8  ) / 255.f;
-                float b = ( ( *ptr & BlueMask  )       ) / 255.f;
+                float r = ( ( *ptr & RedMask   ) >> RedShift   ) / 255.f;
+                float g = ( ( *ptr & GreenMask ) >> GreenShift ) / 255.f;
+                float b = ( ( *ptr & BlueMask  ) >> BlueShift  ) / 255.f;
 
                 hist += r * 0.3f + g * 0.59f + b * 0.11f;
             }
