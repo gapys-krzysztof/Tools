@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <cstdio>
-#include <list>
 #include <map>
 
 #include "Bitmap.hpp"
@@ -74,7 +73,7 @@ int main( int argc, char** argv )
     r = RemoveEmpty( r, &bmp );
 
     std::vector<float> hist( CalcBroadDuplicates( r, &bmp ) );
-    std::map<float, std::list<int> > map;
+    std::map<float, std::vector<int> > map;
     for( int i=0; i<hist.size(); i++ )
     {
         map[hist[i]].push_back( i );
