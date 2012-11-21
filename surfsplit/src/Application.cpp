@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <map>
+#include <vector>
 
 #include "Bitmap.hpp"
 #include "Generators.hpp"
@@ -77,6 +78,57 @@ int main( int argc, char** argv )
     for( int i=0; i<hist.size(); i++ )
     {
         map[hist[i]].push_back( i );
+    }
+
+    std::vector<Rect> rects;
+    std::vector<DupRect> dupes;
+    for( auto it = begin( map ); it != end( map ); ++it )
+    {
+        if( it->second.size() == 1 )
+        {
+            rects.push_back( r[*it->second.begin()] );
+        }
+        else
+        {
+            for( auto lit = begin( it->second ); lit != end( it->second ); ++lit )
+            {
+                auto cit = lit;
+                ++cit;
+                std::vector<Rect> d;
+                while( cit != end( it->second ) )
+                {
+                    if( AreExactDuplicates( r[*lit], r[*cit], &bmp ) )
+                    {
+                        d.push_back( r[*cit] );
+                        cit = it->second.erase( cit );
+                    }
+                    else
+                    {
+                        ++cit;
+                    }
+                }
+                if( d.empty() )
+                {
+                    rects.push_back( r[*lit] );
+                }
+                else
+                {
+                    Rect& base = r[*lit];
+                    DupRect dr( base );
+                    dr.n = d.size();
+                    dr.xy = new uint16[dr.n * 2];
+
+                    uint16* ptr = dr.xy;
+                    for( int i=0; i<dr.n; i++ )
+                    {
+                        *ptr++ = d[i].x;
+                        *ptr++ = d[i].y;
+                    }
+
+                    dupes.push_back( dr );
+                }
+            }
+        }
     }
 
     std::vector<Rect> r1 = MergeHorizontal( r );
