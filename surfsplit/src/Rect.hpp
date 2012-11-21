@@ -10,4 +10,14 @@ struct Rect
     uint16 x, y, w, h;
 };
 
+struct DupRect
+{
+    DupRect( const Rect& r ) : x( r.x ), y( r.y ), w( r.w ), h( r.h ) {}
+
+    uint16* xy;
+    uint16 x, y;
+    uint16 w, h;
+    uint16 n;
+};
+
 #endif
