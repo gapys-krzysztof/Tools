@@ -65,8 +65,8 @@ int main( int argc, char** argv )
     std::vector<Rect> r( GenerateGrid( bmp.Size(), blockSize, blockSize ) );
     r = RemoveEmpty( r, &bmp );
 
-    std::vector<float> hist( CalcBroadDuplicates( r, &bmp ) );
-    std::map<float, std::vector<int> > map;
+    std::vector<int> hist( CalcBroadDuplicates( r, &bmp ) );
+    std::map<int, std::vector<int> > map;
     for( int i=0; i<hist.size(); i++ )
     {
         map[hist[i]].push_back( i );

@@ -227,13 +227,13 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
     return ret;
 }
 
-float CalcHistogram( const Rect& rect, Bitmap* bmp )
+int CalcHistogram( const Rect& rect, Bitmap* bmp )
 {
     int bw = bmp->Size().x;
     uint32* ptr = bmp->Data() + rect.x + rect.y * bw;
     int h = rect.h;
 
-    float hist = 0;
+    int hist = 0;
 
     while( h-- )
     {
@@ -243,11 +243,11 @@ float CalcHistogram( const Rect& rect, Bitmap* bmp )
         {
             if( ( *ptr & AlphaMask ) != 0 )
             {
-                float r = ( ( *ptr & RedMask   ) >> RedShift   );
-                float g = ( ( *ptr & GreenMask ) >> GreenShift );
-                float b = ( ( *ptr & BlueMask  ) >> BlueShift  );
+                int r = ( ( *ptr & RedMask   ) >> RedShift   );
+                int g = ( ( *ptr & GreenMask ) >> GreenShift );
+                int b = ( ( *ptr & BlueMask  ) >> BlueShift  );
 
-                hist += r * 0.3f + g * 0.59f + b * 0.11f;
+                hist += ( r * 77 + g * 151 + b * 28 ) >> 8;
             }
             ptr++;
         }
@@ -258,9 +258,9 @@ float CalcHistogram( const Rect& rect, Bitmap* bmp )
     return hist;
 }
 
-std::vector<float> CalcBroadDuplicates( const std::vector<Rect>& rects, Bitmap* bmp )
+std::vector<int> CalcBroadDuplicates( const std::vector<Rect>& rects, Bitmap* bmp )
 {
-    std::vector<float> ret;
+    std::vector<int> ret;
     ret.reserve( rects.size() );
 
     for( std::vector<Rect>::const_iterator it = rects.begin(); it != rects.end(); ++it )
