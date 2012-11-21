@@ -223,15 +223,7 @@ int CalcHistogram( const Rect& rect, Bitmap* bmp )
 
         while( w-- )
         {
-            if( ( *ptr & AlphaMask ) != 0 )
-            {
-                int r = ( ( *ptr & RedMask   ) >> RedShift   );
-                int g = ( ( *ptr & GreenMask ) >> GreenShift );
-                int b = ( ( *ptr & BlueMask  ) >> BlueShift  );
-
-                hist += ( r * 77 + g * 151 + b * 28 ) >> 8;
-            }
-            ptr++;
+            hist += *ptr++;
         }
 
         ptr += bw - rect.w;
