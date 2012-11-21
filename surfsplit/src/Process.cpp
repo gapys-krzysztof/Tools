@@ -243,9 +243,9 @@ float CalcHistogram( const Rect& rect, Bitmap* bmp )
         {
             if( ( *ptr & AlphaMask ) != 0 )
             {
-                float r = ( ( *ptr & RedMask   ) >> RedShift   ) / 255.f;
-                float g = ( ( *ptr & GreenMask ) >> GreenShift ) / 255.f;
-                float b = ( ( *ptr & BlueMask  ) >> BlueShift  ) / 255.f;
+                float r = ( ( *ptr & RedMask   ) >> RedShift   );
+                float g = ( ( *ptr & GreenMask ) >> GreenShift );
+                float b = ( ( *ptr & BlueMask  ) >> BlueShift  );
 
                 hist += r * 0.3f + g * 0.59f + b * 0.11f;
             }
