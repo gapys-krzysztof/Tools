@@ -159,19 +159,17 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
     } Comparator;
     tmp.sort( Comparator );
 
-    std::list<Rect>::iterator it = tmp.begin();
-    while( it != tmp.end() )
+    auto it = begin( tmp );
+    while( it != end( tmp ) )
     {
         std::list<std::list<Rect>::iterator> del;
 
-        std::list<Rect>::iterator tit = it;
-        std::list<Rect>::iterator end = tmp.end();
-
+        auto tit = it;
         ++tit;
 
         int tx = it->x + it->w;
 
-        while( tit != end && tit->y == it->y && tit->x == tx && tit->h == it->h )
+        while( tit != end( tmp ) && tit->y == it->y && tit->x == tx && tit->h == it->h )
         {
             it->w += tit->w;
             tx += tit->w;
@@ -179,7 +177,7 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
             ++tit;
         }
 
-        for( std::list<std::list<Rect>::iterator>::const_iterator dit = del.begin(); dit != del.end(); ++dit )
+        for( auto dit = del.begin(); dit != del.end(); ++dit )
         {
             tmp.erase( *dit );
         }
@@ -202,19 +200,17 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
     } Comparator;
     tmp.sort( Comparator );
 
-    std::list<Rect>::iterator it = tmp.begin();
-    while( it != tmp.end() )
+    auto it = begin( tmp );
+    while( it != end( tmp ) )
     {
         std::list<std::list<Rect>::iterator> del;
 
-        std::list<Rect>::iterator tit = it;
-        std::list<Rect>::iterator end = tmp.end();
-
+        auto tit = it;
         ++tit;
 
         int ty = it->y + it->h;
 
-        while( tit != end && tit->x == it->x && tit->y == ty && tit->w == it->w )
+        while( tit != end( tmp ) && tit->x == it->x && tit->y == ty && tit->w == it->w )
         {
             it->h += tit->h;
             ty += tit->h;
@@ -222,7 +218,7 @@ std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
             ++tit;
         }
 
-        for( std::list<std::list<Rect>::iterator>::const_iterator dit = del.begin(); dit != del.end(); ++dit )
+        for( auto dit = del.begin(); dit != del.end(); ++dit )
         {
             tmp.erase( *dit );
         }
