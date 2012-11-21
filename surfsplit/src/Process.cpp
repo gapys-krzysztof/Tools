@@ -153,6 +153,12 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
 {
     std::list<Rect> tmp( rects.begin(), rects.end() );
 
+    struct
+    {
+        bool operator()( const Rect& r1, const Rect& r2 ) { return r1.y == r2.y ? r1.x < r2.x : r1.y < r2.y; }
+    } Comparator;
+    tmp.sort( Comparator );
+
     std::list<Rect>::iterator it = tmp.begin();
     while( it != tmp.end() )
     {
@@ -191,6 +197,12 @@ std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
 std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
 {
     std::list<Rect> tmp( rects.begin(), rects.end() );
+
+    struct
+    {
+        bool operator()( const Rect& r1, const Rect& r2 ) { return r1.y == r2.y ? r1.x < r2.x : r1.y < r2.y; }
+    } Comparator;
+    tmp.sort( Comparator );
 
     std::list<Rect>::iterator it = tmp.begin();
     while( it != tmp.end() )
