@@ -121,6 +121,8 @@ int main( int argc, char** argv )
         }
     }
 
+    r = rects;
+
     std::vector<Rect> r1 = MergeHorizontal( r );
     r1 = MergeVertical( r1 );
     r = MergeVertical( r );
