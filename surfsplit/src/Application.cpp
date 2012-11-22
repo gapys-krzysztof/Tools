@@ -108,6 +108,8 @@ int main( int argc, char** argv )
                     Rect& base = r[*lit];
                     DupRect dr( base );
 
+                    dr.xy.push_back( OffRect( base.x, base.y, base.w, base.h, 0, 0 ) );
+
                     for( int i=0; i<d.size(); i++ )
                     {
                         dr.xy.push_back( OffRect( d[i].x, d[i].y, d[i].w, d[i].h, 0, 0 ) );

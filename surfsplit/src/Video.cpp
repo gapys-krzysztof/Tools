@@ -59,17 +59,6 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<
             glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
             glEnd();
         }
-        glColor4f( 1, 1, 1, 0.5f );
-        for( auto it = duprects.begin(); it != duprects.end(); ++it )
-        {
-            glBegin( GL_LINE_STRIP );
-            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
-            glVertex2f( ( it->x + it->w + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
-            glVertex2f( ( it->x + it->w + 0.5 ) * xr - 1, 1 - ( ( it->y + it->h + 0.5 ) * yr ) );
-            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + it->h + 0.5 ) * yr ) );
-            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
-            glEnd();
-        }
         glColor4f( 1, 0, 0, 0.25f );
         for( auto it = duprects.begin(); it != duprects.end(); ++it )
         {
@@ -87,6 +76,17 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<
                 glVertex2f( ( x + 0.5 ) * xr - 1, 1 - ( ( y + 0.5 ) * yr ) );
                 glEnd();
             }
+        }
+        glColor4f( 1, 1, 1, 0.5f );
+        for( auto it = duprects.begin(); it != duprects.end(); ++it )
+        {
+            glBegin( GL_LINE_STRIP );
+            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + it->w + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + it->w + 0.5 ) * xr - 1, 1 - ( ( it->y + it->h + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + it->h + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
+            glEnd();
         }
         glColor4f( 1, 1, 1, 1 );
         glEnable(GL_TEXTURE_2D );
