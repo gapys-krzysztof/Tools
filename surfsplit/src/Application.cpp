@@ -123,11 +123,8 @@ int main( int argc, char** argv )
 
     r = rects;
 
-    std::vector<Rect> r1 = MergeHorizontal( r );
-    r1 = MergeVertical( r1 );
-    r = MergeVertical( r );
-    r = MergeHorizontal( r );
-    //printf( "H1: %i, V1: %i\n", r1.size(), r.size() );
+    std::vector<Rect> r1 = MergeVertical( MergeHorizontal( r ) );
+    r = MergeHorizontal( MergeVertical( r ) );
     if( r1.size() < r.size() )
     {
         r = r1;
