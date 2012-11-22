@@ -6,6 +6,6 @@
 #include "Bitmap.hpp"
 #include "Rect.hpp"
 
-void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects );
+void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<DupRect>& dupes );
 
 #endif

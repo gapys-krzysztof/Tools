@@ -144,7 +144,7 @@ int main( int argc, char** argv )
 
     if( viewData )
     {
-        ShowBitmap( &bmp, r );
+        ShowBitmap( &bmp, r, dupes );
     }
 
     return 0;

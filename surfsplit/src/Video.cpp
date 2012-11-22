@@ -3,7 +3,7 @@
 #include "Texture.hpp"
 #include "Video.hpp"
 
-void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects )
+void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<DupRect>& duprects )
 {
     SDL_Init( SDL_INIT_VIDEO );
     SDL_SetVideoMode( bmp->Size().x, bmp->Size().y, 32, SDL_OPENGL );
@@ -49,7 +49,7 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects )
 
         glDisable( GL_TEXTURE_2D );
         glColor4f( 0, 1, 0, 0.5f );
-        for( std::vector<Rect>::const_iterator it = rects.begin(); it != rects.end(); ++it )
+        for( auto it = rects.begin(); it != rects.end(); ++it )
         {
             glBegin( GL_LINE_STRIP );
             glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
@@ -58,6 +58,35 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects )
             glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + it->h + 0.5 ) * yr ) );
             glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
             glEnd();
+        }
+        glColor4f( 1, 1, 1, 0.5f );
+        for( auto it = duprects.begin(); it != duprects.end(); ++it )
+        {
+            glBegin( GL_LINE_STRIP );
+            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + it->w + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + it->w + 0.5 ) * xr - 1, 1 - ( ( it->y + it->h + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + it->h + 0.5 ) * yr ) );
+            glVertex2f( ( it->x + 0.5 ) * xr - 1, 1 - ( ( it->y + 0.5 ) * yr ) );
+            glEnd();
+        }
+        glColor4f( 1, 0, 0, 0.25f );
+        for( auto it = duprects.begin(); it != duprects.end(); ++it )
+        {
+            for( int i=0; i<it->n; i++ )
+            {
+                int x = it->xy[i].x;
+                int y = it->xy[i].y;
+                int w = it->xy[i].w;
+                int h = it->xy[i].h;
+                glBegin( GL_LINE_STRIP );
+                glVertex2f( ( x + 0.5 ) * xr - 1, 1 - ( ( y + 0.5 ) * yr ) );
+                glVertex2f( ( x + w + 0.5 ) * xr - 1, 1 - ( ( y + 0.5 ) * yr ) );
+                glVertex2f( ( x + w + 0.5 ) * xr - 1, 1 - ( ( y + h + 0.5 ) * yr ) );
+                glVertex2f( ( x + 0.5 ) * xr - 1, 1 - ( ( y + h + 0.5 ) * yr ) );
+                glVertex2f( ( x + 0.5 ) * xr - 1, 1 - ( ( y + 0.5 ) * yr ) );
+                glEnd();
+            }
         }
         glColor4f( 1, 1, 1, 1 );
         glEnable(GL_TEXTURE_2D );
