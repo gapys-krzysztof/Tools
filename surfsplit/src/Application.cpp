@@ -123,6 +123,32 @@ int main( int argc, char** argv )
 
     r = rects;
 
+    std::vector<DupRect> mdr1 = MergeVertical( MergeHorizontal( dupes ) );
+    std::vector<DupRect> mdr = MergeHorizontal( MergeVertical( dupes ) );
+    if( mdr1.size() < mdr.size() )
+    {
+        mdr = mdr1;
+    }
+
+    for( auto it = begin( mdr ); it != end( mdr ); ++it )
+    {
+        it->xy.clear();
+
+        for( auto dit = begin( dupes ); dit != end( dupes ); ++dit )
+        {
+            if( dit->x >= it->x && dit->x + dit->w <= it->x + it->w &&
+                dit->y >= it->y && dit->y + dit->h <= it->y + it->h )
+            {
+                for( auto oit = begin( dit->xy ); oit != end( dit->xy ); ++oit )
+                {
+                    it->xy.push_back( OffRect( oit->x, oit->y, oit->w, oit->h, dit->x - it->x, dit->y - it->y ) );
+                }
+            }
+        }
+    }
+
+    dupes = mdr;
+
     std::vector<Rect> r1 = MergeVertical( MergeHorizontal( r ) );
     r = MergeHorizontal( MergeVertical( r ) );
     if( r1.size() < r.size() )
