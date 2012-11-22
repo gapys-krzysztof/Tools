@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <list>
 
 #include "Process.hpp"
@@ -151,61 +152,47 @@ std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp )
 
 std::vector<Rect> MergeHorizontal( const std::vector<Rect>& rects )
 {
-    std::list<Rect> tmp( rects.begin(), rects.end() );
+    std::vector<Rect> ret( rects );
+    std::sort( begin( ret ), end( ret ), []( const Rect& r1, const Rect& r2 ){ return r1.y == r2.y ? r1.x < r2.x : r1.y < r2.y; } );
 
-    struct
-    {
-        bool operator()( const Rect& r1, const Rect& r2 ) { return r1.y == r2.y ? r1.x < r2.x : r1.y < r2.y; }
-    } Comparator;
-    tmp.sort( Comparator );
-
-    for( auto it = begin( tmp ); it != end( tmp ); ++it )
+    for( auto it = begin( ret ); it != end( ret ); ++it )
     {
         auto tit = it;
         ++tit;
 
         int tx = it->x + it->w;
 
-        while( tit != end( tmp ) && tit->y == it->y && tit->x == tx && tit->h == it->h )
+        while( tit != end( ret ) && tit->y == it->y && tit->x == tx && tit->h == it->h )
         {
             it->w += tit->w;
             tx += tit->w;
-            tit = tmp.erase( tit );
+            tit = ret.erase( tit );
         }
     }
 
-    std::vector<Rect> ret( tmp.begin(), tmp.end() );
-    //printf( "Merge horizontal: %i -> %i\n", rects.size(), ret.size() );
     return ret;
 }
 
 std::vector<Rect> MergeVertical( const std::vector<Rect>& rects )
 {
-    std::list<Rect> tmp( rects.begin(), rects.end() );
+    std::vector<Rect> ret( rects );
+    std::sort( begin( ret ), end( ret ), []( const Rect& r1, const Rect& r2 ){ return r1.x == r2.x ? r1.y < r2.y : r1.x < r2.x; } );
 
-    struct
-    {
-        bool operator()( const Rect& r1, const Rect& r2 ) { return r1.x == r2.x ? r1.y < r2.y : r1.x < r2.x; }
-    } Comparator;
-    tmp.sort( Comparator );
-
-    for( auto it = begin( tmp ); it != end( tmp ); ++it )
+    for( auto it = begin( ret ); it != end( ret ); ++it )
     {
         auto tit = it;
         ++tit;
 
         int ty = it->y + it->h;
 
-        while( tit != end( tmp ) && tit->x == it->x && tit->y == ty && tit->w == it->w )
+        while( tit != end( ret ) && tit->x == it->x && tit->y == ty && tit->w == it->w )
         {
             it->h += tit->h;
             ty += tit->h;
-            tit = tmp.erase( tit );
+            tit = ret.erase( tit );
         }
     }
 
-    std::vector<Rect> ret( tmp.begin(), tmp.end() );
-    //printf( "Merge vertical: %i -> %i\n", rects.size(), ret.size() );
     return ret;
 }
 
