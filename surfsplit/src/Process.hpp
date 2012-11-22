@@ -17,7 +17,7 @@ template<typename T>
 std::vector<T> MergeHorizontal( const std::vector<T>& rects )
 {
     std::vector<T> ret( rects );
-    std::sort( begin( ret ), end( ret ), []( const Rect& r1, const Rect& r2 ){ return r1.y == r2.y ? r1.x < r2.x : r1.y < r2.y; } );
+    std::sort( begin( ret ), end( ret ), []( const T& r1, const T& r2 ){ return r1.y == r2.y ? r1.x < r2.x : r1.y < r2.y; } );
 
     for( auto it = begin( ret ); it != end( ret ); ++it )
     {
@@ -41,7 +41,7 @@ template<typename T>
 std::vector<T> MergeVertical( const std::vector<T>& rects )
 {
     std::vector<T> ret( rects );
-    std::sort( begin( ret ), end( ret ), []( const Rect& r1, const Rect& r2 ){ return r1.x == r2.x ? r1.y < r2.y : r1.x < r2.x; } );
+    std::sort( begin( ret ), end( ret ), []( const T& r1, const T& r2 ){ return r1.x == r2.x ? r1.y < r2.y : r1.x < r2.x; } );
 
     for( auto it = begin( ret ); it != end( ret ); ++it )
     {
