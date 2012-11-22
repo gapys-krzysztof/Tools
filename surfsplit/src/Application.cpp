@@ -107,12 +107,10 @@ int main( int argc, char** argv )
                 {
                     Rect& base = r[*lit];
                     DupRect dr( base );
-                    dr.n = d.size();
-                    dr.xy = new OffRect[dr.n];
 
-                    for( int i=0; i<dr.n; i++ )
+                    for( int i=0; i<d.size(); i++ )
                     {
-                        dr.xy[i] = OffRect( d[i].x, d[i].y, d[i].w, d[i].h, 0, 0 );
+                        dr.xy.push_back( OffRect( d[i].x, d[i].y, d[i].w, d[i].h, 0, 0 ) );
                     }
 
                     dupes.push_back( dr );

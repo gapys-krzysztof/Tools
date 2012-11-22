@@ -1,6 +1,8 @@
 #ifndef __RECT_HPP__
 #define __RECT_HPP__
 
+#include <vector>
+
 #include "Types.hpp"
 
 struct Rect
@@ -22,10 +24,9 @@ struct DupRect
 {
     DupRect( const Rect& r ) : x( r.x ), y( r.y ), w( r.w ), h( r.h ) {}
 
-    OffRect* xy;
     uint16 x, y;
     uint16 w, h;
-    uint16 n;
+    std::vector<OffRect> xy;
 };
 
 #endif

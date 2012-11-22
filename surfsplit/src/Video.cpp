@@ -73,7 +73,7 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<
         glColor4f( 1, 0, 0, 0.25f );
         for( auto it = duprects.begin(); it != duprects.end(); ++it )
         {
-            for( int i=0; i<it->n; i++ )
+            for( int i=0; i<it->xy.size(); i++ )
             {
                 int x = it->xy[i].x;
                 int y = it->xy[i].y;
