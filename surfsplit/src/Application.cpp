@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
+#include <iterator>
 #include <map>
 #include <vector>
 
@@ -138,6 +139,23 @@ int main( int argc, char** argv )
                     it->xy.push_back( OffRect( oit->x, oit->y, oit->w, oit->h, dit->x - it->x, dit->y - it->y ) );
                 }
             }
+        }
+    }
+
+    for( auto it = begin( mdr ); it != end( mdr ); ++it )
+    {
+        std::map<std::pair<int, int>, std::vector<OffRect>> m;
+        for( auto oit = begin( it->xy ); oit != end( it->xy ); ++oit )
+        {
+            int bx = ((int)oit->x - (int)it->x)/ (int)it->w;
+            int by = ((int)oit->y - (int)it->y) / (int)it->h;
+            m[std::make_pair( bx, by )].push_back( *oit );
+        }
+        it->xy.clear();
+        for( auto mit = begin( m ); mit != end( m ); ++mit )
+        {
+            auto mo = Merge( mit->second );
+            std::copy( begin( mo ), end( mo ), std::back_inserter( it->xy ) );
         }
     }
 
