@@ -9,12 +9,27 @@
 #include "Process.hpp"
 #include "Video.hpp"
 
-void Save( const char* fn, const std::vector<Rect>& rects )
+void Save( const char* fn, const std::vector<Rect>& rects, const std::vector<DupRect>& dupes )
 {
     FILE* f = fopen( fn, "wb" );
+
     uint32 s = rects.size();
     fwrite( &s, 1, 4, f );
     fwrite( &*rects.begin(), 1, sizeof( Rect ) * s, f );
+
+    s = dupes.size();
+    fwrite( &s, 1, 4, f );
+    for( auto it = begin( dupes ); it != end( dupes ); ++it )
+    {
+        fwrite( &*it, 1, sizeof( uint16 ) * 4, f );
+        s = it->xy.size();
+        fwrite( &s, 1, 4, f );
+        for( auto oit = begin( it->xy ); oit != end( it->xy ); ++oit )
+        {
+            fwrite( &*oit, 1, sizeof( OffRect ), f );
+        }
+    }
+
     fclose( f );
 }
 
@@ -170,7 +185,7 @@ int main( int argc, char** argv )
         rarea += it->w * it->h;
     }
     //printf( "Reduction: %i -> %i (%.2f%%)\n", area, rarea, 100.f * rarea / area );
-    Save( out.c_str(), r );
+    Save( out.c_str(), r, dupes );
 
     if( viewData )
     {
