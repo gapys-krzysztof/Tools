@@ -123,13 +123,7 @@ int main( int argc, char** argv )
 
     r = rects;
 
-    std::vector<DupRect> mdr1 = MergeVertical( MergeHorizontal( dupes ) );
-    std::vector<DupRect> mdr = MergeHorizontal( MergeVertical( dupes ) );
-    if( mdr1.size() < mdr.size() )
-    {
-        mdr = mdr1;
-    }
-
+    std::vector<DupRect> mdr = Merge( dupes );
     for( auto it = begin( mdr ); it != end( mdr ); ++it )
     {
         it->xy.clear();
@@ -149,12 +143,7 @@ int main( int argc, char** argv )
 
     dupes = mdr;
 
-    std::vector<Rect> r1 = MergeVertical( MergeHorizontal( r ) );
-    r = MergeHorizontal( MergeVertical( r ) );
-    if( r1.size() < r.size() )
-    {
-        r = r1;
-    }
+    r = Merge( r );
     r = CropEmpty( r, &bmp );
     int area = bmp.Size().x * bmp.Size().y;
     int rarea = 0;

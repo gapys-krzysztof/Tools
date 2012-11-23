@@ -14,6 +14,14 @@ Rect CropEmpty( const Rect& rect, Bitmap* bmp );
 std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp );
 
 template<typename T>
+std::vector<T> Merge( const std::vector<T>& rects )
+{
+    std::vector<T> v1 = MergeVertical( MergeHorizontal( rects ) );
+    std::vector<T> v2 = MergeHorizontal( MergeVertical( rects ) );
+    return v1.size() < v2.size() ? v1 : v2;
+}
+
+template<typename T>
 std::vector<T> MergeHorizontal( const std::vector<T>& rects )
 {
     std::vector<T> ret( rects );
