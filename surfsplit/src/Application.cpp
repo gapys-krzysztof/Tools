@@ -187,13 +187,7 @@ int main( int argc, char** argv )
 
     r = Merge( r );
     r = CropEmpty( r, &bmp );
-    int area = bmp.Size().x * bmp.Size().y;
-    int rarea = 0;
-    for( std::vector<Rect>::const_iterator it = r.begin(); it != r.end(); ++it )
-    {
-        rarea += it->w * it->h;
-    }
-    //printf( "Reduction: %i -> %i (%.2f%%)\n", area, rarea, 100.f * rarea / area );
+
     Save( out.c_str(), r, dupes );
 
     if( viewData )
