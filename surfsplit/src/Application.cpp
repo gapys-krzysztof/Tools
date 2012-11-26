@@ -39,13 +39,13 @@ void Error()
     fprintf( stderr, "Options:\n" );
     fprintf( stderr, " -v     view data layout\n" );
     fprintf( stderr, " -b     set block size (default: 8)\n" );
-    fprintf( stderr, " -n     don't search for duplicates\n" );
+    fprintf( stderr, " -d     search for duplicates\n" );
     exit( 1 );
 }
 
 bool viewData = false;
 int blockSize = 8;
-bool searchDuplicates = true;
+bool searchDuplicates = false;
 
 int main( int argc, char** argv )
 {
@@ -67,9 +67,9 @@ int main( int argc, char** argv )
             blockSize = atoi( argv[i+1] );
             i++;
         }
-        else if( CSTR( "-n" ) )
+        else if( CSTR( "-d" ) )
         {
-            searchDuplicates = false;
+            searchDuplicates = true;
         }
         else
         {
