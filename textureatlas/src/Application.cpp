@@ -75,28 +75,9 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
                 {
                     BRect r( 0, 0, 0, 0, b, *nit );
                     fread( &r, 1, sizeof( uint16 ) * 4, f );
-                    OffRect off = { r.x, r.y, r.w, r.h, 0, 0 };
-                    r.xy.push_back( off );
                     ret.push_back( r );
                 }
             }
-
-            fread( &size, 1, 4, f );
-            for( int i=0; i<size; i++ )
-            {
-                BRect r( 0, 0, 0, 0, b, *nit );
-                fread( &r, 1, sizeof( uint16 ) * 4, f );
-                int32 n;
-                fread( &n, 1, 4, f );
-                for( int i=0; i<n; i++ )
-                {
-                    OffRect off;
-                    fread( &off, 1, sizeof( OffRect ), f );
-                    r.xy.push_back( off );
-                }
-                ret.push_back( r );
-            }
-
             fclose( f );
         }
     }
@@ -132,11 +113,6 @@ void FindFlipped( std::vector<BRect>& images )
         {
             it->flip = true;
             std::swap( it->h, it->w );
-            for( auto xy = begin( it->xy ); xy != end( it->xy ); ++xy )
-            {
-                std::swap( xy->ox, xy->oy );
-                std::swap( xy->w, xy->h );
-            }
         }
     }
 }
@@ -289,26 +265,18 @@ bool DoWork()
             }
             id = prepend + it->first.substr( pos );
         }
-        int n = 0;
+        fprintf( f, "  <asset id=\"%s\" rects=\"%i\" w=\"%i\" h=\"%i\">\n", id.c_str(), it->second.size(), it->second.begin()->br->b->Size().x, it->second.begin()->br->b->Size().y );
         for( std::list<Data>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit )
         {
-            n += dit->br->xy.size();
-        }
-        fprintf( f, "  <asset id=\"%s\" rects=\"%i\" w=\"%i\" h=\"%i\">\n", id.c_str(), n, it->second.begin()->br->b->Size().x, it->second.begin()->br->b->Size().y );
-        for( std::list<Data>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit )
-        {
-            for( int i=0; i<dit->br->xy.size(); i++ )
-            {
-                fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
-                    dit->br->flip ? 1 : 0,
-                    dit->pr->x + dit->br->xy[i].ox,
-                    dit->pr->y + dit->br->xy[i].oy,
-                    dit->br->xy[i].x,
-                    dit->br->xy[i].y,
-                    dit->br->flip ? dit->br->xy[i].h : dit->br->xy[i].w,
-                    dit->br->flip ? dit->br->xy[i].w : dit->br->xy[i].h
-                    );
-            }
+            fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
+                dit->br->flip ? 1 : 0,
+                dit->pr->x,
+                dit->pr->y,
+                dit->br->x,
+                dit->br->y,
+                dit->br->flip ? dit->br->h : dit->br->w,
+                dit->br->flip ? dit->br->w : dit->br->h
+                );
         }
         fprintf( f, "  </asset>\n" );
     }
