@@ -206,6 +206,25 @@ bool DoWork()
             }
             Blit( b, br, Rect( uv->rect.x, uv->rect.y + uv->rect.h + i, uv->rect.w, 1 ) );
         }
+        for( int i=0; i<edges; i++ )
+        {
+            {
+                BRect br( uv->rect.x, uv->rect.y - edges, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y - edges, 1, edges ) );
+            }
+            {
+                BRect br( uv->rect.x, uv->rect.y + uv->rect.h, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y + uv->rect.h, 1, edges ) );
+            }
+            {
+                BRect br( uv->rect.x + uv->rect.w - 1, uv->rect.y - edges, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y - edges, 1, edges ) );
+            }
+            {
+                BRect br( uv->rect.x + uv->rect.w - 1, uv->rect.y + uv->rect.h, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y + uv->rect.h, 1, edges ) );
+            }
+        }
     }
 
     if( potw )
