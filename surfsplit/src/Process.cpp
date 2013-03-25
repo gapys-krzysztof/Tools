@@ -10,8 +10,11 @@ enum { GreenShift = 8 };
 enum { BlueShift  = 16 };
 enum { AlphaShift = 24 };
 
+extern int alphaCutoff;
+
 bool IsEmpty( const Rect& rect, Bitmap* bmp )
 {
+    int alpha = alphaCutoff << AlphaShift;
     int bw = bmp->Size().x;
     uint32* ptr = bmp->Data() + rect.x + rect.y * bw;
     int h = rect.h;
@@ -22,7 +25,7 @@ bool IsEmpty( const Rect& rect, Bitmap* bmp )
 
         while( w-- )
         {
-            if( ( *ptr++ & AlphaMask ) != 0 )
+            if( ( *ptr++ & AlphaMask ) > alpha )
             {
                 return false;
             }
@@ -55,6 +58,7 @@ std::vector<Rect> RemoveEmpty( const std::vector<Rect>& rects, Bitmap* bmp )
 Rect CropEmpty( const Rect& rect, Bitmap* bmp )
 {
     Rect ret( rect );
+    int alpha = alphaCutoff << AlphaShift;
 
     int bw = bmp->Size().x;
     uint32* ptr = bmp->Data() + ret.x + ret.y * bw;
@@ -65,7 +69,7 @@ Rect CropEmpty( const Rect& rect, Bitmap* bmp )
         int w = ret.w;
         while( w-- )
         {
-            if( ( *ptr++ & AlphaMask ) != 0 )
+            if( ( *ptr++ & AlphaMask ) > alpha )
             {
                 goto next1;
             }
@@ -84,7 +88,7 @@ next1:
         int w = ret.w;
         while( w-- )
         {
-            if( ( *ptr++ & AlphaMask ) != 0 )
+            if( ( *ptr++ & AlphaMask ) > alpha )
             {
                 goto next2;
             }
@@ -101,7 +105,7 @@ next2:
         h = ret.h;
         while( h-- )
         {
-            if( ( *ptr & AlphaMask ) != 0 )
+            if( ( *ptr & AlphaMask ) > alpha )
             {
                 goto next3;
             }
@@ -120,7 +124,7 @@ next3:
         h = ret.h;
         while( h-- )
         {
-            if( ( *ptr & AlphaMask ) != 0 )
+            if( ( *ptr & AlphaMask ) > alpha )
             {
                 goto next4;
             }

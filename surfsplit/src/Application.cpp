@@ -40,12 +40,14 @@ void Error()
     fprintf( stderr, " -v     view data layout\n" );
     fprintf( stderr, " -b     set block size (default: 8)\n" );
     fprintf( stderr, " -d     search for duplicates\n" );
+    fprintf( stderr, " -a     set minimum alpha cutoff threshold (default: 0)\n" );
     exit( 1 );
 }
 
 bool viewData = false;
 int blockSize = 8;
 bool searchDuplicates = false;
+int alphaCutoff = 0;
 
 int main( int argc, char** argv )
 {
@@ -64,12 +66,17 @@ int main( int argc, char** argv )
         }
         else if( CSTR( "-b" ) )
         {
-            blockSize = atoi( argv[i+1] );
             i++;
+            blockSize = atoi( argv[i] );
         }
         else if( CSTR( "-d" ) )
         {
             searchDuplicates = true;
+        }
+        else if( CSTR( "-a" ) )
+        {
+            i++;
+            alphaCutoff = atoi( argv[i] );
         }
         else
         {
