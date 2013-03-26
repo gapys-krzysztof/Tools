@@ -189,4 +189,12 @@
       <Filter>SurfSplit</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\src\zlib\inffas32.obj">
+      <Filter>SurfSplit\zlib</Filter>
+    </Object>
+    <Object Include="..\src\zlib\match686.obj">
+      <Filter>SurfSplit\zlib</Filter>
+    </Object>
+  </ItemGroup>
 </Project>
