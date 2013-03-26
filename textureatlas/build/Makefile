@@ -1,7 +1,8 @@
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Darwin)
-ARCH =-arch i386
+ARCH=-arch i386
+FLAGS=-stdlib=libc++
 endif
 
 SRCS = \
@@ -53,7 +54,7 @@ clean:
 TextureAtlas:
 	@echo "* Build"
 	clang -c $(SRCS)  -I ../../src/zlib  -I ../../src -I ../../src/libpng -O2  $(ARCH)
-	clang++ -o $@ -I../../src -I../../contrib -D__UNIX__ $(SRCSC) $(OBJS) -I ../../src/zlib  -I ../../src -I ../../src/libpng -O2 -std=c++11 -stdlib=libc++ $(ARCH)
+	clang++ -o $@ -I../../src -I../../contrib -D__UNIX__ $(SRCSC) $(OBJS) -I ../../src/zlib  -I ../../src -I ../../src/libpng -O2 -std=c++11 $(FLAGS) $(ARCH)
 
 ../../../bin/TextureAtlas : TextureAtlas
 	@echo "* Copy"
