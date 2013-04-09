@@ -35,7 +35,7 @@ void Save( const char* fn, const std::vector<Rect>& rects, const std::vector<Dup
 
 void Error()
 {
-    fprintf( stderr, "Usage: surfsplit filename.png [option]\n\n" );
+    fprintf( stderr, "Usage: surfsplit filename.png|list.txt [option]\n\n" );
     fprintf( stderr, "Options:\n" );
     fprintf( stderr, " -v     view data layout\n" );
     fprintf( stderr, " -b     set block size (default: 8)\n" );
@@ -205,7 +205,34 @@ int main( int argc, char** argv )
 
 #undef CSTR
 
-    Process( argv[1] );
+    if( strcmp( argv[1] + strlen( argv[1] ) - 3, "png" ) == 0 )
+    {
+        Process( argv[1] );
+    }
+    else
+    {
+        FILE* f = fopen( argv[1], "r" );
+        if( !f )
+        {
+            Error();
+        }
+        else
+        {
+            char tmp[1024];
+            while( fgets( tmp, 1024, f ) )
+            {
+                int len = strlen( tmp ) - 1;
+                while( tmp[len] == '\r' || tmp[len] == '\n' )
+                {
+                    tmp[len--] = '\0';
+                }
+                Process( tmp );
+                printf( "." );
+                fflush( stdout );
+            }
+            fclose( f );
+        }
+    }
 
     return 0;
 }
