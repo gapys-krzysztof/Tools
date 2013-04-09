@@ -219,6 +219,10 @@ int main( int argc, char** argv )
         else
         {
             char tmp[1024];
+            int cnt = 0;
+            while( fgets( tmp, 1024, f ) ) cnt++;
+            fseek( f, 0, SEEK_SET );
+            int curr = 0;
             while( fgets( tmp, 1024, f ) )
             {
                 int len = strlen( tmp ) - 1;
@@ -227,10 +231,15 @@ int main( int argc, char** argv )
                     tmp[len--] = '\0';
                 }
                 Process( tmp );
-                printf( "." );
-                fflush( stdout );
+                if( curr % 50 == 0 )
+                {
+                    printf( "%i/%i\r", curr, cnt );
+                    fflush( stdout );
+                }
+                curr++;
             }
             fclose( f );
+            printf( "%i/%i\n", cnt, cnt );
         }
     }
 
