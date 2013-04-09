@@ -48,7 +48,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\src\zlib;..\src;$(SDL_ROOT)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src;$(SDL_ROOT)\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;ASMV;ASMINF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -64,7 +64,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\src\zlib;..\src;$(SDL_ROOT)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src;$(SDL_ROOT)\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;ASMV;ASMINF;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
@@ -82,70 +82,71 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\common\libpng\png.c" />
+    <ClCompile Include="..\..\common\libpng\pngerror.c" />
+    <ClCompile Include="..\..\common\libpng\pngget.c" />
+    <ClCompile Include="..\..\common\libpng\pngmem.c" />
+    <ClCompile Include="..\..\common\libpng\pngpread.c" />
+    <ClCompile Include="..\..\common\libpng\pngread.c" />
+    <ClCompile Include="..\..\common\libpng\pngrio.c" />
+    <ClCompile Include="..\..\common\libpng\pngrtran.c" />
+    <ClCompile Include="..\..\common\libpng\pngrutil.c" />
+    <ClCompile Include="..\..\common\libpng\pngset.c" />
+    <ClCompile Include="..\..\common\libpng\pngtrans.c" />
+    <ClCompile Include="..\..\common\libpng\pngwio.c" />
+    <ClCompile Include="..\..\common\libpng\pngwrite.c" />
+    <ClCompile Include="..\..\common\libpng\pngwtran.c" />
+    <ClCompile Include="..\..\common\libpng\pngwutil.c" />
+    <ClCompile Include="..\..\common\zlib\adler32.c" />
+    <ClCompile Include="..\..\common\zlib\compress.c" />
+    <ClCompile Include="..\..\common\zlib\crc32.c" />
+    <ClCompile Include="..\..\common\zlib\deflate.c" />
+    <ClCompile Include="..\..\common\zlib\gzlib.c" />
+    <ClCompile Include="..\..\common\zlib\infback.c" />
+    <ClCompile Include="..\..\common\zlib\inffast.c" />
+    <ClCompile Include="..\..\common\zlib\inflate.c" />
+    <ClCompile Include="..\..\common\zlib\inftrees.c" />
+    <ClCompile Include="..\..\common\zlib\trees.c" />
+    <ClCompile Include="..\..\common\zlib\uncompr.c" />
+    <ClCompile Include="..\..\common\zlib\zutil.c" />
     <ClCompile Include="..\src\Application.cpp" />
     <ClCompile Include="..\src\Bitmap.cpp" />
     <ClCompile Include="..\src\Generators.cpp" />
-    <ClCompile Include="..\src\libpng\png.c" />
-    <ClCompile Include="..\src\libpng\pngerror.c" />
-    <ClCompile Include="..\src\libpng\pngget.c" />
-    <ClCompile Include="..\src\libpng\pngmem.c" />
-    <ClCompile Include="..\src\libpng\pngpread.c" />
-    <ClCompile Include="..\src\libpng\pngread.c" />
-    <ClCompile Include="..\src\libpng\pngrio.c" />
-    <ClCompile Include="..\src\libpng\pngrtran.c" />
-    <ClCompile Include="..\src\libpng\pngrutil.c" />
-    <ClCompile Include="..\src\libpng\pngset.c" />
-    <ClCompile Include="..\src\libpng\pngtrans.c" />
-    <ClCompile Include="..\src\libpng\pngwio.c" />
-    <ClCompile Include="..\src\libpng\pngwrite.c" />
-    <ClCompile Include="..\src\libpng\pngwtran.c" />
-    <ClCompile Include="..\src\libpng\pngwutil.c" />
     <ClCompile Include="..\src\Process.cpp" />
     <ClCompile Include="..\src\Texture.cpp" />
     <ClCompile Include="..\src\Video.cpp" />
-    <ClCompile Include="..\src\zlib\adler32.c" />
-    <ClCompile Include="..\src\zlib\compress.c" />
-    <ClCompile Include="..\src\zlib\crc32.c" />
-    <ClCompile Include="..\src\zlib\deflate.c" />
-    <ClCompile Include="..\src\zlib\gzlib.c" />
-    <ClCompile Include="..\src\zlib\infback.c" />
-    <ClCompile Include="..\src\zlib\inffast.c" />
-    <ClCompile Include="..\src\zlib\inflate.c" />
-    <ClCompile Include="..\src\zlib\inftrees.c" />
-    <ClCompile Include="..\src\zlib\trees.c" />
-    <ClCompile Include="..\src\zlib\uncompr.c" />
-    <ClCompile Include="..\src\zlib\zutil.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\common\libpng\png.h" />
+    <ClInclude Include="..\..\common\libpng\pngconf.h" />
+    <ClInclude Include="..\..\common\libpng\pngdebug.h" />
+    <ClInclude Include="..\..\common\libpng\pnginfo.h" />
+    <ClInclude Include="..\..\common\libpng\pnglibconf.h" />
+    <ClInclude Include="..\..\common\libpng\pngpriv.h" />
+    <ClInclude Include="..\..\common\libpng\pngstruct.h" />
+    <ClInclude Include="..\..\common\zlib\crc32.h" />
+    <ClInclude Include="..\..\common\zlib\deflate.h" />
+    <ClInclude Include="..\..\common\zlib\gzguts.h" />
+    <ClInclude Include="..\..\common\zlib\inffast.h" />
+    <ClInclude Include="..\..\common\zlib\inffixed.h" />
+    <ClInclude Include="..\..\common\zlib\inflate.h" />
+    <ClInclude Include="..\..\common\zlib\inftrees.h" />
+    <ClInclude Include="..\..\common\zlib\trees.h" />
+    <ClInclude Include="..\..\common\zlib\zconf.h" />
+    <ClInclude Include="..\..\common\zlib\zlib.h" />
+    <ClInclude Include="..\..\common\zlib\zutil.h" />
     <ClInclude Include="..\src\Bitmap.hpp" />
     <ClInclude Include="..\src\Generators.hpp" />
-    <ClInclude Include="..\src\libpng\png.h" />
-    <ClInclude Include="..\src\libpng\pngconf.h" />
-    <ClInclude Include="..\src\libpng\pngdebug.h" />
-    <ClInclude Include="..\src\libpng\pnginfo.h" />
-    <ClInclude Include="..\src\libpng\pngpriv.h" />
-    <ClInclude Include="..\src\libpng\pngstruct.h" />
     <ClInclude Include="..\src\Process.hpp" />
     <ClInclude Include="..\src\Rect.hpp" />
     <ClInclude Include="..\src\Texture.hpp" />
     <ClInclude Include="..\src\Types.hpp" />
     <ClInclude Include="..\src\Vector.hpp" />
     <ClInclude Include="..\src\Video.hpp" />
-    <ClInclude Include="..\src\zlib\crc32.h" />
-    <ClInclude Include="..\src\zlib\deflate.h" />
-    <ClInclude Include="..\src\zlib\gzguts.h" />
-    <ClInclude Include="..\src\zlib\inffast.h" />
-    <ClInclude Include="..\src\zlib\inffixed.h" />
-    <ClInclude Include="..\src\zlib\inflate.h" />
-    <ClInclude Include="..\src\zlib\inftrees.h" />
-    <ClInclude Include="..\src\zlib\trees.h" />
-    <ClInclude Include="..\src\zlib\zconf.h" />
-    <ClInclude Include="..\src\zlib\zlib.h" />
-    <ClInclude Include="..\src\zlib\zutil.h" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="..\src\zlib\inffas32.obj" />
-    <Object Include="..\src\zlib\match686.obj" />
+    <Object Include="..\..\common\zlib\inffas32.obj" />
+    <Object Include="..\..\common\zlib\match686.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

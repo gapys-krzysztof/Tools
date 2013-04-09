@@ -15,87 +15,6 @@
     <ClCompile Include="..\src\Application.cpp">
       <Filter>SurfSplit</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\libpng\png.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngerror.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngget.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngmem.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngpread.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngread.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngrio.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngrtran.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngrutil.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngset.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngtrans.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngwio.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngwrite.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngwtran.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\libpng\pngwutil.c">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\adler32.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\compress.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\crc32.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\deflate.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\gzlib.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\infback.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\inffast.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\inflate.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\inftrees.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\trees.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\uncompr.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\zlib\zutil.c">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Bitmap.cpp">
       <Filter>SurfSplit</Filter>
     </ClCompile>
@@ -111,59 +30,89 @@
     <ClCompile Include="..\src\Process.cpp">
       <Filter>SurfSplit</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\zlib\adler32.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\compress.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\crc32.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\deflate.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\gzlib.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\infback.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inffast.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inflate.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inftrees.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\trees.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\uncompr.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\zutil.c">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\png.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngerror.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngget.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngmem.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngpread.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngread.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrio.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrtran.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrutil.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngset.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngtrans.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwio.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwrite.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwtran.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwutil.c">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\libpng\png.h">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\libpng\pngconf.h">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\libpng\pngdebug.h">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\libpng\pnginfo.h">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\libpng\pngpriv.h">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\libpng\pngstruct.h">
-      <Filter>SurfSplit\libpng</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\crc32.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\deflate.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\gzguts.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\inffast.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\inffixed.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\inflate.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\inftrees.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\trees.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\zconf.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\zlib.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\zlib\zutil.h">
-      <Filter>SurfSplit\zlib</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bitmap.hpp">
       <Filter>SurfSplit</Filter>
     </ClInclude>
@@ -188,12 +137,66 @@
     <ClInclude Include="..\src\Process.hpp">
       <Filter>SurfSplit</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\common\zlib\crc32.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\deflate.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\gzguts.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inffast.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inffixed.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inflate.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inftrees.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\trees.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zconf.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zlib.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zutil.h">
+      <Filter>SurfSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\png.h">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngconf.h">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngdebug.h">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pnginfo.h">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pnglibconf.h">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngpriv.h">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngstruct.h">
+      <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="..\src\zlib\inffas32.obj">
+    <Object Include="..\..\common\zlib\inffas32.obj">
       <Filter>SurfSplit\zlib</Filter>
     </Object>
-    <Object Include="..\src\zlib\match686.obj">
+    <Object Include="..\..\common\zlib\match686.obj">
       <Filter>SurfSplit\zlib</Filter>
     </Object>
   </ItemGroup>
