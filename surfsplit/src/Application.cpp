@@ -49,47 +49,12 @@ int blockSize = 8;
 bool searchDuplicates = false;
 int alphaCutoff = 0;
 
-int main( int argc, char** argv )
+void Process( const char* in )
 {
-#define CSTR(x) strcmp( argv[i], x ) == 0
-
-    if( argc < 2 )
-    {
-        Error();
-    }
-
-    for( int i=2; i<argc; i++ )
-    {
-        if( CSTR( "-v" ) )
-        {
-            viewData = true;
-        }
-        else if( CSTR( "-b" ) )
-        {
-            i++;
-            blockSize = atoi( argv[i] );
-        }
-        else if( CSTR( "-d" ) )
-        {
-            searchDuplicates = true;
-        }
-        else if( CSTR( "-a" ) )
-        {
-            i++;
-            alphaCutoff = atoi( argv[i] );
-        }
-        else
-        {
-            Error();
-        }
-    }
-
-#undef CSTR
-
-    std::string out( argv[1] );
+    std::string out( in );
     out += ".csr";
 
-    Bitmap bmp( argv[1] );
+    Bitmap bmp( in );
 
     std::vector<Rect> r( GenerateGrid( bmp.Size(), blockSize, blockSize ) );
     r = RemoveEmpty( r, &bmp );
@@ -201,6 +166,46 @@ int main( int argc, char** argv )
     {
         ShowBitmap( &bmp, r, dupes );
     }
+}
+
+int main( int argc, char** argv )
+{
+#define CSTR(x) strcmp( argv[i], x ) == 0
+
+    if( argc < 2 )
+    {
+        Error();
+    }
+
+    for( int i=2; i<argc; i++ )
+    {
+        if( CSTR( "-v" ) )
+        {
+            viewData = true;
+        }
+        else if( CSTR( "-b" ) )
+        {
+            i++;
+            blockSize = atoi( argv[i] );
+        }
+        else if( CSTR( "-d" ) )
+        {
+            searchDuplicates = true;
+        }
+        else if( CSTR( "-a" ) )
+        {
+            i++;
+            alphaCutoff = atoi( argv[i] );
+        }
+        else
+        {
+            Error();
+        }
+    }
+
+#undef CSTR
+
+    Process( argv[1] );
 
     return 0;
 }
