@@ -50,13 +50,13 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
 {
     std::vector<BRect> ret;
 
-    std::list<std::string>::const_iterator nit = names.begin();
-    std::list<std::string>::const_iterator rit = rectnames.begin();
+    auto nit = names.cbegin();
+    auto rit = rectnames.cbegin();
 
     ret.reserve( pngs.size() );
-    for( std::list<std::string>::const_iterator it = pngs.begin(); it != pngs.end(); ++it, ++nit, ++rit )
+    for( auto& png : pngs )
     {
-        Bitmap* b = new Bitmap( it->c_str() );
+        Bitmap* b = new Bitmap( png.c_str() );
         FILE* f = fopen( rit->c_str(), "rb" );
         if( !f )
         {
@@ -81,6 +81,8 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
             }
             fclose( f );
         }
+        ++nit;
+        ++rit;
     }
 
     return ret;
@@ -88,34 +90,12 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
 
 void SortImages( std::vector<BRect>& images )
 {
-    struct
-    {
-        bool operator()( const BRect& i1, const BRect& i2 )
-        {
-            if( i1.h != i2.h )
-            {
-                return i1.h > i2.h;
-            }
-            else
-            {
-                return i1.w > i2.w;
-            }
-        }
-    } Comparator;
-
-    std::sort( images.begin(), images.end(), Comparator );
+    std::sort( images.begin(), images.end(), []( const BRect& i1, const BRect& i2 ){ if( i1.h != i2.h ) return i1.h > i2.h; else return i1.w > i2.w; } );
 }
 
 void FindFlipped( std::vector<BRect>& images )
 {
-    for( std::vector<BRect>::iterator it = images.begin(); it != images.end(); ++it )
-    {
-        if( it->h > it->w )
-        {
-            it->flip = true;
-            std::swap( it->h, it->w );
-        }
-    }
+    std::for_each( images.begin(), images.end(), []( BRect& img ){ if( img.h > img.w ) { img.flip = true; std::swap( img.w, img.h ); } } );
 }
 
 bool DoWork()
@@ -149,9 +129,9 @@ bool DoWork()
     int bh = 0;
 
     std::vector<Rect> rects;
-    for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it )
+    for( auto& img : images )
     {
-        Node* uv = tree->Insert( Rect( edges, edges, it->w + edges * 2, it->h + edges * 2 ), align );
+        Node* uv = tree->Insert( Rect( edges, edges, img.w + edges * 2, img.h + edges * 2 ), align );
         if( !uv )
         {
             delete b;
@@ -163,50 +143,50 @@ bool DoWork()
         bh = std::max( bh, uv->rect.y + uv->rect.h + edges );
 
         rects.push_back( uv->rect );
-        Blit( b, *it, uv->rect );
+        Blit( b, img, uv->rect );
         for( int i=0; i<edges; i++ )
         {
-            BRect br( *it );
+            BRect br( img );
             if( br.flip )
             {
-                br.y = std::max( 0, it->y - i - 1 );
+                br.y = std::max( 0, img.y - i - 1 );
             }
             else
             {
-                br.x = std::max( 0, it->x - i - 1 );
+                br.x = std::max( 0, img.x - i - 1 );
             }
             Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y, 1, uv->rect.h ) );
 
             if( br.flip )
             {
-                br.y = std::min( it->b->Size().y - 1, it->y + it->w + i );
+                br.y = std::min( img.b->Size().y - 1, img.y + img.w + i );
             }
             else
             {
-                br.x = std::min( it->b->Size().x - 1, it->x + it->w + i );
+                br.x = std::min( img.b->Size().x - 1, img.x + img.w + i );
             }
             Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y, 1, uv->rect.h ) );
         }
         for( int i=0; i<edges; i++ )
         {
-            BRect br( *it );
+            BRect br( img );
             if( br.flip )
             {
-                br.x = std::max( 0, it->x - i - 1 );
+                br.x = std::max( 0, img.x - i - 1 );
             }
             else
             {
-                br.y = std::max( 0, it->y - i - 1 );
+                br.y = std::max( 0, img.y - i - 1 );
             }
             Blit( b, br, Rect( uv->rect.x, uv->rect.y - i - 1, uv->rect.w, 1 ) );
 
             if( br.flip )
             {
-                br.x = std::min( it->b->Size().x - 1, it->x + it->h + i );
+                br.x = std::min( img.b->Size().x - 1, img.x + img.h + i );
             }
             else
             {
-                br.y = std::min( it->b->Size().y - 1, it->y + it->h + i );
+                br.y = std::min( img.b->Size().y - 1, img.y + img.h + i );
             }
             Blit( b, br, Rect( uv->rect.x, uv->rect.y + uv->rect.h + i, uv->rect.w, 1 ) );
         }
@@ -263,33 +243,34 @@ bool DoWork()
     };
 
     std::map<std::string, std::list<Data> > irmap;
-    std::vector<Rect>::const_iterator rit = rects.begin();
-    for( std::vector<BRect>::const_iterator it = images.begin(); it != images.end(); ++it, ++rit )
+    auto rit = rects.begin();
+    for( auto& img : images )
     {
-        irmap[it->name].push_back( Data( &(*it), &(*rit) ) );
+        irmap[img.name].push_back( Data( &img, &(*rit) ) );
+        ++rit;
     }
 
     f = fopen( ( output + "/" + name + ".xml" ).c_str(), "w" );
     fprintf( f, "<?xml version=\"1.0\"?>\n" );
     fprintf( f, "<atlas height=\"%i\" width=\"%i\">\n", b->Size().x, b->Size().y );
-    for( std::map<std::string, std::list<Data> >::const_iterator it = irmap.begin(); it != irmap.end(); ++it )
+    for( auto& data : irmap )
     {
         std::string id;
         if( path == -1 )
         {
-            id = prepend + it->first;
+            id = prepend + data.first;
         }
         else
         {
             size_t pos = 0;
             for( int i=0; i<path; i++ )
             {
-                pos = it->first.find( '/', pos ) + 1;
+                pos = data.first.find( '/', pos ) + 1;
             }
-            id = prepend + it->first.substr( pos );
+            id = prepend + data.first.substr( pos );
         }
-        fprintf( f, "  <asset id=\"%s\" rects=\"%i\" w=\"%i\" h=\"%i\">\n", id.c_str(), it->second.size(), it->second.begin()->br->b->Size().x, it->second.begin()->br->b->Size().y );
-        for( std::list<Data>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit )
+        fprintf( f, "  <asset id=\"%s\" rects=\"%i\" w=\"%i\" h=\"%i\">\n", id.c_str(), data.second.size(), data.second.begin()->br->b->Size().x, data.second.begin()->br->b->Size().y );
+        for( auto dit = data.second.cbegin(); dit != data.second.cend(); ++dit )
         {
             fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
                 dit->br->flip ? 1 : 0,
