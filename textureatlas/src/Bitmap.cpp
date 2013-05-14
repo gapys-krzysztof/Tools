@@ -1,5 +1,7 @@
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "libpng/png.h"
 
@@ -23,6 +25,12 @@ Bitmap::Bitmap( const char* fn )
     : m_data( NULL )
 {
     FILE* f = fopen( fn, "rb" );
+
+    if( !f )
+    {
+        fprintf( stderr, "FATAL: cannot open %s", fn );
+        exit( 1 );
+    }
 
     unsigned int sig_read = 0;
     int bit_depth, color_type, interlace_type;
