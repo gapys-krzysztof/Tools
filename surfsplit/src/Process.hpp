@@ -13,6 +13,8 @@ std::vector<Rect> RemoveEmpty( const std::vector<Rect>& rects, Bitmap* bmp );
 Rect CropEmpty( const Rect& rect, Bitmap* bmp );
 std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp );
 
+std::vector<Rect> LimitSize( const std::vector<Rect>& rects, int limit );
+
 template<typename T>
 std::vector<T> Merge( const std::vector<T>& rects )
 {
@@ -34,7 +36,7 @@ std::vector<T> MergeHorizontal( const std::vector<T>& rects )
 
         int tx = it->x + it->w;
 
-        while( tit != end( ret ) && tit->y == it->y && tit->x == tx && tit->h == it->h && it->w < blockSizeLimit )
+        while( tit != end( ret ) && tit->y == it->y && tit->x == tx && tit->h == it->h )
         {
             it->w += tit->w;
             tx += tit->w;
@@ -58,7 +60,7 @@ std::vector<T> MergeVertical( const std::vector<T>& rects )
 
         int ty = it->y + it->h;
 
-        while( tit != end( ret ) && tit->x == it->x && tit->y == ty && tit->w == it->w && it->h < blockSizeLimit )
+        while( tit != end( ret ) && tit->x == it->x && tit->y == ty && tit->w == it->w )
         {
             it->h += tit->h;
             ty += tit->h;

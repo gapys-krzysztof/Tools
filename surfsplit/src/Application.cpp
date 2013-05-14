@@ -49,7 +49,7 @@ bool viewData = false;
 int blockSize = 8;
 bool searchDuplicates = false;
 int alphaCutoff = 0;
-int blockSizeLimit = std::numeric_limits<int>::max();
+int blockSizeLimit = 0;
 
 void Process( const char* in )
 {
@@ -161,6 +161,10 @@ void Process( const char* in )
 
     r = Merge( r );
     r = CropEmpty( r, &bmp );
+    if ( blockSizeLimit > 0 )
+    {
+        r = LimitSize( r, blockSizeLimit );
+    }
 
     Save( out.c_str(), r, dupes );
 

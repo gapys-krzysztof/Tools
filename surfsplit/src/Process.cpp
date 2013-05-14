@@ -151,6 +151,31 @@ std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp )
     return ret;
 }
 
+std::vector<Rect> LimitSize( const std::vector<Rect>& rects, int limit )
+{
+    std::vector<Rect> ret;
+    ret.reserve( rects.size() );
+
+    for( std::vector<Rect>::const_iterator it = rects.begin(); it != rects.end(); ++it )
+    {
+        int y = 0;
+        while( y < it->h )
+        {
+            int x = 0;
+            int h = std::min<int>( limit, it->h - y );
+            while( x < it->w )
+            {
+                int w = std::min<int>( limit, it->w - x );
+                ret.push_back( Rect( x + it->x, y + it->y, w, h ) );
+                x += w;
+            }
+            y += h;
+        }
+    }
+
+    return ret;
+}
+
 int CalcHistogram( const Rect& rect, Bitmap* bmp )
 {
     int bw = bmp->Size().x;
