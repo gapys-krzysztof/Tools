@@ -41,6 +41,7 @@ void Error()
     fprintf( stderr, " -b     set block size (default: 8)\n" );
     fprintf( stderr, " -d     search for duplicates\n" );
     fprintf( stderr, " -a     set minimum alpha cutoff threshold (default: 0)\n" );
+    fprintf( stderr, " -l     set limit for block size\n" );
     exit( 1 );
 }
 
@@ -48,6 +49,7 @@ bool viewData = false;
 int blockSize = 8;
 bool searchDuplicates = false;
 int alphaCutoff = 0;
+int blockSizeLimit = std::numeric_limits<int>::max();
 
 void Process( const char* in )
 {
@@ -196,6 +198,11 @@ int main( int argc, char** argv )
         {
             i++;
             alphaCutoff = atoi( argv[i] );
+        }
+        else if( CSTR( "-l" ) )
+        {
+            i++;
+            blockSizeLimit = atoi( argv[i] );
         }
         else
         {

@@ -34,7 +34,7 @@ std::vector<T> MergeHorizontal( const std::vector<T>& rects )
 
         int tx = it->x + it->w;
 
-        while( tit != end( ret ) && tit->y == it->y && tit->x == tx && tit->h == it->h )
+        while( tit != end( ret ) && tit->y == it->y && tit->x == tx && tit->h == it->h && it->w < blockSizeLimit )
         {
             it->w += tit->w;
             tx += tit->w;
@@ -58,7 +58,7 @@ std::vector<T> MergeVertical( const std::vector<T>& rects )
 
         int ty = it->y + it->h;
 
-        while( tit != end( ret ) && tit->x == it->x && tit->y == ty && tit->w == it->w )
+        while( tit != end( ret ) && tit->x == it->x && tit->y == ty && tit->w == it->w && it->h < blockSizeLimit )
         {
             it->h += tit->h;
             ty += tit->h;
