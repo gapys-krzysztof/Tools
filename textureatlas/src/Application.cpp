@@ -27,6 +27,7 @@ bool square = false;
 bool noalpha = false;
 bool splashfill = true;
 bool allowFlip = true;
+bool writeRaw = false;
 
 
 template<typename T>
@@ -292,7 +293,14 @@ bool DoWork()
         SplashFill( b );
     }
 
-    b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
+    if( writeRaw )
+    {
+        b->WriteRaw( ( output + "/" + name + ".raw" ).c_str(), !noalpha );
+    }
+    else
+    {
+        b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
+    }
 
     delete b;
     delete tree;
@@ -318,6 +326,7 @@ void Usage()
     printf( "-N, --noalpha      no alpha channel\n" );
     printf( "--nosplashfill     disable splash fill\n" );
     printf( "--noflip           disable fragment flipping\n" );
+    printf( "--raw              write raw data\n" );
 }
 
 void Error()
@@ -399,6 +408,10 @@ int main( int argc, char** argv )
         else if( CSTR( "--noflip" ) )
         {
             allowFlip = false;
+        }
+        else if( CSTR( "--raw" ) )
+        {
+            writeRaw = true;
         }
         else
         {

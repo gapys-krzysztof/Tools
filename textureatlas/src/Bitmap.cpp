@@ -136,6 +136,25 @@ bool Bitmap::Write( const char* fn, bool alpha )
     return true;
 }
 
+bool Bitmap::WriteRaw( const char* fn, bool alpha )
+{
+    FILE* f = fopen( fn, "wb" );
+    if( !f ) return false;
+
+    const char raw[] = { 'r', 'a', 'w' };
+    fwrite( raw, 1, 3, f );
+    uint8 a = alpha ? 1 : 0;
+    fwrite( &a, 1, 1, f );
+    uint32 d = m_size.x;
+    fwrite( &d, 1, 4, f );
+    d = m_size.y;
+    fwrite( &d, 1, 4, f );
+    fwrite( m_data, 1, m_size.x * m_size.y * 4, f );
+
+    fclose( f );
+    return true;
+}
+
 Bitmap& Bitmap::operator=( const Bitmap& bmp )
 {
     if( m_size != bmp.m_size )
