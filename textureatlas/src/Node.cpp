@@ -16,16 +16,20 @@ Node* Node::Insert( const Rect& area, bool align )
         return ret;
     }
 
-    if( area.w <= rect.w && area.h <= rect.h )
+    int w = area.w;
+    int h = area.h;
+
+    if( align )
     {
-        if( align )
-        {
-        }
-        else
-        {
-            child[0] = new Node( Rect( rect.x + area.w, rect.y, rect.w - area.w, area.h ) );
-            child[1] = new Node( Rect( rect.x, rect.y + area.h, rect.w, rect.h - area.h ) );
-        }
+        w = ( w + 3 ) & ~0x3;
+        h = ( h + 3 ) & ~0x3;
+    }
+
+    if( w <= rect.w && h <= rect.h )
+    {
+        child[0] = new Node( Rect( rect.x + w, rect.y, rect.w - w, h ) );
+        child[1] = new Node( Rect( rect.x, rect.y + h, rect.w, rect.h - h ) );
+
         rect = Rect( rect.x + area.x, rect.y + area.y, area.w - area.x * 2, area.h - area.y * 2 );
         ret = this;
     }
