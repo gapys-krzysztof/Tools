@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{32011C46-F7F4-4084-AD75-FC60005B24C2}</ProjectGuid>
+    <ProjectGuid>{46CBCC09-09F2-4C53-B000-9870DCD2CBBD}</ProjectGuid>
     <RootNamespace>rgbasplit</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
