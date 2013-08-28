@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="rgbasplit">
+      <UniqueIdentifier>{d75721a9-60be-4e85-b5ec-064dcc4aae17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rgbasplit\zlib">
+      <UniqueIdentifier>{bc3c6cbb-6794-42b4-9ddb-6268a91773ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rgbasplit\libpng">
+      <UniqueIdentifier>{997de788-4339-4690-bd72-8dbf7c7a29e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Application.cpp">
+      <Filter>rgbasplit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bitmap.cpp">
+      <Filter>rgbasplit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\adler32.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\compress.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\crc32.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\deflate.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\gzlib.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\infback.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inffast.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inflate.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inftrees.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\trees.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\uncompr.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\zutil.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\png.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngerror.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngget.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngmem.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngpread.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngread.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrio.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrtran.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrutil.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngset.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngtrans.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwio.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwrite.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwtran.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwutil.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Bitmap.hpp">
+      <Filter>rgbasplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\crc32.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\deflate.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\gzguts.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inffast.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inffixed.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inflate.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inftrees.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\trees.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zconf.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zlib.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zutil.h">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\png.h">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngconf.h">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngdebug.h">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pnginfo.h">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pnglibconf.h">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngpriv.h">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngstruct.h">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Types.hpp">
+      <Filter>rgbasplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Vector.hpp">
+      <Filter>rgbasplit</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\common\zlib\inffas32.obj">
+      <Filter>rgbasplit\zlib</Filter>
+    </Object>
+    <Object Include="..\..\common\zlib\match686.obj">
+      <Filter>rgbasplit\zlib</Filter>
+    </Object>
+  </ItemGroup>
+</Project>
