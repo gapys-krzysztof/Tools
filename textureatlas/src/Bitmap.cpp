@@ -113,6 +113,9 @@ bool Bitmap::Write( const char* fn, bool alpha )
     setjmp( png_jmpbuf( png_ptr ) );
     png_init_io( png_ptr, f );
 
+    png_set_compression_level( png_ptr, 1 );
+    png_set_filter( png_ptr, 0, PNG_FILTER_NONE );
+
     png_set_IHDR( png_ptr, info_ptr, m_size.x, m_size.y, 8, alpha ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE );
 
     png_write_info( png_ptr, info_ptr );
