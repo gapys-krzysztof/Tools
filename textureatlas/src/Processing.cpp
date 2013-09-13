@@ -5,7 +5,7 @@ void SplashFill( Bitmap* bmp )
     Bitmap* tmp = new Bitmap( *bmp );
 
     const v2i s = bmp->Size();
-    const int32 offsetTable[8] = { -1, 1, -s.x, s.x, -s.x-1, -s.x+1, s.x-1, s.x+1 };
+    const int32 offsetTable[8] = { -1, 1, -s.x-1, -s.x, -s.x+1, s.x-1, s.x, s.x+1 };
 
     uint32* ptr = tmp->Data();
     for( int i=0; i<s.x*s.y; i++ )
