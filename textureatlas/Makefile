@@ -1,13 +1,13 @@
 CFLAGS = -g3 -O3
 CXXFLAGS = $(CFLAGS) --std=c++0x
 DEFINES =
-INCLUDES = $(shell sdl-config --cflags)
-LIBS = $(shell sdl-config --libs) -lGL
+INCLUDES = $(shell sdl-config --cflags) $(shell pkg-config --cflags libpng)
+LIBS = $(shell sdl-config --libs) -lGL $(shell pkg-config --libs libpng)
 
 IMAGE = TextureAtlas
 
-SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
-CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
+SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | grep -v common | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
+CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | grep -v common |sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
 OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 
 all: $(IMAGE)
