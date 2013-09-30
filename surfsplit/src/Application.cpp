@@ -1,8 +1,12 @@
+#include <assert.h>
 #include <cstdlib>
 #include <cstdio>
 #include <iterator>
 #include <map>
+#include <string>
 #include <vector>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "Bitmap.hpp"
 #include "Generators.hpp"
@@ -42,6 +46,7 @@ void Error()
     fprintf( stderr, " -d     search for duplicates\n" );
     fprintf( stderr, " -a     set minimum alpha cutoff threshold (default: 0)\n" );
     fprintf( stderr, " -l     set limit for block size\n" );
+    fprintf( stderr, " -f     force recalculation\n" );
     exit( 1 );
 }
 
@@ -50,6 +55,7 @@ int blockSize = 8;
 bool searchDuplicates = false;
 int alphaCutoff = 0;
 int blockSizeLimit = 0;
+bool force = false;
 
 void Process( const char* in )
 {
@@ -208,6 +214,10 @@ int main( int argc, char** argv )
             i++;
             blockSizeLimit = atoi( argv[i] );
         }
+        else if( CSTR( "-f" ) )
+        {
+            force = true;
+        }
         else
         {
             Error();
@@ -241,7 +251,15 @@ int main( int argc, char** argv )
                 {
                     tmp[len--] = '\0';
                 }
-                Process( tmp );
+                struct stat s;
+                auto ret = stat( tmp, &s );
+                assert( ret == 0 );
+                auto ts = s.st_mtime;
+                ret = stat( ( std::string( tmp ) + ".csr" ).c_str(), &s );
+                if( ret != 0 || ts >= s.st_mtime || force )
+                {
+                    Process( tmp );
+                }
                 if( curr % 50 == 0 )
                 {
                     printf( "%i/%i\r", curr, cnt );
