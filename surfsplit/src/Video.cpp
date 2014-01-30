@@ -6,7 +6,8 @@
 void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<DupRect>& duprects )
 {
     SDL_Init( SDL_INIT_VIDEO );
-    SDL_SetVideoMode( bmp->Size().x, bmp->Size().y, 32, SDL_OPENGL );
+    auto win = SDL_CreateWindow( "surfsplit", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, bmp->Size().x, bmp->Size().y, SDL_WINDOW_OPENGL );
+    SDL_GL_CreateContext( win );
 
     Texture tex( bmp );
 
@@ -91,6 +92,6 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<
         glColor4f( 1, 1, 1, 1 );
         glEnable(GL_TEXTURE_2D );
 
-        SDL_GL_SwapBuffers();
+        SDL_GL_SwapWindow( win );
     }
 }
