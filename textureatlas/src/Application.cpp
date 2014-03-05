@@ -28,6 +28,7 @@ bool noalpha = false;
 bool splashfill = true;
 bool allowFlip = true;
 bool writeRaw = false;
+bool cascadeUp = false;
 
 
 template<typename T>
@@ -122,6 +123,32 @@ bool DoWork()
         FindFlipped( images );
     }
     SortImages( images );
+
+    if( cascadeUp )
+    {
+        bool bad = false;
+        do
+        {
+            bad = false;
+            Node* test = new Node( Rect( 0, 0, size, size ) );
+            for( auto& img : images )
+            {
+                Node* uv = test->Insert( Rect( edges, edges, img.w + edges * 2, img.h + edges * 2 ), align );
+                if( !uv )
+                {
+                    size *= 2;
+                    if( size > 32768 )
+                    {
+                        return false;
+                    }
+                    bad = true;
+                    break;
+                }
+            }
+            delete test;
+        }
+        while( bad );
+    }
 
     Bitmap* b = new Bitmap( size, size );
     Node* tree = new Node( Rect( 0, 0, size, size ) );
@@ -327,6 +354,7 @@ void Usage()
     printf( "--nosplashfill     disable splash fill\n" );
     printf( "--noflip           disable fragment flipping\n" );
     printf( "--raw              write raw data\n" );
+    printf( "-c, --cascade      try bigger atlas size, if data does not fit\n" );
 }
 
 void Error()
@@ -413,6 +441,10 @@ int main( int argc, char** argv )
         else if( CSTR( "--raw" ) )
         {
             writeRaw = true;
+        }
+        else if( CSTR( "-c" ) || CSTR( "--cascade" ) )
+        {
+            cascadeUp = true;
         }
         else
         {
