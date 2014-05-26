@@ -320,7 +320,7 @@ void Usage()
     printf( "-P, --path         path strip depth\n" );
     printf( "-W, --potw         make width of atlas a power of two\n" );
     printf( "-H, --poth         make height of atlas a power of two\n" );
-    printf( "-a, --align    *   align textures to 4x4 blocks\n" );
+    printf( "-a, --align        align textures to 4x4 blocks\n" );
     printf( "-p, --prepend      prepend given string to all asset paths\n" );
     printf( "-q, --square       make width equal to height\n" );
     printf( "-N, --noalpha      no alpha channel\n" );
