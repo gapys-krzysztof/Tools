@@ -21,7 +21,7 @@ int edges = 0;
 int path = -1;
 bool potw = false;
 bool poth = false;
-bool align = false;
+int align = 0;
 std::string prepend;
 bool square = false;
 bool noalpha = false;
@@ -320,7 +320,7 @@ void Usage()
     printf( "-P, --path         path strip depth\n" );
     printf( "-W, --potw         make width of atlas a power of two\n" );
     printf( "-H, --poth         make height of atlas a power of two\n" );
-    printf( "-a, --align        align textures to 4x4 blocks\n" );
+    printf( "-a, --align        align textures (default: disabled)\n" );
     printf( "-p, --prepend      prepend given string to all asset paths\n" );
     printf( "-q, --square       make width equal to height\n" );
     printf( "-N, --noalpha      no alpha channel\n" );
@@ -386,7 +386,8 @@ int main( int argc, char** argv )
         }
         else if( CSTR( "-a" ) || CSTR( "--align" ) )
         {
-            align = true;
+            align = atoi( argv[i+1] );
+            i++;
         }
         else if( CSTR( "-p" ) || CSTR( "--prepend" ) )
         {

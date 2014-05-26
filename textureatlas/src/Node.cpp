@@ -2,7 +2,7 @@
 
 #include "Node.hpp"
 
-Node* Node::Insert( const Rect& area, bool align )
+Node* Node::Insert( const Rect& area, int align )
 {
     Node* ret = NULL;
 
@@ -19,10 +19,10 @@ Node* Node::Insert( const Rect& area, bool align )
     int w = area.w;
     int h = area.h;
 
-    if( align )
+    if( align > 1 )
     {
-        w = ( w + 3 ) & ~0x3;
-        h = ( h + 3 ) & ~0x3;
+        w = ( w + align - 1 ) / align * align;
+        h = ( h + align - 1 ) / align * align;
     }
 
     if( w <= rect.w && h <= rect.h )
