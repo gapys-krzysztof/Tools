@@ -10,8 +10,8 @@
 bool IsEmpty( const Rect& rect, Bitmap* bmp );
 std::vector<Rect> RemoveEmpty( const std::vector<Rect>& rects, Bitmap* bmp );
 
-Rect CropEmpty( const Rect& rect, Bitmap* bmp );
-std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp );
+Rect CropEmpty( const Rect& rect, Bitmap* bmp, int align );
+std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp, int align );
 
 std::vector<Rect> LimitSize( const std::vector<Rect>& rects, int limit );
 

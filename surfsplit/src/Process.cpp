@@ -55,7 +55,7 @@ std::vector<Rect> RemoveEmpty( const std::vector<Rect>& rects, Bitmap* bmp )
     return ret;
 }
 
-Rect CropEmpty( const Rect& rect, Bitmap* bmp )
+Rect CropEmpty( const Rect& rect, Bitmap* bmp, int align )
 {
     Rect ret( rect );
     int alpha = alphaCutoff << AlphaShift;
@@ -135,17 +135,25 @@ next3:
     }
 
 next4:
+    int tmp = ret.x;
+    ret.x = ret.x / align * align;
+    ret.w += tmp - ret.x;
+
+    tmp = ret.y;
+    ret.y = ret.y / align * align;
+    ret.h += tmp - ret.y;
+
     return ret;
 }
 
-std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp )
+std::vector<Rect> CropEmpty( const std::vector<Rect>& rects, Bitmap* bmp, int align )
 {
     std::vector<Rect> ret;
     ret.reserve( rects.size() );
 
     for( std::vector<Rect>::const_iterator it = rects.begin(); it != rects.end(); ++it )
     {
-        ret.push_back( CropEmpty( *it, bmp ) );
+        ret.push_back( CropEmpty( *it, bmp, align ) );
     }
 
     return ret;

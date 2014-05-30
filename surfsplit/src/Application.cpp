@@ -47,6 +47,7 @@ void Error()
     fprintf( stderr, " -a     set minimum alpha cutoff threshold (default: 0)\n" );
     fprintf( stderr, " -l     set limit for block size\n" );
     fprintf( stderr, " -f     force recalculation\n" );
+    fprintf( stderr, " -A     align blocks to grid (default: 1)\n" );
     exit( 1 );
 }
 
@@ -56,6 +57,7 @@ bool searchDuplicates = false;
 int alphaCutoff = 0;
 int blockSizeLimit = 0;
 bool force = false;
+int align = 1;
 
 void Process( const char* in )
 {
@@ -166,7 +168,7 @@ void Process( const char* in )
     }
 
     r = Merge( r );
-    r = CropEmpty( r, &bmp );
+    r = CropEmpty( r, &bmp, align );
     if ( blockSizeLimit > 0 )
     {
         r = LimitSize( r, blockSizeLimit );
@@ -217,6 +219,11 @@ int main( int argc, char** argv )
         else if( CSTR( "-f" ) )
         {
             force = true;
+        }
+        else if( CSTR( "-A" ) )
+        {
+            i++;
+            align = atoi( argv[i] );
         }
         else
         {
