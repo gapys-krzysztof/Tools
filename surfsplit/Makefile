@@ -1,8 +1,8 @@
 CFLAGS = -g3 -O3
 CXXFLAGS = $(CFLAGS) --std=c++0x
 DEFINES =
-INCLUDES = $(shell sdl-config --cflags)
-LIBS = $(shell sdl-config --libs) -lGL
+INCLUDES = $(shell pkg-config --cflags sdl2)
+LIBS = $(shell pkg-config --libs sdl2) -lGL
 
 IMAGE = SurfSplit
 
