@@ -9,5 +9,13 @@
     <ClCompile Include="..\src\Application.cpp">
       <Filter>MipSplit</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\VFS.cpp">
+      <Filter>MipSplit</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\VFS.hpp">
+      <Filter>MipSplit</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
