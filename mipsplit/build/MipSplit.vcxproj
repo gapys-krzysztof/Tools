@@ -149,6 +149,7 @@
     <ClCompile Include="..\src\VFS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\PvrHeader.hpp" />
     <ClInclude Include="..\src\VFS.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
