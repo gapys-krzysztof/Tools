@@ -162,6 +162,66 @@ void SplitPVR( FILE* f )
 void SplitPNG( const char* fn )
 {
     Bitmap bmp( fn );
+
+    bool alpha = bmp.Alpha();
+    int32_t w = bmp.Size().x;
+    int32_t h = bmp.Size().y;
+    int32_t fmt = alpha ? 0x1908 : 0x1907;    // GL_RGBA, GL_RGB
+    int32_t mips = (int)floor( log2( std::max( w, h ) ) );
+
+    FILE* o = fopen( ( out + "/meta" ).c_str(), "wb" );
+    fwrite( &w, 1, 4, o );
+    fwrite( &h, 1, 4, o );
+    fwrite( &mips, 1, 4, o );
+    fwrite( &fmt, 1, 4, o );
+    fclose( o );
+
+    FILE* f = fopen( fn, "rb" );
+    fseek( f, 0, SEEK_END );
+    const auto len = ftell( f );
+    fseek( f, 0, SEEK_SET );
+    char* buf = new char[len];
+    fread( buf, 1, len, f );
+    fclose( f );
+    f = fopen( ( out + "/0" ).c_str(), "wb" );
+    fwrite( buf, 1, len, f );
+    fclose( f );
+
+    for( int i=1; i<=mips; i++ )
+    {
+        w = std::max( 1, w / 2 );
+        h = std::max( 1, h / 2 );
+        Bitmap tmp( w, h );
+
+        if( w < 2 || h < 2 )
+        {
+            memset( tmp.Data(), 0, sizeof( uint32 ) * w * h );
+        }
+        else
+        {
+            auto dst = tmp.Data();
+            auto src1 = bmp.Data();
+            auto src2 = src1 + bmp.Size().x;
+            for( int j=0; j<h; j++ )
+            {
+                for( int i=0; i<w; i++ )
+                {
+                    int r = ( ( *src1 & 0x000000FF ) + ( *(src1+1) & 0x000000FF ) + ( *src2 & 0x000000FF ) + ( *(src2+1) & 0x000000FF ) ) / 4;
+                    int g = ( ( ( *src1 & 0x0000FF00 ) + ( *(src1+1) & 0x0000FF00 ) + ( *src2 & 0x0000FF00 ) + ( *(src2+1) & 0x0000FF00 ) ) / 4 ) & 0x0000FF00;
+                    int b = ( ( ( *src1 & 0x00FF0000 ) + ( *(src1+1) & 0x00FF0000 ) + ( *src2 & 0x00FF0000 ) + ( *(src2+1) & 0x00FF0000 ) ) / 4 ) & 0x00FF0000;
+                    int a = ( ( ( ( ( *src1 & 0xFF000000 ) >> 8 ) + ( ( *(src1+1) & 0xFF000000 ) >> 8 ) + ( ( *src2 & 0xFF000000 ) >> 8 ) + ( ( *(src2+1) & 0xFF000000 ) >> 8 ) ) / 4 ) & 0x00FF0000 ) << 8;
+                    *dst++ = r | g | b | a;
+                    src1 += 2;
+                    src2 += 2;
+                }
+                src1 += bmp.Size().x;
+                src2 += bmp.Size().x;
+            }
+        }
+
+        tmp.Write( ( out + "/" + std::to_string( i ) ).c_str(), alpha );
+        bmp = tmp;
+    }
 }
 
 int main( int argc, char** argv )
