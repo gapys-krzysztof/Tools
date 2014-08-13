@@ -220,7 +220,7 @@ void SplitPNG( const char* fn )
         }
 
         tmp.Write( ( out + "/" + std::to_string( i ) ).c_str(), alpha );
-        bmp = tmp;
+        bmp = std::move( tmp );
     }
 }
 

@@ -20,6 +20,7 @@ public:
     bool Alpha() const { return m_alpha; }
 
     Bitmap& operator=( const Bitmap& bmp );
+    Bitmap& operator=( Bitmap&& bmp );
 
 private:
     uint32* m_data;

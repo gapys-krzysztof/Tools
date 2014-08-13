@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <utility>
 
 #include "libpng/png.h"
 
@@ -172,6 +173,15 @@ Bitmap& Bitmap::operator=( const Bitmap& bmp )
     }
 
     memcpy( m_data, bmp.m_data, sizeof( uint32 ) * m_size.x * m_size.y );
+
+    return *this;
+}
+
+Bitmap& Bitmap::operator=( Bitmap&& bmp )
+{
+    std::swap( m_size, bmp.m_size );
+    std::swap( m_data, bmp.m_data );
+    std::swap( m_alpha, bmp.m_alpha );
 
     return *this;
 }
