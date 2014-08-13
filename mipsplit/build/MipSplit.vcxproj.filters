@@ -4,6 +4,12 @@
     <Filter Include="MipSplit">
       <UniqueIdentifier>{d75721a9-60be-4e85-b5ec-064dcc4aae17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MipSplit\zlib">
+      <UniqueIdentifier>{344f72a2-8719-4cc8-aadc-d89e75335f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MipSplit\libpng">
+      <UniqueIdentifier>{3398626c-bb83-4863-a4a7-658444641246}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Application.cpp">
@@ -12,12 +18,159 @@
     <ClCompile Include="..\src\VFS.cpp">
       <Filter>MipSplit</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\zlib\adler32.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\compress.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\crc32.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\deflate.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\gzlib.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\infback.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inffast.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inflate.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inftrees.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\trees.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\uncompr.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\zlib\zutil.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\png.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngerror.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngget.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngmem.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngpread.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngread.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrio.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrtran.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngrutil.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngset.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngtrans.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwio.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwrite.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwtran.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\pngwutil.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bitmap.cpp">
+      <Filter>MipSplit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\VFS.hpp">
       <Filter>MipSplit</Filter>
     </ClInclude>
     <ClInclude Include="..\src\PvrHeader.hpp">
+      <Filter>MipSplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\crc32.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\deflate.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\gzguts.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inffast.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inffixed.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inflate.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\inftrees.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\trees.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zconf.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zlib.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\zlib\zutil.h">
+      <Filter>MipSplit\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\png.h">
+      <Filter>MipSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngconf.h">
+      <Filter>MipSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngdebug.h">
+      <Filter>MipSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pnginfo.h">
+      <Filter>MipSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pnglibconf.h">
+      <Filter>MipSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngpriv.h">
+      <Filter>MipSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\libpng\pngstruct.h">
+      <Filter>MipSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\textureatlas\src\Types.hpp">
+      <Filter>MipSplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\textureatlas\src\Vector.hpp">
+      <Filter>MipSplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bitmap.hpp">
       <Filter>MipSplit</Filter>
     </ClInclude>
   </ItemGroup>

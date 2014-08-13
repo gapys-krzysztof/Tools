@@ -6,6 +6,9 @@
 #include <string>
 #include <string.h>
 
+#include "libpng/png.h"
+
+#include "Bitmap.hpp"
 #include "PvrHeader.hpp"
 #include "VFS.hpp"
 
@@ -155,6 +158,11 @@ void SplitPVR( FILE* f )
     }
 }
 
+void SplitPNG( const char* fn )
+{
+    Bitmap bmp( fn );
+}
+
 int main( int argc, char** argv )
 {
     if( argc < 2 )
@@ -204,7 +212,17 @@ int main( int argc, char** argv )
         exit( 2 );
     }
 
-    SplitPVR( f );
+    char sig[4];
+    fread( sig, 1, 4, f );
+    fseek( f, -4, SEEK_CUR );
+    if( png_sig_cmp( (png_bytep)sig, 0, 4 ) == 0 )
+    {
+        SplitPNG( argv[1] );
+    }
+    else
+    {
+        SplitPVR( f );
+    }
 
     fclose( f );
 
