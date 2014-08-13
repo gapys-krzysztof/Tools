@@ -151,6 +151,7 @@ void SplitPVR( FILE* f )
         auto ret = fread( buf, 1, size, f );
         if( ret != size ) ErrSplit();
         fwrite( buf, 1, size, o );
+        delete[] buf;
         fclose( o );
 
         w = std::max( mw, w/2 );
