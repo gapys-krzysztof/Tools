@@ -136,7 +136,7 @@ void SplitPVR( FILE* f )
         assert( false );
     }
 
-    FILE* o = fopen( ( out + "/meta" ).c_str(), "wb" );
+    FILE* o = fopen( ( out + "meta" ).c_str(), "wb" );
     fwrite( &w, 1, 4, o );
     fwrite( &h, 1, 4, o );
     fwrite( &mips, 1, 4, o );
@@ -145,7 +145,7 @@ void SplitPVR( FILE* f )
 
     for( int i=0; i<=mips; i++ )
     {
-        FILE* o = fopen( ( out + "/" + std::to_string( i ) ).c_str(), "wb" );
+        FILE* o = fopen( ( out + std::to_string( i ) ).c_str(), "wb" );
         const auto size = ( w * h * bpp ) / 8;
         char* buf = new char[size];
         auto ret = fread( buf, 1, size, f );
@@ -169,7 +169,7 @@ void SplitPNG( const char* fn )
     int32_t fmt = alpha ? 0x1908 : 0x1907;    // GL_RGBA, GL_RGB
     int32_t mips = (int)floor( log2( std::max( w, h ) ) );
 
-    FILE* o = fopen( ( out + "/meta" ).c_str(), "wb" );
+    FILE* o = fopen( ( out + "meta" ).c_str(), "wb" );
     fwrite( &w, 1, 4, o );
     fwrite( &h, 1, 4, o );
     fwrite( &mips, 1, 4, o );
@@ -183,7 +183,7 @@ void SplitPNG( const char* fn )
     char* buf = new char[len];
     fread( buf, 1, len, f );
     fclose( f );
-    f = fopen( ( out + "/0" ).c_str(), "wb" );
+    f = fopen( ( out + "0" ).c_str(), "wb" );
     fwrite( buf, 1, len, f );
     delete[] buf;
     fclose( f );
@@ -250,6 +250,13 @@ int main( int argc, char** argv )
     }
 #undef CSTR
 
+    if( out[out.size()-1] != '/' )
+    {
+        out += '/';
+    }
+
+    bool pvrplus = false;
+
     FILE* f = fopen( argv[1], "rb" );
     char fourcc[4];
     auto ret = fread( fourcc, 1, 4, f );
@@ -260,8 +267,8 @@ int main( int argc, char** argv )
     }
     if( strncmp( fourcc, "PVR+", 4 ) == 0 )
     {
-        fprintf( stderr, "PVR+ is not currently supported.\n" );
-        exit( -1 );
+        fseek( f, 1, SEEK_CUR );
+        pvrplus = true;
     }
     else
     {
@@ -283,7 +290,18 @@ int main( int argc, char** argv )
     }
     else
     {
-        SplitPVR( f );
+        if( pvrplus )
+        {
+            out += 'C';
+            SplitPVR( f );
+            out.pop_back();
+            out += 'A';
+            SplitPVR( f );
+        }
+        else
+        {
+            SplitPVR( f );
+        }
     }
 
     fclose( f );
