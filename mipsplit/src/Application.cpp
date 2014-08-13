@@ -185,6 +185,7 @@ void SplitPNG( const char* fn )
     fclose( f );
     f = fopen( ( out + "/0" ).c_str(), "wb" );
     fwrite( buf, 1, len, f );
+    delete[] buf;
     fclose( f );
 
     for( int i=1; i<=mips; i++ )
