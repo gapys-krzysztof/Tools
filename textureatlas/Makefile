@@ -1,8 +1,8 @@
 CFLAGS = -g3 -O3
 CXXFLAGS = $(CFLAGS) --std=c++0x
 DEFINES =
-INCLUDES = $(shell sdl-config --cflags) $(shell pkg-config --cflags libpng)
-LIBS = $(shell sdl-config --libs) -lGL $(shell pkg-config --libs libpng)
+INCLUDES = $(shell pkg-config --cflags libpng)
+LIBS = $(shell pkg-config --libs libpng)
 
 IMAGE = TextureAtlas
 
