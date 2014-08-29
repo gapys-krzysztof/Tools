@@ -177,7 +177,18 @@ void SplitPNG( const char* fn )
     fclose( o );
 
     FILE* f = fopen( ( out + "0" ).c_str(), "wb" );
-    fwrite( bmp.Data(), 1, w * h * sizeof( uint32_t ), f );
+    if( fmt == 0x1908 )
+    {
+        fwrite( bmp.Data(), 1, w * h * sizeof( uint32_t ), f );
+    }
+    else
+    {
+        auto ptr = bmp.Data();
+        for( int i=0; i<w*h; i++ )
+        {
+            fwrite( ptr++, 1, 3, f );
+        }
+    }
     fclose( f );
 
     for( int i=1; i<=mips; i++ )
@@ -214,7 +225,17 @@ void SplitPNG( const char* fn )
 
         auto ptr = tmp.Data();
         FILE* f = fopen( ( out + "/" + std::to_string( i ) ).c_str(), "wb" );
-        fwrite( ptr, 1, w * h * sizeof( uint32_t ), f );
+        if( fmt == 0x1908 )
+        {
+            fwrite( ptr, 1, w * h * sizeof( uint32_t ), f );
+        }
+        else
+        {
+            for( int i=0; i<w*h; i++ )
+            {
+                fwrite( ptr++, 1, 3, f );
+            }
+        }
         fclose( f );
         bmp = std::move( tmp );
     }
