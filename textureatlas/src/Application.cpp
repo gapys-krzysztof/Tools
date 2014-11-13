@@ -285,9 +285,23 @@ bool DoWork()
     for( auto& data : irmap )
     {
         std::string id;
-        if( path == -1 )
+        if ((path == -1) && pathStripPrefix.empty())
         {
             id = prepend + data.first;
+        }
+        else if (!pathStripPrefix.empty())
+        {
+            // If prefix to be stripped is found at the very beginning of the file path then strip
+            // it. If it occurs anywhere else, leave the path unchanged.
+
+            if (!data.first.find(pathStripPrefix))
+            {
+                id = prepend + data.first.substr(pathStripPrefix.length());
+            }
+            else
+            {
+                id = prepend + data.first;
+            }
         }
         else
         {
@@ -298,6 +312,7 @@ bool DoWork()
             }
             id = prepend + data.first.substr( pos );
         }
+
         fprintf( f, "  <asset id=\"%s\" rects=\"%i\" w=\"%i\" h=\"%i\">\n", id.c_str(), data.second.size(), data.second.begin()->br->b->Size().x, data.second.begin()->br->b->Size().y );
         for( auto dit = data.second.cbegin(); dit != data.second.cend(); ++dit )
         {
