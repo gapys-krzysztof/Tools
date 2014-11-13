@@ -19,6 +19,7 @@ int size = 1024;
 std::string name( "atlas" );
 int edges = 0;
 int path = -1;
+std::string pathStripPrefix;
 bool potw = false;
 bool poth = false;
 int align = 0;
@@ -345,6 +346,8 @@ void Usage()
     printf( "-n, --name         name of generated files (default: atlas)\n" );
     printf( "-h, --help         prints this message\n" );
     printf( "-P, --path         path strip depth\n" );
+    printf( "--strip-prefix PFX prefix to be stripped from all asset paths (makes -P option\n");
+    printf( "                   ineffective; executed before path prepending action)\n");
     printf( "-W, --potw         make width of atlas a power of two\n" );
     printf( "-H, --poth         make height of atlas a power of two\n" );
     printf( "-a, --align        align textures (default: disabled)\n" );
@@ -403,6 +406,17 @@ int main( int argc, char** argv )
         {
             path = atoi( argv[i+1] );
             i++;
+        }
+        else if( CSTR( "--strip-prefix" ) )
+        {
+            if (argc <= i+1)
+            {
+                fprintf(stderr, "ERROR: Missing --strip-prefix option argument.\n");
+                exit(1);
+            }
+
+            pathStripPrefix = argv[i+1];
+            ++i;
         }
         else if( CSTR( "-W" ) || CSTR( "--potw" ) )
         {
