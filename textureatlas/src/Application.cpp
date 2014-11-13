@@ -285,18 +285,18 @@ bool DoWork()
     for( auto& data : irmap )
     {
         std::string id;
-        if ((path == -1) && pathStripPrefix.empty())
+        if( ( path == -1 ) && pathStripPrefix.empty() )
         {
             id = prepend + data.first;
         }
-        else if (!pathStripPrefix.empty())
+        else if( !pathStripPrefix.empty() )
         {
             // If prefix to be stripped is found at the very beginning of the file path then strip
             // it. If it occurs anywhere else, leave the path unchanged.
 
-            if (!data.first.find(pathStripPrefix))
+            if ( !data.first.find( pathStripPrefix ) )
             {
-                id = prepend + data.first.substr(pathStripPrefix.length());
+                id = prepend + data.first.substr( pathStripPrefix.length() );
             }
             else
             {
