@@ -416,6 +416,7 @@ int main( int argc, char** argv )
         }
         else
         {
+            fprintf(stderr, "TextureAtlas: error: unknown argument: %s\n", argv[i]);
             Error();
         }
     }
