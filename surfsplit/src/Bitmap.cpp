@@ -1,19 +1,44 @@
 #include <ctype.h>
 #include <string.h>
+#include <sstream>
 
 #include "libpng/png.h"
 
 #include "Bitmap.hpp"
+
+void FatalExit(std::string const& message);
+void FatalExitErrno(std::string const& message, int err);
+
+static void my_png_error(png_structp png_ptr, png_const_charp libpng_error_message)
+{
+    std::ostringstream message;
+    const char* fn = (const char*)png_get_error_ptr(png_ptr);
+    message << "png error while processing file '" << fn << "': " << libpng_error_message;
+    FatalExit(message.str());
+}
 
 Bitmap::Bitmap( const char* fn )
     : m_data( NULL )
 {
     FILE* f = fopen( fn, "rb" );
 
+    if( !f )
+    {
+        std::ostringstream message;
+        message << "failed to open file " << fn;
+        FatalExitErrno(message.str(), errno);
+    }
     unsigned int sig_read = 0;
     int bit_depth, color_type, interlace_type;
 
     png_structp png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
+
+    if (!png_ptr)
+    {
+        FatalExit("png_create_read_struct: Failed to allocate png struct");
+    }
+
+    png_set_error_fn(png_ptr, (png_voidp) fn, &my_png_error, NULL);
     png_infop info_ptr = png_create_info_struct( png_ptr );
     setjmp( png_jmpbuf( png_ptr ) );
 

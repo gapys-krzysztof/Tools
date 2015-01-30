@@ -8,16 +8,27 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sstream>
+#include <errno.h>
+#include <iostream>
 
 #include "Bitmap.hpp"
 #include "Generators.hpp"
 #include "Process.hpp"
 #include "Video.hpp"
 
+void FatalExit(std::string const& message);
+void FatalExitErrno(std::string const& message, int err);
+
 void Save( const char* fn, const std::vector<Rect>& rects, const std::vector<DupRect>& dupes )
 {
     FILE* f = fopen( fn, "wb" );
-
+    if( !f )
+    {
+        std::ostringstream message;
+        message << "failed to open file for writing" << fn;
+        FatalExitErrno(message.str(), errno);
+    }
     uint32 s = rects.size();
     fwrite( &s, 1, 4, f );
     fwrite( &*rects.begin(), 1, sizeof( Rect ) * s, f );
@@ -38,6 +49,20 @@ void Save( const char* fn, const std::vector<Rect>& rects, const std::vector<Dup
     fclose( f );
 }
 
+void FatalExit(std::string const& message);
+void FatalExitErrno(std::string const& message, int err)
+{
+    std::ostringstream foo;
+    foo << message << ": " << strerror(errno) << "(errno=" << errno << ")";
+    FatalExit(message);
+}
+void FatalExit(std::string const& message)
+{
+    std::ostringstream foo;
+    foo << "SurfSplit: fatal error: " << message << "\n";
+    std::cerr << foo.str();
+    exit(1);
+}
 void Error()
 {
     fprintf( stderr, "Usage: surfsplit filename.png|list.txt [option]\n\n" );
