@@ -49,7 +49,6 @@ void Save( const char* fn, const std::vector<Rect>& rects, const std::vector<Dup
     fclose( f );
 }
 
-void FatalExit(std::string const& message);
 void FatalExitErrno(std::string const& message, int err)
 {
     std::ostringstream foo;
