@@ -272,7 +272,14 @@ int main( int argc, char** argv )
                 }
                 struct stat s;
                 auto ret = stat( tmp, &s );
-                assert( ret == 0 );
+                if ( ret )
+                {
+                    std::ostringstream oss;
+                    oss << "couldn't stat file ('" << tmp << "') referenced by '" << argv[1]
+                        << "' input list file: " << strerror(errno) << " (errno=" << errno << ").";
+                    FatalExit(oss.str());
+                }
+
                 auto ts = s.st_mtime;
                 ret = stat( ( std::string( tmp ) + ".csr" ).c_str(), &s );
                 if( ret != 0 || ts >= s.st_mtime || force )
