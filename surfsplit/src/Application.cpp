@@ -49,19 +49,6 @@ void Save( const char* fn, const std::vector<Rect>& rects, const std::vector<Dup
     fclose( f );
 }
 
-void FatalExitErrno(std::string const& message, int err)
-{
-    std::ostringstream foo;
-    foo << message << ": " << strerror(errno) << "(errno=" << errno << ")";
-    FatalExit(message);
-}
-void FatalExit(std::string const& message)
-{
-    std::ostringstream foo;
-    foo << "SurfSplit: fatal error: " << message << "\n";
-    std::cerr << foo.str();
-    exit(1);
-}
 void Error()
 {
     fprintf( stderr, "Usage: surfsplit filename.png|list.txt [option]\n\n" );
@@ -305,4 +292,19 @@ int main( int argc, char** argv )
     }
 
     return 0;
+}
+
+void FatalExitErrno(std::string const& message, int err)
+{
+    std::ostringstream foo;
+    foo << message << ": " << strerror(errno) << "(errno=" << errno << ")";
+    FatalExit(message);
+}
+
+void FatalExit(std::string const& message)
+{
+    std::ostringstream foo;
+    foo << "SurfSplit: fatal error: " << message << "\n";
+    std::cerr << foo.str();
+    exit(1);
 }
