@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <iterator>
 #include <map>
+#include <mutex>
 #include <string>
 #include <string.h>
 #include <vector>
@@ -15,6 +16,8 @@
 #include "Bitmap.hpp"
 #include "Generators.hpp"
 #include "Process.hpp"
+#include "System.hpp"
+#include "TaskDispatch.hpp"
 #include "Video.hpp"
 
 void FatalExit(std::string const& message);
@@ -251,6 +254,8 @@ int main( int argc, char** argv )
     }
     else
     {
+        int cnt = 0;
+        std::vector<std::string> files;
         FILE* f = fopen( argv[1], "r" );
         if( !f )
         {
@@ -259,10 +264,8 @@ int main( int argc, char** argv )
         else
         {
             char tmp[1024];
-            int cnt = 0;
             while( fgets( tmp, 1024, f ) ) cnt++;
             fseek( f, 0, SEEK_SET );
-            int curr = 0;
             while( fgets( tmp, 1024, f ) )
             {
                 int len = strlen( tmp ) - 1;
@@ -284,18 +287,30 @@ int main( int argc, char** argv )
                 ret = stat( ( std::string( tmp ) + ".csr" ).c_str(), &s );
                 if( ret != 0 || ts >= s.st_mtime || force )
                 {
-                    Process( tmp );
+                    files.emplace_back( tmp );
                 }
+            }
+            fclose( f );
+        }
+
+        TaskDispatch td( System::CPUCores() );
+        std::mutex lock;
+        int curr = 0;
+        for( auto& file : files )
+        {
+            TaskDispatch::Queue( [&file, &lock, &curr, &cnt] {
+                Process( file.c_str() );
+                std::lock_guard<std::mutex> lg( lock );
+                curr++;
                 if( curr % 50 == 0 )
                 {
                     printf( "%i/%i\r", curr, cnt );
                     fflush( stdout );
                 }
-                curr++;
-            }
-            fclose( f );
-            printf( "%i/%i\n", cnt, cnt );
+            } );
         }
+        TaskDispatch::Sync();
+        printf( "%i/%i\n", cnt, cnt );
     }
 
     return 0;

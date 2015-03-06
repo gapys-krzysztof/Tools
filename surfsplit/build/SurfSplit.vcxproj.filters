@@ -111,6 +111,12 @@
     <ClCompile Include="..\..\common\libpng\pngwutil.c">
       <Filter>SurfSplit\libpng</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\TaskDispatch.cpp">
+      <Filter>SurfSplit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\System.cpp">
+      <Filter>SurfSplit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bitmap.hpp">
@@ -190,6 +196,12 @@
     </ClInclude>
     <ClInclude Include="..\..\common\libpng\pngstruct.h">
       <Filter>SurfSplit\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TaskDispatch.hpp">
+      <Filter>SurfSplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System.hpp">
+      <Filter>SurfSplit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

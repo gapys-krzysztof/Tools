@@ -176,6 +176,8 @@
     <ClCompile Include="..\src\Bitmap.cpp" />
     <ClCompile Include="..\src\Generators.cpp" />
     <ClCompile Include="..\src\Process.cpp" />
+    <ClCompile Include="..\src\System.cpp" />
+    <ClCompile Include="..\src\TaskDispatch.cpp" />
     <ClCompile Include="..\src\Texture.cpp" />
     <ClCompile Include="..\src\Video.cpp" />
   </ItemGroup>
@@ -202,6 +204,8 @@
     <ClInclude Include="..\src\Generators.hpp" />
     <ClInclude Include="..\src\Process.hpp" />
     <ClInclude Include="..\src\Rect.hpp" />
+    <ClInclude Include="..\src\System.hpp" />
+    <ClInclude Include="..\src\TaskDispatch.hpp" />
     <ClInclude Include="..\src\Texture.hpp" />
     <ClInclude Include="..\src\Types.hpp" />
     <ClInclude Include="..\src\Vector.hpp" />
