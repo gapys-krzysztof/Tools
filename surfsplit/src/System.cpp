@@ -34,7 +34,7 @@ int System::CPUCores()
     return cores;
 }
 
-void System::SetThreadName( std::thread& thread, const char* name )
+void System::SetThreadName( const char* name )
 {
 #ifdef _WIN32
     const DWORD MS_VC_EXCEPTION=0x406D1388;
@@ -49,7 +49,7 @@ void System::SetThreadName( std::thread& thread, const char* name )
     };
 #  pragma pack(pop)
 
-    DWORD ThreadId = GetThreadId( static_cast<HANDLE>( thread.native_handle() ) );
+    DWORD ThreadId = GetThreadId( GetCurrentThread() );
     THREADNAME_INFO info;
     info.dwType = 0x1000;
     info.szName = name;
@@ -64,6 +64,6 @@ void System::SetThreadName( std::thread& thread, const char* name )
     {
     }
 #else
-    pthread_setname_np( thread.native_handle(), name );
+    pthread_setname_np( pthread_self(), name );
 #endif
 }
