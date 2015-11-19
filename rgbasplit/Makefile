@@ -1,5 +1,5 @@
 CFLAGS = -g3 -O3
-CXXFLAGS = $(CFLAGS) --std=c++0x
+CXXFLAGS = $(CFLAGS) --std=c++14
 DEFINES =
 INCLUDES = $(shell sdl-config --cflags)
 LIBS = $(shell sdl-config --libs) -lGL
