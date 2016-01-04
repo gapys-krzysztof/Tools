@@ -572,7 +572,7 @@ png_push_crc_finish(png_structrp png_ptr)
       else
          skip_length = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
+      //png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
 
       png_ptr->skip_length -= skip_length;
       png_ptr->buffer_size -= save_size;
@@ -593,7 +593,7 @@ png_push_crc_finish(png_structrp png_ptr)
       else
          skip_length = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
+      //png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
 
       png_ptr->skip_length -= skip_length;
       png_ptr->buffer_size -= save_size;
@@ -775,7 +775,7 @@ png_push_read_IDAT(png_structrp png_ptr)
       else
          idat_size = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
+      //png_calculate_crc(png_ptr, png_ptr->save_buffer_ptr, save_size);
 
       png_process_IDAT_data(png_ptr, png_ptr->save_buffer_ptr, save_size);
 
@@ -801,7 +801,7 @@ png_push_read_IDAT(png_structrp png_ptr)
       else
          idat_size = (png_uint_32)save_size;
 
-      png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
+      //png_calculate_crc(png_ptr, png_ptr->current_buffer_ptr, save_size);
 
       png_process_IDAT_data(png_ptr, png_ptr->current_buffer_ptr, save_size);
 
