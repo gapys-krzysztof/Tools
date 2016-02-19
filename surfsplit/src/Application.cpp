@@ -283,11 +283,18 @@ int main( int argc, char** argv )
                     FatalExit(oss.str());
                 }
 
-                auto ts = s.st_mtime;
-                ret = stat( ( std::string( tmp ) + ".csr" ).c_str(), &s );
-                if( ret != 0 || ts >= s.st_mtime || force )
+                if( force )
                 {
                     files.emplace_back( tmp );
+                }
+                else
+                {
+                    auto ts = s.st_mtime;
+                    ret = stat( ( std::string( tmp ) + ".csr" ).c_str(), &s );
+                    if( ret != 0 || ts >= s.st_mtime )
+                    {
+                        files.emplace_back( tmp );
+                    }
                 }
             }
             fclose( f );
