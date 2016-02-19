@@ -300,12 +300,17 @@ int main( int argc, char** argv )
         {
             TaskDispatch::Queue( [&file, &lock, &curr, &cnt] {
                 Process( file.c_str() );
-                std::lock_guard<std::mutex> lg( lock );
+                lock.lock();
                 curr++;
                 if( curr % 50 == 0 )
                 {
                     printf( "%i/%i\r", curr, cnt );
+                    lock.unlock();
                     fflush( stdout );
+                }
+                else
+                {
+                    lock.unlock();
                 }
             } );
         }
