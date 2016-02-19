@@ -30,7 +30,11 @@ bool splashfill = true;
 bool allowFlip = true;
 bool writeRaw = false;
 bool cascadeUp = false;
+bool stats = false;
 
+int stats_png = 0;
+int stats_csr = 0;
+int stats_atl = 0;
 
 template<typename T>
 inline T AlignPOT( T a )
@@ -60,10 +64,12 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
     for( auto& png : pngs )
     {
         Bitmap* b = new Bitmap( png.c_str() );
+        stats_png += b->Size().x * b->Size().y;
         FILE* f = fopen( rit->c_str(), "rb" );
         if( !f )
         {
             ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b, *nit ) );
+            stats_csr += b->Size().x * b->Size().y;
         }
         else
         {
@@ -80,6 +86,7 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
                     BRect r( 0, 0, 0, 0, b, *nit );
                     fread( &r, 1, sizeof( uint16 ) * 4, f );
                     ret.push_back( r );
+                    stats_csr += r.w * r.h;
                 }
             }
             fclose( f );
@@ -238,6 +245,7 @@ bool DoWork()
                 Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y + uv->rect.h, 1, edges ) );
             }
         }
+        stats_atl += uv->rect.w * uv->rect.h + edges * ( edges * 4 + 2 * ( uv->rect.h + uv->rect.w ) );
     }
 
     if( potw )
@@ -345,6 +353,17 @@ bool DoWork()
         b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
     }
 
+    if( stats )
+    {
+        printf( "PNG size: %.2f Kpx\n", stats_png / 1000.f );
+        printf( "CSR size: %.2f Kpx\n", stats_csr / 1000.f );
+        printf( "CSR reduction: %.2f%%\n", float( stats_csr ) / stats_png * 100 );
+        auto as = b->Size().x * b->Size().y;
+        printf( "Atlas size: %.2f Kpx\n", as / 1000.f );
+        printf( "Atlas used: %.2f Kpx\n", stats_atl / 1000.f );
+        printf( "Atlas fill: %.2f%%\n", float( stats_atl ) / as * 100 );
+    }
+
     delete b;
     delete tree;
 
@@ -373,6 +392,7 @@ void Usage()
     printf( "--noflip           disable fragment flipping\n" );
     printf( "--raw              write raw data\n" );
     printf( "-c, --cascade      try bigger atlas size, if data does not fit\n" );
+    printf( "--stats            print stats\n" );
 }
 
 void Error()
@@ -474,6 +494,10 @@ int main( int argc, char** argv )
         else if( CSTR( "-c" ) || CSTR( "--cascade" ) )
         {
             cascadeUp = true;
+        }
+        else if( CSTR( "--stats" ) )
+        {
+            stats = true;
         }
         else
         {
