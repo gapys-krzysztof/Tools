@@ -1,0 +1,5 @@
+External licenses apply.
+
+libpng: http://www.libpng.org/pub/png/src/libpng-LICENSE.txt
+zlib: http://www.zlib.net/zlib_license.html
+pugixml: http://pugixml.org/license.html
