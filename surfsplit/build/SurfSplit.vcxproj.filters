@@ -192,12 +192,4 @@
       <Filter>SurfSplit\libpng</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="..\..\common\zlib\inffas32.obj">
-      <Filter>SurfSplit\zlib</Filter>
-    </Object>
-    <Object Include="..\..\common\zlib\match686.obj">
-      <Filter>SurfSplit\zlib</Filter>
-    </Object>
-  </ItemGroup>
 </Project>

@@ -186,12 +186,4 @@
       <Filter>TextureAtlas\zlib</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="..\..\common\zlib\inffas32.obj">
-      <Filter>TextureAtlas\zlib</Filter>
-    </Object>
-    <Object Include="..\..\common\zlib\match686.obj">
-      <Filter>TextureAtlas\zlib</Filter>
-    </Object>
-  </ItemGroup>
 </Project>
