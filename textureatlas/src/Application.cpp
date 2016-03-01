@@ -26,6 +26,7 @@ std::string prepend;
 bool square = false;
 bool noalpha = false;
 bool splashfill = true;
+bool allowFlip = true;
 
 
 template<typename T>
@@ -135,7 +136,10 @@ bool DoWork()
     fclose( f );
 
     std::vector<BRect> images( LoadImages( pngnames, names, rectnames ) );
-    FindFlipped( images );
+    if( allowFlip )
+    {
+        FindFlipped( images );
+    }
     SortImages( images );
 
     Bitmap* b = new Bitmap( size, size );
@@ -205,6 +209,25 @@ bool DoWork()
                 br.y = std::min( it->b->Size().y - 1, it->y + it->h + i );
             }
             Blit( b, br, Rect( uv->rect.x, uv->rect.y + uv->rect.h + i, uv->rect.w, 1 ) );
+        }
+        for( int i=0; i<edges; i++ )
+        {
+            {
+                BRect br( uv->rect.x, uv->rect.y - edges, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y - edges, 1, edges ) );
+            }
+            {
+                BRect br( uv->rect.x, uv->rect.y + uv->rect.h, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y + uv->rect.h, 1, edges ) );
+            }
+            {
+                BRect br( uv->rect.x + uv->rect.w - 1, uv->rect.y - edges, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y - edges, 1, edges ) );
+            }
+            {
+                BRect br( uv->rect.x + uv->rect.w - 1, uv->rect.y + uv->rect.h, 1, edges, b, "" );
+                Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y + uv->rect.h, 1, edges ) );
+            }
         }
     }
 
@@ -313,6 +336,7 @@ void Usage()
     printf( "-q, --square       make width equal to height\n" );
     printf( "-N, --noalpha      no alpha channel\n" );
     printf( "--nosplashfill     disable splash fill\n" );
+    printf( "--noflip           disable fragment flipping\n" );
 }
 
 void Error()
@@ -390,6 +414,10 @@ int main( int argc, char** argv )
         else if( CSTR( "--nosplashfill" ) )
         {
             splashfill = false;
+        }
+        else if( CSTR( "--noflip" ) )
+        {
+            allowFlip = false;
         }
         else
         {
