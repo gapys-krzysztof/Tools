@@ -1,0 +1,3 @@
+Graphic assets are intellectual property of Huuuge Games and can be only used
+to illustrate working concepts of the provided open source code. Any other
+usage, modification or creation of derivative works is strictly prohibited.
