@@ -1,0 +1,92 @@
+========================================
+= Proper rendering of surfsplit images =
+========================================
+
+Let's assume we have the following image:
+
++------+
+|###   |
+|###   |
+|###   |
+|######|
+|######|
+|######|
++------+
+
+When surfsplit process is applied to it, two regions will be specified,
+omitting the transparent section in upper right corner:
+
++---+
+|###|
+|###|
+|###+---+
+|###|###|
+|###|###|
+|###|###|
++---+---+
+
+A naive approach to rendering these regions would generate the following
+geometry (two triangles for each rect):
+
++---+
+|:  |
+|:  |
+| : +---+
+| : |\  |
+|  :| \ |
+|  :|  \|
++---+---+
+
+While such approach will work perfectly fine if rects are axis aligned to
+display pixels, artifacting will happen if rects are transformed in any way.
+The problem is visible on the shared center horizontal edge. It is commonly
+relied upon and intuitive that polygons sharing an edge are rendered without
+holes between them, but in our case there are no common end points, as
+required by OpenGL core 4.5 specification, section 14.6.1:
+
+-------------------------------------------------------------------------8<--
+Special treatment is given to a fragment whose center lies on a polygon edge.
+In such a case we require that if two polygons lie on either side of a common
+edge (with identical endpoints) on which a fragment center lies, then exactly
+one of the polygons results in the production of the fragment during
+rasterization.
+--8<------------------https://www.opengl.org/registry/doc/glspec45.core.pdf--
+
+Similar statements will be present in specifications of other graphic systems.
+To solve this issue, we need to triangulate surfsplit rects in such way, that
+there are edges with shared end points for all adjacent rectangles. In our
+case this would be appropriate:
+
++---+
+|\  |
+| \ |
+|  \+---+
+|  /|\  |
+| / | \ |
+|/  |  \|
++---+---+
+
+In real world scenarios, on each side there will be any number of rects (or
+none), possibly with holes in between. While at first it may seem as a complex
+problem, the solutions are quite simple.
+
+1. We need a list of triangle end points on both edges. We start with two top
+points on top (upper left and upper right corners of whole rect) and go down,
+searching for the next top-most edge point on either edge. We create the
+triangle using the three points we have and remove the top-most point that was
+on the side where we found the new point. The process continues until there
+are no points left. Our geometry looks like the one above.
+
+2. We start with two diagonal points. On one edge we go either top to bottom
+or bottom to top and for each point found we generate a triangle with our
+diagonal points as a base. The process repeats for the other edge. We get the
+following geometry:
+
++---+
+|\  |
+|:\ |
+| :\+---+
+| : |\  |
+|  :| \ |
+|  :|  \|
++---+---+
