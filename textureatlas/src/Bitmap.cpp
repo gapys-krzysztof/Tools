@@ -25,7 +25,39 @@ Bitmap::Bitmap( const Bitmap& bmp )
 Bitmap::Bitmap( const char* fn )
     : m_data( NULL )
 {
-    FILE* f = fopen( fn, "rb" );
+    std::string lz4( fn );
+    lz4 += ".lz4";
+
+    FILE *f = fopen( lz4.c_str(), "rb" );
+    if( f )
+    {
+        char fourcc[4];
+        fread( fourcc, 1, 4, f );
+        if( memcmp( fourcc, "raw4", 4 ) != 0 )
+        {
+            fprintf( stderr, "FATAL: %s has wrong fourcc", lz4.c_str() );
+            exit( 1 );
+        }
+
+        fseek( f, 1, SEEK_CUR );    // alpha
+        fread( &m_size.x, 1, 4, f );
+        fread( &m_size.y, 1, 4, f );
+
+        m_data = new uint32[m_size.x * m_size.y];
+
+        int32 csize;
+        fread( &csize, 1, 4, f );
+        auto cbuf = new char[csize];
+        fread( cbuf, 1, csize, f );
+        fclose( f );
+
+        LZ4_decompress_fast( cbuf, (char*)m_data, m_size.x * m_size.y * 4 );
+
+        delete[] cbuf;
+        return;
+    }
+
+    f = fopen( fn, "rb" );
 
     if( !f )
     {
