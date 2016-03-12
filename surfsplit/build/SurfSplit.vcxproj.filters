@@ -10,6 +10,9 @@
     <Filter Include="SurfSplit\libpng">
       <UniqueIdentifier>{997de788-4339-4690-bd72-8dbf7c7a29e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SurfSplit\lz4">
+      <UniqueIdentifier>{0de99d1d-648b-4814-8f69-b38794f992f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Application.cpp">
@@ -117,6 +120,9 @@
     <ClCompile Include="..\src\System.cpp">
       <Filter>SurfSplit</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\lz4\lz4.c">
+      <Filter>SurfSplit\lz4</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bitmap.hpp">
@@ -202,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="..\src\System.hpp">
       <Filter>SurfSplit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\lz4\lz4.h">
+      <Filter>SurfSplit\lz4</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

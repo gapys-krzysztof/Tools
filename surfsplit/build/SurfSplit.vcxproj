@@ -160,6 +160,7 @@
     <ClCompile Include="..\..\common\libpng\pngwrite.c" />
     <ClCompile Include="..\..\common\libpng\pngwtran.c" />
     <ClCompile Include="..\..\common\libpng\pngwutil.c" />
+    <ClCompile Include="..\..\common\lz4\lz4.c" />
     <ClCompile Include="..\..\common\zlib\adler32.c" />
     <ClCompile Include="..\..\common\zlib\compress.c" />
     <ClCompile Include="..\..\common\zlib\crc32.c" />
@@ -189,6 +190,7 @@
     <ClInclude Include="..\..\common\libpng\pnglibconf.h" />
     <ClInclude Include="..\..\common\libpng\pngpriv.h" />
     <ClInclude Include="..\..\common\libpng\pngstruct.h" />
+    <ClInclude Include="..\..\common\lz4\lz4.h" />
     <ClInclude Include="..\..\common\zlib\crc32.h" />
     <ClInclude Include="..\..\common\zlib\deflate.h" />
     <ClInclude Include="..\..\common\zlib\gzguts.h" />
