@@ -63,6 +63,7 @@ void Error()
     fprintf( stderr, " -l     set limit for block size\n" );
     fprintf( stderr, " -f     force recalculation\n" );
     fprintf( stderr, " -A     align blocks to grid (default: 1)\n" );
+    fprintf( stderr, " -lz4   save lz4 compressed bitmaps\n" );
     exit( 1 );
 }
 
@@ -73,6 +74,7 @@ int alphaCutoff = 0;
 int blockSizeLimit = 0;
 bool force = false;
 int align = 1;
+bool lz4 = false;
 
 void Process( const char* in )
 {
@@ -191,6 +193,13 @@ void Process( const char* in )
 
     Save( out.c_str(), r, dupes );
 
+    if( lz4 )
+    {
+        std::string lz4file( in );
+        lz4file += ".lz4";
+        bmp.WriteRaw( lz4file.c_str() );
+    }
+
     if( viewData )
     {
         ShowBitmap( &bmp, r, dupes );
@@ -239,6 +248,10 @@ int main( int argc, char** argv )
         {
             i++;
             align = atoi( argv[i] );
+        }
+        else if( CSTR( "-lz4" ) )
+        {
+            lz4 = true;
         }
         else
         {
