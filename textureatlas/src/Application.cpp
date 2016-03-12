@@ -28,9 +28,10 @@ bool square = false;
 bool noalpha = false;
 bool splashfill = true;
 bool allowFlip = true;
-bool writeRaw = false;
 bool cascadeUp = false;
 bool stats = false;
+bool lz4 = false;
+int png = 1;
 
 int stats_png = 0;
 int stats_csr = 0;
@@ -344,11 +345,11 @@ bool DoWork()
         SplashFill( b );
     }
 
-    if( writeRaw )
+    if( lz4 )
     {
-        b->WriteRaw( ( output + "/" + name + ".raw" ).c_str(), !noalpha );
+        b->WriteRaw( ( output + "/" + name + ".lz4" ).c_str(), !noalpha );
     }
-    else
+    if( png > 0 )
     {
         b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
     }
@@ -390,7 +391,8 @@ void Usage()
     printf( "-N, --noalpha      no alpha channel\n" );
     printf( "--nosplashfill     disable splash fill\n" );
     printf( "--noflip           disable fragment flipping\n" );
-    printf( "--raw              write raw data\n" );
+    printf( "--lz4              save lz4 compressed atlas\n" );
+    printf( "--png              save png atlas (default)\n" );
     printf( "-c, --cascade      try bigger atlas size, if data does not fit\n" );
     printf( "--stats            print stats\n" );
 }
@@ -487,9 +489,14 @@ int main( int argc, char** argv )
         {
             allowFlip = false;
         }
-        else if( CSTR( "--raw" ) )
+        else if( CSTR( "--lz4" ) )
         {
-            writeRaw = true;
+            lz4 = true;
+            png--;
+        }
+        else if( CSTR( "--png" ) )
+        {
+            png++;
         }
         else if( CSTR( "-c" ) || CSTR( "--cascade" ) )
         {
