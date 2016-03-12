@@ -10,6 +10,9 @@
     <Filter Include="TextureAtlas\libpng">
       <UniqueIdentifier>{997de788-4339-4690-bd72-8dbf7c7a29e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TextureAtlas\lz4">
+      <UniqueIdentifier>{bd518d4e-ef0c-4827-8424-145202133eff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Application.cpp">
@@ -108,6 +111,9 @@
     <ClCompile Include="..\..\common\zlib\zutil.c">
       <Filter>TextureAtlas\zlib</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\lz4\lz4.c">
+      <Filter>TextureAtlas\lz4</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bitmap.hpp">
@@ -184,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="..\..\common\zlib\zutil.h">
       <Filter>TextureAtlas\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\lz4\lz4.h">
+      <Filter>TextureAtlas\lz4</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "libpng/png.h"
+#include "lz4/lz4.h"
 
 #include "Bitmap.hpp"
 
@@ -144,15 +145,23 @@ bool Bitmap::WriteRaw( const char* fn, bool alpha )
     FILE* f = fopen( fn, "wb" );
     if( !f ) return false;
 
-    const char raw[] = { 'r', 'a', 'w' };
-    fwrite( raw, 1, 3, f );
+    const char fourcc[] = { 'r', 'a', 'w', '4' };
+    fwrite( fourcc, 1, sizeof( fourcc ), f );
     uint8 a = alpha ? 1 : 0;
     fwrite( &a, 1, 1, f );
     uint32 d = m_size.x;
     fwrite( &d, 1, 4, f );
     d = m_size.y;
     fwrite( &d, 1, 4, f );
-    fwrite( m_data, 1, m_size.x * m_size.y * 4, f );
+
+    const auto cbufsize = LZ4_compressBound( m_size.x * m_size.y * 4 );
+    auto cbuf = new char[cbufsize];
+    const int32 csize = LZ4_compress_default( (const char*)m_data, cbuf, m_size.x * m_size.y * 4, cbufsize );
+
+    fwrite( &csize, 1, 4, f );
+    fwrite( cbuf, 1, csize, f );
+
+    delete[] cbuf;
 
     fclose( f );
     return true;
