@@ -1,0 +1,8 @@
+**/build/.vs/
+**/build/*.VC.opendb
+**/build/*.sdf
+**/build/*.vcxproj.user
+**/build/packages
+**/build/x64
+**/build/Debug
+**/build/Release
