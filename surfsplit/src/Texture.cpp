@@ -1,3 +1,5 @@
+#ifdef BUILD_VIS
+
 #include "Texture.hpp"
 
 Texture::Texture( Bitmap* bitmap )
@@ -16,3 +18,5 @@ Texture::~Texture()
 {
     glDeleteTextures( 1, &m_texture );
 }
+
+#endif
