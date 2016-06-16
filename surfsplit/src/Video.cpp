@@ -299,6 +299,7 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<
     Texture tex( bmp );
 
     glEnable( GL_TEXTURE_2D );
+    glEnable( GL_LINE_SMOOTH );
     glBindTexture( GL_TEXTURE_2D, tex );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
