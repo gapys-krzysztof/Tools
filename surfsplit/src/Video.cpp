@@ -262,10 +262,17 @@ static SurfGeo CalcGeo( const std::vector<SurfRect>& rects )
             geo.uv.emplace_back( SurfUV{ xy } );
         }
 
+        auto size = points.size();
+
         int pidx = rectsHor ? 1 : 0;
+        if( points[size-1].v[pidx] != points[size-3].v[pidx] )
+        {
+            std::swap( points[size-1], points[size-2] );
+        }
+
         int i1 = 0;
         int i2 = 1;
-        for( int i=2; i<points.size(); i++ )
+        for( int i=2; i<size; i++ )
         {
             unsigned int v1 = uvmap[points[i1]];
             unsigned int v2 = uvmap[points[i2]];
