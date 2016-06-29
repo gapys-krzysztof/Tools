@@ -4,6 +4,8 @@
 #else
 #  include <dirent.h>
 #endif
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "Filesystem.hpp"
 
@@ -67,4 +69,10 @@ std::vector<std::string> ListDirectory( const std::string& path )
 #endif
 
     return ret;
+}
+
+bool Exists( const std::string& file )
+{
+    struct stat buf;
+    return stat( file.c_str(), &buf ) == 0 && ( buf.st_mode & S_IFREG ) != 0;
 }
