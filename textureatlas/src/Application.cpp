@@ -112,7 +112,7 @@ void FindFlipped( std::vector<BRect>& images )
     std::for_each( images.begin(), images.end(), []( BRect& img ){ if( img.h > img.w ) { img.flip = true; std::swap( img.w, img.h ); } } );
 }
 
-bool DoWork()
+bool DoWork( const std::string& lang )
 {
     FILE* f = fopen( input.c_str(), "r" );
     if( !f ) return false;
@@ -529,12 +529,12 @@ int main( int argc, char** argv )
 
 #undef CSTR
 
-    if( !DoWork() )
+    for( auto& v : i18nLangs )
     {
-        return 1;
+        if( !DoWork( v ) )
+        {
+            return 1;
+        }
     }
-    else
-    {
-        return 0;
-    }
+    return 0;
 }
