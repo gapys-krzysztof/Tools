@@ -119,15 +119,38 @@ bool DoWork( const std::string& lang )
 
     std::list<std::string> names, pngnames, rectnames;
     std::string line;
+    bool skipLang = !lang.empty();
     while( ReadLine( f, line ) )
     {
         names.push_back( line );
-        pngnames.push_back( line.substr( 0, line.rfind( '.' ) ) + ".png" );
-        rectnames.push_back( line + ".csr" );
+        if( lang.empty() )
+        {
+            pngnames.push_back( line.substr( 0, line.rfind( '.' ) ) + ".png" );
+            rectnames.push_back( line + ".csr" );
+        }
+        else
+        {
+            std::string png = line.substr( 0, line.rfind( '.' ) ) + ".png";
+            std::string pfx = i18nBase + "/" + lang + "/";
+            std::string pfxpng = pfx + png;
+            if( Exists( pfxpng ) )
+            {
+                pngnames.push_back( std::move( pfxpng ) );
+                rectnames.push_back( pfx + line + ".csr" );
+                skipLang = false;
+            }
+            else
+            {
+                pngnames.push_back( std::move( png ) );
+                rectnames.push_back( line + ".csr" );
+            }
+        }
         line.clear();
     }
 
     fclose( f );
+
+    if( skipLang ) return true;
 
     std::vector<BRect> images( LoadImages( pngnames, names, rectnames ) );
     if( allowFlip )
