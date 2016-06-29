@@ -114,6 +114,9 @@
     <ClCompile Include="..\..\common\lz4\lz4.c">
       <Filter>TextureAtlas\lz4</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Filesystem.cpp">
+      <Filter>TextureAtlas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bitmap.hpp">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="..\..\common\lz4\lz4.h">
       <Filter>TextureAtlas\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Filesystem.hpp">
+      <Filter>TextureAtlas</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
