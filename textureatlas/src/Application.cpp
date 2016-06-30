@@ -132,7 +132,13 @@ bool DoWork( const std::string& lang )
         {
             std::string png = line.substr( 0, line.rfind( '.' ) ) + ".png";
             std::string pfx = i18nBase + "/" + lang + "/";
-            std::string pfxpng = pfx + png;
+            size_t pos = 0;
+            for( int i=0; i<path; i++ )
+            {
+                pos = png.find( '/', pos ) + 1;
+            }
+            auto tpng = prepend + png.substr( pos );
+            std::string pfxpng = pfx + tpng;
             if( Exists( pfxpng ) )
             {
                 pngnames.push_back( std::move( pfxpng ) );
