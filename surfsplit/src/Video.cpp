@@ -149,7 +149,13 @@ static std::vector<SurfRect> CalculatePoints( const std::vector<Rect>& rects )
                 rectsHor = true;
             }
         }
+    }
 
+    for( int i = 0; i < ret.size(); ++i )
+    {
+        SurfRect& ri = ret[i];
+        uint16_t rix2 = ri.x+ri.w;
+        uint16_t riy2 = ri.y+ri.h;
         if( rectsHor )
         {
             ri.p1.push_back( ri.x );
