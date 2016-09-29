@@ -47,7 +47,7 @@ std::vector<std::string> ListDirectory( const std::string& path )
 
     FindClose( h );
 #else
-    DIR* dir = opendir( ( m_path + path ).c_str() );
+    DIR* dir = opendir( path.c_str() );
     if( dir == nullptr )
     {
         return ret;
