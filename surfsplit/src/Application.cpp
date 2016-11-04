@@ -219,6 +219,10 @@ int main( int argc, char** argv )
     {
         if( CSTR( "-v" ) )
         {
+#ifndef BUILD_VIS
+            printf( "ERROR: SurfSplit is not built with BUILD_VIS flag. Rebuild to enable\nvisualization.\n" );
+            exit( 1 );
+#endif
             viewData = true;
         }
         else if( CSTR( "-b" ) )
