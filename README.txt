@@ -43,6 +43,8 @@ We begin by scanning source image files for non-transparent areas. Regions
 containing data are saved in an external metafile, which allows omitting
 transparent parts of the image during rendering. Example results are displayed
 in docs/surfsplit.png.
+To enable split visualization (-v) build surfsplit with BUILD_VIS flag. This
+will add OpenGL and SDL2 dependencies.
 
 b) textureatlas
 ---------------
