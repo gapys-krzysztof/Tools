@@ -92,4 +92,6 @@ following geometry:
 +---+---+
 
 Example implementation of triangulation algorithm is present in surfsplit
-sources and can be executed by passing -v option.
+sources and can be executed by passing -v option. We have opted to use the
+first approach, with special handling for last triangle in rect (commit
+ecb99f76). This results in triangles which are well-formed for culling.
