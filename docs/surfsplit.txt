@@ -90,3 +90,6 @@ following geometry:
 |  :| \ |
 |  :|  \|
 +---+---+
+
+Example implementation of triangulation algorithm is present in surfsplit
+sources and can be executed by passing -v option.
