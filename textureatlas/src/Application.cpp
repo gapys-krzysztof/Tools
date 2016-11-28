@@ -8,6 +8,7 @@
 #include <map>
 
 #include "Bitmap.hpp"
+#include "Filesystem.hpp"
 #include "Node.hpp"
 #include "Rect.hpp"
 #include "String.hpp"
@@ -30,6 +31,8 @@ bool splashfill = true;
 bool allowFlip = true;
 bool cascadeUp = false;
 bool stats = false;
+std::string i18nBase;
+std::vector<std::string> i18nLangs;
 bool lz4 = false;
 int png = 1;
 
@@ -395,6 +398,7 @@ void Usage()
     printf( "--png              save png atlas (default)\n" );
     printf( "-c, --cascade      try bigger atlas size, if data does not fit\n" );
     printf( "--stats            print stats\n" );
+    printf( "-O, --override     i18n override directory\n" );
 }
 
 void Error()
@@ -505,6 +509,12 @@ int main( int argc, char** argv )
         else if( CSTR( "--stats" ) )
         {
             stats = true;
+        }
+        else if( CSTR( "-O" ) || CSTR( "--override" ) )
+        {
+            i18nBase = argv[i+1];
+            i18nLangs = ListDirectory( i18nBase );
+            i++;
         }
         else
         {
