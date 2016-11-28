@@ -291,7 +291,20 @@ bool DoWork( const std::string& lang )
         ++rit;
     }
 
-    f = fopen( ( output + "/" + name + ".xml" ).c_str(), "w" );
+    std::string xmlName;
+    std::string bitmapName;
+    if( lang.empty() )
+    {
+        xmlName = output + "/" + name + ".xml";
+        bitmapName = output + "/" + name;
+    }
+    else
+    {
+        xmlName = output + "/" + lang + "_" + name + ".xml";
+        bitmapName = output + "/" + lang + "_" + name;
+    }
+
+    f = fopen( xmlName.c_str(), "w" );
     fprintf( f, "<?xml version=\"1.0\"?>\n" );
     fprintf( f, "<atlas height=\"%i\" width=\"%i\">\n", b->Size().x, b->Size().y );
     for( auto& data : irmap )
@@ -350,11 +363,11 @@ bool DoWork( const std::string& lang )
 
     if( lz4 )
     {
-        b->WriteRaw( ( output + "/" + name + ".lz4" ).c_str(), !noalpha );
+        b->WriteRaw( ( bitmapName + ".lz4" ).c_str(), !noalpha );
     }
     if( png > 0 )
     {
-        b->Write( ( output + "/" + name + ".png" ).c_str(), !noalpha );
+        b->Write( ( bitmapName + ".png" ).c_str(), !noalpha );
     }
 
     if( stats )
