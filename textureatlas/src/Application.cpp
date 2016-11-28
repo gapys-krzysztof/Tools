@@ -32,7 +32,7 @@ bool allowFlip = true;
 bool cascadeUp = false;
 bool stats = false;
 std::string i18nBase;
-std::vector<std::string> i18nLangs;
+std::vector<std::string> i18nLangs = { "" };
 bool lz4 = false;
 int png = 1;
 
@@ -513,7 +513,11 @@ int main( int argc, char** argv )
         else if( CSTR( "-O" ) || CSTR( "--override" ) )
         {
             i18nBase = argv[i+1];
-            i18nLangs = ListDirectory( i18nBase );
+            const auto tmp = ListDirectory( i18nBase );
+            for( auto& v : tmp )
+            {
+                i18nLangs.emplace_back( v );
+            }
             i++;
         }
         else
