@@ -1,13 +1,15 @@
 CFLAGS = -g3 -O3
 CXXFLAGS = $(CFLAGS) --std=c++14
 DEFINES =
-INCLUDES = $(shell sdl-config --cflags)
+INCLUDES = $(shell sdl-config --cflags) -I../common
 LIBS = $(shell sdl-config --libs) -lGL
 
 IMAGE = rgbasplit
 
 SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
 CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
+CSRC := $(wildcard ../common/libpng/*.c)
+CSRC := $(wildcard ../common/lz4/*.c)
 OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 
 all: $(IMAGE)

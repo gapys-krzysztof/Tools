@@ -1,13 +1,15 @@
 CFLAGS = -g3 -O3
 CXXFLAGS = $(CFLAGS) --std=c++14
 DEFINES =
-INCLUDES = $(shell pkg-config --cflags libpng)
+INCLUDES = $(shell pkg-config --cflags libpng) -I../common
 LIBS = $(shell pkg-config --libs libpng)
 
 IMAGE = MipSplit
 
 SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | grep -v common | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
 CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | grep -v common | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
+CSRC := $(wildcard ../common/libpng/*.c)
+CSRC := $(wildcard ../common/lz4/*.c)
 OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 
 all: $(IMAGE)
