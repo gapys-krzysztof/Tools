@@ -8,8 +8,8 @@ IMAGE = rgbasplit
 
 SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
 CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
-CSRC := $(wildcard ../common/libpng/*.c)
-CSRC := $(wildcard ../common/lz4/*.c)
+CSRC += $(wildcard ../common/libpng/*.c)
+CSRC += $(wildcard ../common/lz4/*.c)
 OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 
 all: $(IMAGE)
