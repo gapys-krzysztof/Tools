@@ -1,13 +1,15 @@
 CFLAGS = -g3 -O3
 CXXFLAGS = $(CFLAGS) --std=c++14
 DEFINES =
-INCLUDES = $(shell pkg-config --cflags sdl2 libpng)
+INCLUDES = $(shell pkg-config --cflags sdl2 libpng) -I../common
 LIBS = $(shell pkg-config --libs sdl2 libpng) -lGL -lpthread
 
 IMAGE = SurfSplit
 
 SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | grep -v common | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
 CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | grep -v common | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
+CSRC += $(wildcard ../common/libpng/*.c)
+CSRC += $(wildcard ../common/lz4/*.c)
 OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 
 all: $(IMAGE)

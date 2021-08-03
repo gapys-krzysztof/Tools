@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string>
 #include <string.h>
+#include <cmath>
 
 #include "libpng/png.h"
 
