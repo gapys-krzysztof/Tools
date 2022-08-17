@@ -1,9 +1,3 @@
-#ifdef BUILD_VIS
-
-#ifdef _MSC_VER
-#  pragma comment( lib, "opengl32.lib" )
-#endif
-
 #include "Texture.hpp"
 
 Texture::Texture( Bitmap* bitmap )
@@ -22,5 +16,3 @@ Texture::~Texture()
 {
     glDeleteTextures( 1, &m_texture );
 }
-
-#endif

@@ -99,6 +99,24 @@
     <ClCompile Include="..\..\common\libpng\pngwutil.c">
       <Filter>rgbasplit\libpng</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inffas8664.c">
+      <Filter>rgbasplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\arm_init.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\filter_neon_intrinsics.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\filter_sse2_intrinsics.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\intel_init.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\palette_neon_intrinsics.c">
+      <Filter>rgbasplit\libpng</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bitmap.hpp">
@@ -164,5 +182,18 @@
     <ClInclude Include="..\src\Vector.hpp">
       <Filter>rgbasplit</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\common\zlib\gvmat64.obj">
+      <Filter>rgbasplit\zlib</Filter>
+    </Object>
+    <Object Include="..\..\common\zlib\inffasx64.obj">
+      <Filter>rgbasplit\zlib</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\common\libpng\LICENSE">
+      <Filter>rgbasplit\libpng</Filter>
+    </None>
   </ItemGroup>
 </Project>

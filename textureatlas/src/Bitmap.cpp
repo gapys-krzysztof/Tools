@@ -4,60 +4,27 @@
 #include <stdio.h>
 
 #include "libpng/png.h"
-#include "lz4/lz4.h"
 
 #include "Bitmap.hpp"
 
 Bitmap::Bitmap( int x, int y )
-    : m_data( new uint32[x*y] )
+    : m_data( new uint32_t[x*y] )
     , m_size( x, y )
 {
-    memset( m_data, 0, sizeof( uint32 ) * x * y );
+    memset( m_data, 0, sizeof( uint32_t ) * x * y );
 }
 
 Bitmap::Bitmap( const Bitmap& bmp )
-    : m_data( new uint32[bmp.m_size.x*bmp.m_size.y] )
+    : m_data( new uint32_t[bmp.m_size.x*bmp.m_size.y] )
     , m_size( bmp.m_size )
 {
-    memcpy( m_data, bmp.m_data, sizeof( uint32 ) * m_size.x * m_size.y );
+    memcpy( m_data, bmp.m_data, sizeof( uint32_t ) * m_size.x * m_size.y );
 }
 
 Bitmap::Bitmap( const char* fn )
     : m_data( NULL )
 {
-    std::string lz4( fn );
-    lz4 += ".lz4";
-
-    FILE *f = fopen( lz4.c_str(), "rb" );
-    if( f )
-    {
-        char fourcc[4];
-        fread( fourcc, 1, 4, f );
-        if( memcmp( fourcc, "raw4", 4 ) != 0 )
-        {
-            fprintf( stderr, "FATAL: %s has wrong fourcc", lz4.c_str() );
-            exit( 1 );
-        }
-
-        fseek( f, 1, SEEK_CUR );    // alpha
-        fread( &m_size.x, 1, 4, f );
-        fread( &m_size.y, 1, 4, f );
-
-        m_data = new uint32[m_size.x * m_size.y];
-
-        int32 csize;
-        fread( &csize, 1, 4, f );
-        auto cbuf = new char[csize];
-        fread( cbuf, 1, csize, f );
-        fclose( f );
-
-        LZ4_decompress_fast( cbuf, (char*)m_data, m_size.x * m_size.y * 4 );
-
-        delete[] cbuf;
-        return;
-    }
-
-    f = fopen( fn, "rb" );
+    FILE* f = fopen( fn, "rb" );
 
     if( !f )
     {
@@ -117,8 +84,8 @@ Bitmap::Bitmap( const char* fn )
         break;
     }
 
-    m_data = new uint32[w*h];
-    uint32* ptr = m_data;
+    m_data = new uint32_t[w*h];
+    uint32_t* ptr = m_data;
     while( h-- )
     {
         png_read_rows( png_ptr, (png_bytepp)&ptr, NULL, 1 );
@@ -158,7 +125,7 @@ bool Bitmap::Write( const char* fn, bool alpha )
         png_set_filler( png_ptr, 0, PNG_FILLER_AFTER );
     }
 
-    uint32* ptr = m_data;
+    uint32_t* ptr = m_data;
     for( int i=0; i<m_size.y; i++ )
     {
         png_write_rows( png_ptr, (png_bytepp)(&ptr), 1 );
@@ -177,23 +144,15 @@ bool Bitmap::WriteRaw( const char* fn, bool alpha )
     FILE* f = fopen( fn, "wb" );
     if( !f ) return false;
 
-    const char fourcc[] = { 'r', 'a', 'w', '4' };
-    fwrite( fourcc, 1, sizeof( fourcc ), f );
-    uint8 a = alpha ? 1 : 0;
+    const char raw[] = { 'r', 'a', 'w' };
+    fwrite( raw, 1, 3, f );
+    uint8_t a = alpha ? 1 : 0;
     fwrite( &a, 1, 1, f );
-    uint32 d = m_size.x;
+    uint32_t d = m_size.x;
     fwrite( &d, 1, 4, f );
     d = m_size.y;
     fwrite( &d, 1, 4, f );
-
-    const auto cbufsize = LZ4_compressBound( m_size.x * m_size.y * 4 );
-    auto cbuf = new char[cbufsize];
-    const int32 csize = LZ4_compress_default( (const char*)m_data, cbuf, m_size.x * m_size.y * 4, cbufsize );
-
-    fwrite( &csize, 1, 4, f );
-    fwrite( cbuf, 1, csize, f );
-
-    delete[] cbuf;
+    fwrite( m_data, 1, m_size.x * m_size.y * 4, f );
 
     fclose( f );
     return true;
@@ -205,18 +164,18 @@ Bitmap& Bitmap::operator=( const Bitmap& bmp )
     {
         m_size = bmp.m_size;
         delete[] m_data;
-        m_data = new uint32[m_size.x*m_size.y];
+        m_data = new uint32_t[m_size.x*m_size.y];
     }
 
-    memcpy( m_data, bmp.m_data, sizeof( uint32 ) * m_size.x * m_size.y );
+    memcpy( m_data, bmp.m_data, sizeof( uint32_t ) * m_size.x * m_size.y );
 
     return *this;
 }
 
 void Blit( Bitmap* _dst, const BRect& _src, const Rect& rect )
 {
-    uint32* src = _src.b->Data() + _src.x + _src.y * _src.b->Size().x;
-    uint32* dst = _dst->Data() + rect.x + rect.y * _dst->Size().x;
+    uint32_t* src = _src.b->Data() + _src.x + _src.y * _src.b->Size().x;
+    uint32_t* dst = _dst->Data() + rect.x + rect.y * _dst->Size().x;
 
     int sf = _src.b->Size().x;
     int sb = _src.b->Size().x * rect.w - 1;
@@ -242,7 +201,7 @@ void Blit( Bitmap* _dst, const BRect& _src, const Rect& rect )
 
         for( int y=0; y<rect.h; y++ )
         {
-            memcpy( dst, src, sizeof( uint32 ) * rect.w );
+            memcpy( dst, src, sizeof( uint32_t ) * rect.w );
             dst += line;
             src += skip;
         }

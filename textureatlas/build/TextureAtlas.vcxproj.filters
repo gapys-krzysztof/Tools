@@ -10,12 +10,12 @@
     <Filter Include="TextureAtlas\libpng">
       <UniqueIdentifier>{997de788-4339-4690-bd72-8dbf7c7a29e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TextureAtlas\lz4">
-      <UniqueIdentifier>{bd518d4e-ef0c-4827-8424-145202133eff}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Application.cpp">
+      <Filter>TextureAtlas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Atlas.cpp">
       <Filter>TextureAtlas</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Bitmap.cpp">
@@ -111,18 +111,33 @@
     <ClCompile Include="..\..\common\zlib\zutil.c">
       <Filter>TextureAtlas\zlib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\lz4\lz4.c">
-      <Filter>TextureAtlas\lz4</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Filesystem.cpp">
       <Filter>TextureAtlas</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inffas8664.c">
+      <Filter>TextureAtlas\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\arm_init.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\filter_neon_intrinsics.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\filter_sse2_intrinsics.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\intel_init.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\palette_neon_intrinsics.c">
+      <Filter>TextureAtlas\libpng</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Bitmap.hpp">
+    <ClInclude Include="..\src\Atlas.hpp">
       <Filter>TextureAtlas</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Types.hpp">
+    <ClInclude Include="..\src\Bitmap.hpp">
       <Filter>TextureAtlas</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Vector.hpp">
@@ -194,11 +209,21 @@
     <ClInclude Include="..\..\common\zlib\zutil.h">
       <Filter>TextureAtlas\zlib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\lz4\lz4.h">
-      <Filter>TextureAtlas\lz4</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Filesystem.hpp">
       <Filter>TextureAtlas</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\common\zlib\gvmat64.obj">
+      <Filter>TextureAtlas\zlib</Filter>
+    </Object>
+    <Object Include="..\..\common\zlib\inffasx64.obj">
+      <Filter>TextureAtlas\zlib</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\common\libpng\LICENSE">
+      <Filter>TextureAtlas\libpng</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,12 +1,18 @@
+#include <chrono>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <string>
-#include <list>
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <memory>
+#include <unordered_set>
+#ifndef _WIN32
+#  include <unistd.h>
+#endif
 
+#include "Atlas.hpp"
 #include "Bitmap.hpp"
 #include "Filesystem.hpp"
 #include "Node.hpp"
@@ -14,50 +20,44 @@
 #include "String.hpp"
 #include "Processing.hpp"
 
+constexpr const char* APP_NAME = "TextureAtlas";
+constexpr unsigned VERSION_MAJOR = 1;
+constexpr unsigned VERSION_MINOR = 2;
+constexpr unsigned VERSION_PATCH = 0;
+
 std::string input;
 std::string output( "." );
 int size = 1024;
 std::string name( "atlas" );
 int edges = 0;
 int path = -1;
+int numAtlases = 1;
 std::string pathStripPrefix;
-bool potw = false;
-bool poth = false;
+Atlas::Flags atlasFlags = Atlas::DefaultFlags;
 int align = 0;
 std::string prepend;
-bool square = false;
 bool noalpha = false;
 bool splashfill = true;
 bool allowFlip = true;
+bool writeRaw = false;
 bool cascadeUp = false;
 bool stats = false;
+bool shrink = false;
+bool groupDir = false;
+bool bench = false;
+bool dryRun = false;
 std::string i18nBase;
 std::vector<std::string> i18nLangs = { "" };
-bool lz4 = false;
-int png = 1;
 
-int stats_png = 0;
-int stats_csr = 0;
-int stats_atl = 0;
+typedef std::map<std::string, std::vector<BRect>> ImgRectData;
+std::map<std::string, ImgRectData> imageData;
+std::map<std::string, std::vector<std::string>> imagesByPath;
+std::vector<std::pair<int, std::string>> imagesByMaxRectSize;
+std::vector<std::string> langsToWork;
 
-template<typename T>
-inline T AlignPOT( T a )
-{
-    if( a == 0 )
-    {
-        return 1;
-    }
+std::chrono::high_resolution_clock::time_point benchData[10];
 
-    a--;
-    for( int i=1; i<sizeof(T)*8; i<<=1 )
-    {
-        a |= a >> i;
-    }
-    return a + 1;
-}
-
-
-std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::list<std::string> names, const std::list<std::string> rectnames )
+std::vector<BRect> LoadImages( const std::vector<std::string>& pngs, const std::vector<std::string>& names, const std::vector<std::string>& rectnames )
 {
     std::vector<BRect> ret;
 
@@ -67,13 +67,16 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
     ret.reserve( pngs.size() );
     for( auto& png : pngs )
     {
-        Bitmap* b = new Bitmap( png.c_str() );
-        stats_png += b->Size().x * b->Size().y;
+        int maxRectSize = 0;
         FILE* f = fopen( rit->c_str(), "rb" );
+        Bitmap* b = nullptr;
+        if( !dryRun || !f )
+        {
+            b = new Bitmap( png.c_str() );
+        }
         if( !f )
         {
-            ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b, *nit ) );
-            stats_csr += b->Size().x * b->Size().y;
+            ret.push_back( BRect( 0, 0, b->Size().x, b->Size().y, b, *nit, b->Size().x * b->Size().y ) );
         }
         else
         {
@@ -88,9 +91,15 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
                 for( int i=0; i<size; i++ )
                 {
                     BRect r( 0, 0, 0, 0, b, *nit );
-                    fread( &r, 1, sizeof( uint16 ) * 4, f );
+                    fread( &r, 1, sizeof( uint16_t ) * 4, f );
                     ret.push_back( r );
-                    stats_csr += r.w * r.h;
+                    maxRectSize = std::max( maxRectSize, r.w * r.h );
+                }
+
+                auto rectIt = ret.rbegin();
+                for( int i = 0; i < size; ++i, ++rectIt )
+                {
+                    rectIt->maxRectSize = maxRectSize;
                 }
             }
             fclose( f );
@@ -102,345 +111,372 @@ std::vector<BRect> LoadImages( const std::list<std::string> pngs, const std::lis
     return ret;
 }
 
-void SortImages( std::vector<BRect>& images )
-{
-    std::sort( images.begin(), images.end(), []( const BRect& i1, const BRect& i2 ){ if( i1.h != i2.h ) return i1.h > i2.h; else return i1.w > i2.w; } );
-}
-
 void FindFlipped( std::vector<BRect>& images )
 {
     std::for_each( images.begin(), images.end(), []( BRect& img ){ if( img.h > img.w ) { img.flip = true; std::swap( img.w, img.h ); } } );
 }
 
-bool DoWork( const std::string& lang )
+std::vector <std::string> ReadFilenames( const std::string& filename )
 {
+    std::vector <std::string> names;
     FILE* f = fopen( input.c_str(), "r" );
-    if( !f ) return false;
+    if( !f ) return names;
 
-    std::list<std::string> names, pngnames, rectnames;
     std::string line;
-    bool skipLang = !lang.empty();
     while( ReadLine( f, line ) )
     {
         names.push_back( line );
-        if( lang.empty() )
-        {
-            pngnames.push_back( line.substr( 0, line.rfind( '.' ) ) + ".png" );
-            rectnames.push_back( line + ".csr" );
-        }
-        else
-        {
-            std::string png = line.substr( 0, line.rfind( '.' ) ) + ".png";
-            std::string pfx = i18nBase + "/" + lang + "/";
-            size_t pos = 0;
-            for( int i=0; i<path; i++ )
-            {
-                pos = png.find( '/', pos ) + 1;
-            }
-            auto tpng = prepend + png.substr( pos );
-            std::string pfxpng = pfx + tpng;
-            if( Exists( pfxpng ) )
-            {
-                pngnames.push_back( std::move( pfxpng ) );
-                rectnames.push_back( pfx + line + ".csr" );
-                skipLang = false;
-            }
-            else
-            {
-                pngnames.push_back( std::move( png ) );
-                rectnames.push_back( line + ".csr" );
-            }
-        }
         line.clear();
     }
 
     fclose( f );
+    return names;
+}
 
-    if( skipLang ) return true;
+bool ReadImageData( const std::vector<std::string>& langs )
+{
+    auto names = ReadFilenames( input );
+    if( names.empty() ) return false;
 
-    std::vector<BRect> images( LoadImages( pngnames, names, rectnames ) );
-    if( allowFlip )
+    std::map <std::string, int> maxImageRect;
+
+    for( const auto& lang : langs )
     {
-        FindFlipped( images );
-    }
-    SortImages( images );
+        std::vector <std::string> pngnames, rectnames;
+        bool skipLang = !lang.empty();
+        for( const auto& name : names )
+        {
+            if( lang.empty() )
+            {
+                pngnames.push_back( name.substr( 0, name.rfind( '.' ) ) + ".png" );
+                rectnames.push_back( name + ".csr" );
+            }
+            else
+            {
+                std::string png = name.substr( 0, name.rfind( '.' ) ) + ".png";
+                std::string pfx = i18nBase + "/" + lang + "/";
+                size_t pos = 0;
+                for( int i=0; i<path; i++ )
+                {
+                    pos = png.find( '/', pos ) + 1;
+                }
 
-    if( cascadeUp )
+                auto tpng = prepend + png.substr( pos );
+                std::string pfxpng = pfx + tpng;
+                if( Exists( pfxpng ) )
+                {
+                    rectnames.push_back( pfxpng + ".csr" );
+                    pngnames.push_back( std::move( pfxpng ) );
+                    skipLang = false;
+                }
+                else
+                {
+                    pngnames.push_back( std::move( png ) );
+                    rectnames.push_back( name + ".csr" );
+                }
+            }
+        }
+
+        if( skipLang ) continue;
+        langsToWork.push_back( lang );
+
+        if( groupDir )
+        {
+            for( const auto& imgPath : names )
+            {
+                const std::string dir = imgPath.substr( 0, imgPath.rfind( '/' ) + 1 );
+                imagesByPath[dir].push_back( imgPath );
+            }
+        }
+
+        std::vector<BRect> images( LoadImages( pngnames, names, rectnames ) );
+        if( allowFlip )
+        {
+            FindFlipped( images );
+        }
+
+        for( const auto& img : images )
+        {
+            auto iter = maxImageRect.find( img.name );
+            if( iter == maxImageRect.end() )
+            {
+                maxImageRect[img.name] = img.maxRectSize;
+            }
+            else
+            {
+                maxImageRect[img.name] = std::max( iter->second, img.maxRectSize );
+            }
+
+            auto& imgParts = imageData[lang][img.name];
+            imgParts.push_back( img );
+        }
+
+        for( auto& imgParts : imageData[lang] )
+        {
+            std::stable_sort( imgParts.second.begin(), imgParts.second.end(), []( const BRect& i1, const BRect& i2 ) { if( i1.h != i2.h ) return i1.h > i2.h; else return i1.w > i2.w; } );
+        }
+    }
+
+    for( const auto& p : maxImageRect )
+    {
+        imagesByMaxRectSize.emplace_back( p.second, p.first );
+    }
+    std::stable_sort( imagesByMaxRectSize.begin(), imagesByMaxRectSize.end(), []( const auto& a, const auto& b ) { return a.first > b.first; });
+
+    return true;
+}
+
+bool DoWork()
+{
+    // no cascade check when creating subatlases
+    if( cascadeUp && numAtlases == 1 )
     {
         bool bad = false;
         do
         {
             bad = false;
-            Node* test = new Node( Rect( 0, 0, size, size ) );
-            for( auto& img : images )
+            auto test = std::make_unique<Node>( Rect( 0, 0, size, size ) );
+            for( const auto& imgData : imageData.cbegin()->second )
             {
-                Node* uv = test->Insert( Rect( edges, edges, img.w + edges * 2, img.h + edges * 2 ), align );
-                if( !uv )
+                for( const auto& img : imgData.second )
                 {
-                    size *= 2;
-                    if( size > 32768 )
+                    Node* uv = test->Insert( Rect( edges, edges, img.w + edges * 2, img.h + edges * 2 ), align );
+                    if( !uv )
                     {
-                        return false;
+                        size *= 2;
+                        if( size > 32768 )
+                        {
+                            return false;
+                        }
+                        bad = true;
+                        break;
                     }
-                    bad = true;
-                    break;
                 }
             }
-            delete test;
         }
         while( bad );
     }
 
-    Bitmap* b = new Bitmap( size, size );
-    Node* tree = new Node( Rect( 0, 0, size, size ) );
-
-    int bw = 0;
-    int bh = 0;
-
-    std::vector<Rect> rects;
-    for( auto& img : images )
+    std::vector<std::vector<Atlas>> atlases( langsToWork.size() );
+    for( auto& atlasVec : atlases )
     {
-        Node* uv = tree->Insert( Rect( edges, edges, img.w + edges * 2, img.h + edges * 2 ), align );
-        if( !uv )
+        for( int i = 0; i < numAtlases; ++i )
         {
-            delete b;
-            delete tree;
-            return false;
+            atlasVec.emplace_back( size, size, prepend, edges, align );
         }
+    }
 
-        bw = std::max( bw, uv->rect.x + uv->rect.w + edges );
-        bh = std::max( bh, uv->rect.y + uv->rect.h + edges );
-
-        rects.push_back( uv->rect );
-        Blit( b, img, uv->rect );
-        for( int i=0; i<edges; i++ )
+    benchData[2] = std::chrono::high_resolution_clock::now();
+    if( numAtlases == 1 )
+    {
+        for( size_t langIdx = 0; langIdx < langsToWork.size(); ++langIdx )
         {
-            BRect br( img );
-            if( br.flip )
-            {
-                br.y = std::max( 0, img.y - i - 1 );
-            }
-            else
-            {
-                br.x = std::max( 0, img.x - i - 1 );
-            }
-            Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y, 1, uv->rect.h ) );
+            const std::string& lang = langsToWork[langIdx];
+            std::vector<BRect> imgParts;
+            Atlas& atlas = atlases[langIdx][0];
 
-            if( br.flip )
+            for( const auto& p : imageData[lang] )
             {
-                br.y = std::min( img.b->Size().y - 1, img.y + img.w + i );
+                imgParts.insert( imgParts.end(), p.second.cbegin(), p.second.cend() );
             }
-            else
-            {
-                br.x = std::min( img.b->Size().x - 1, img.x + img.w + i );
-            }
-            Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y, 1, uv->rect.h ) );
-        }
-        for( int i=0; i<edges; i++ )
-        {
-            BRect br( img );
-            if( br.flip )
-            {
-                br.x = std::max( 0, img.x - i - 1 );
-            }
-            else
-            {
-                br.y = std::max( 0, img.y - i - 1 );
-            }
-            Blit( b, br, Rect( uv->rect.x, uv->rect.y - i - 1, uv->rect.w, 1 ) );
 
-            if( br.flip )
+            std::stable_sort( imgParts.begin(), imgParts.end(), []( const BRect& i1, const BRect& i2 ) { if( i1.h != i2.h ) return i1.h > i2.h; else return i1.w > i2.w; } );
+
+            for( const auto& img : imgParts )
             {
-                br.x = std::min( img.b->Size().x - 1, img.x + img.h + i );
-            }
-            else
-            {
-                br.y = std::min( img.b->Size().y - 1, img.y + img.h + i );
-            }
-            Blit( b, br, Rect( uv->rect.x, uv->rect.y + uv->rect.h + i, uv->rect.w, 1 ) );
-        }
-        for( int i=0; i<edges; i++ )
-        {
-            {
-                BRect br( uv->rect.x, uv->rect.y - edges, 1, edges, b, "" );
-                Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y - edges, 1, edges ) );
-            }
-            {
-                BRect br( uv->rect.x, uv->rect.y + uv->rect.h, 1, edges, b, "" );
-                Blit( b, br, Rect( uv->rect.x - i - 1, uv->rect.y + uv->rect.h, 1, edges ) );
-            }
-            {
-                BRect br( uv->rect.x + uv->rect.w - 1, uv->rect.y - edges, 1, edges, b, "" );
-                Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y - edges, 1, edges ) );
-            }
-            {
-                BRect br( uv->rect.x + uv->rect.w - 1, uv->rect.y + uv->rect.h, 1, edges, b, "" );
-                Blit( b, br, Rect( uv->rect.x + uv->rect.w + i, uv->rect.y + uv->rect.h, 1, edges ) );
+                if( !atlas.AddImage( img ) )
+                {
+                    if( lang.empty() )
+                    {
+                        fprintf( stderr, "Unable to fit image %s\n", img.name.c_str() );
+                    }
+                    else
+                    {
+                        fprintf( stderr, "Unable to fit image %s for language %s\n", img.name.c_str(), lang.c_str() );
+                    }
+                    return false;
+                }
             }
         }
-        stats_atl += uv->rect.w * uv->rect.h + edges * ( edges * 4 + 2 * ( uv->rect.h + uv->rect.w ) );
-    }
-
-    if( potw )
-    {
-        bw = AlignPOT( bw );
-    }
-    if( poth )
-    {
-        bh = AlignPOT( bh );
-    }
-
-    if( square )
-    {
-        int sq = std::max( bw, bh );
-        bw = sq;
-        bh = sq;
-    }
-
-    if( b->Size().x != bw || b->Size().y != bh )
-    {
-        Bitmap* tmp = new Bitmap( bw, bh );
-        Blit( tmp, BRect( 0, 0, bw, bh, b, "" ), Rect( 0, 0, bw, bh ) );
-        delete b;
-        b = tmp;
-    }
-
-    struct Data
-    {
-        Data( const BRect* _br, const Rect* _pr ) : br( _br ), pr( _pr ) {}
-        const BRect* br;
-        const Rect* pr;
-    };
-
-    std::map<std::string, std::list<Data> > irmap;
-    auto rit = rects.begin();
-    for( auto& img : images )
-    {
-        irmap[img.name].push_back( Data( &img, &(*rit) ) );
-        ++rit;
-    }
-
-    std::string xmlName;
-    std::string bitmapName;
-    if( lang.empty() )
-    {
-        xmlName = output + "/" + name + ".xml";
-        bitmapName = output + "/" + name;
+        if( dryRun )
+        {
+            return true;
+        }
     }
     else
     {
-        xmlName = output + "/" + lang + "_" + name + ".xml";
-        bitmapName = output + "/" + lang + "_" + name;
-    }
+        std::unordered_set<std::string> imagesProcessed;
 
-    f = fopen( xmlName.c_str(), "w" );
-    fprintf( f, "<?xml version=\"1.0\"?>\n" );
-    fprintf( f, "<atlas height=\"%i\" width=\"%i\">\n", b->Size().x, b->Size().y );
-    for( auto& data : irmap )
-    {
-        std::string id;
-        if( ( path == -1 ) && pathStripPrefix.empty() )
+        for( const auto& p : imagesByMaxRectSize )
         {
-            id = prepend + data.first;
-        }
-        else if( !pathStripPrefix.empty() )
-        {
-            // If prefix to be stripped is found at the very beginning of the file path then strip
-            // it. If it occurs anywhere else, leave the path unchanged.
+            if( imagesProcessed.find( p.second ) != imagesProcessed.end() ) continue;
 
-            if ( !data.first.find( pathStripPrefix ) )
+            std::vector<std::string> imageGroup;
+            if( groupDir )
             {
-                id = prepend + data.first.substr( pathStripPrefix.length() );
+                const std::string dir = p.second.substr( 0, p.second.rfind( '/' ) + 1 );
+                imageGroup = imagesByPath[dir];
             }
             else
             {
-                id = prepend + data.first;
+                imageGroup.push_back( p.second );
             }
-        }
-        else
-        {
-            size_t pos = 0;
-            for( int i=0; i<path; i++ )
+
+            std::vector<std::vector<BRect>> imgParts( langsToWork.size() );
+            for( unsigned langIdx = 0; langIdx < langsToWork.size(); ++langIdx )
             {
-                pos = data.first.find( '/', pos ) + 1;
+                const auto& lang = langsToWork[langIdx];
+                auto& ipVec = imgParts[langIdx];
+
+                for( const auto& imgName : imageGroup )
+                {
+                    const auto& id = imageData[lang][imgName];
+                    ipVec.insert( ipVec.end(), id.cbegin(), id.cend() );
+                }
+
+                std::stable_sort( ipVec.begin(), ipVec.end(), []( const BRect& i1, const BRect& i2 ) { if( i1.h != i2.h ) return i1.h > i2.h; else return i1.w > i2.w; } );
             }
-            id = prepend + data.first.substr( pos );
+
+            bool fits = false;
+            int atlasIdx = 0;
+            while( !fits && atlasIdx < numAtlases )
+            {
+                fits = true;
+
+                for( size_t langIdx = 0; langIdx < langsToWork.size() && fits; ++langIdx )
+                {
+                    const auto& ipVec = imgParts[langIdx];
+                    if( ipVec.empty() ) continue;
+
+                    Atlas& atlas = atlases[langIdx][atlasIdx];
+                    if( !atlas.AssetFits( ipVec ) )
+                    {
+                        const bool optimized = atlas.Optimize();
+                        if( !optimized || !atlas.AssetFits( ipVec ) )
+                        {
+                            fits = false;
+                            ++atlasIdx;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if( !fits )
+            {
+                fprintf( stderr, "Unable to fit images in specified number of atlases (%d)\n", numAtlases );
+                return false;
+            }
+
+            for( size_t langIdx = 0; langIdx < langsToWork.size(); ++langIdx )
+            {
+                Atlas& atlas = atlases[langIdx][atlasIdx];
+                for( const auto& r : imgParts[langIdx] )
+                {
+                    if( !atlas.AddImage( r ) )
+                    {
+                        abort();
+                    }
+                }
+            }
+
+            for( const auto& img : imageGroup )
+            {
+                imagesProcessed.insert( img );
+            }
         }
 
-        fprintf( f, "  <asset id=\"%s\" rects=\"%i\" w=\"%i\" h=\"%i\">\n", id.c_str(), data.second.size(), data.second.begin()->br->b->Size().x, data.second.begin()->br->b->Size().y );
-        for( auto dit = data.second.cbegin(); dit != data.second.cend(); ++dit )
+        if( dryRun )
         {
-            fprintf( f, "    <rect f=\"%i\" ax=\"%i\" ay=\"%i\" x=\"%i\" y=\"%i\" w=\"%i\" h=\"%i\"/>\n",
-                dit->br->flip ? 1 : 0,
-                dit->pr->x,
-                dit->pr->y,
-                dit->br->x,
-                dit->br->y,
-                dit->br->flip ? dit->br->h : dit->br->w,
-                dit->br->flip ? dit->br->w : dit->br->h
-                );
+            return true;
         }
-        fprintf( f, "  </asset>\n" );
-    }
-    fprintf( f, "</atlas>\n" );
-    fclose( f );
 
-    if( splashfill )
-    {
-        SplashFill( b );
+        for( int atlasIdx = 0; atlasIdx < numAtlases; ++atlasIdx )
+        {
+            for( size_t langIdx = 0; langIdx < langsToWork.size(); ++langIdx )
+            {
+                Atlas& atlas = atlases[langIdx][atlasIdx];
+                atlas.Optimize();
+            }
+        }
     }
+    benchData[3] = std::chrono::high_resolution_clock::now();
 
-    if( lz4 )
+    for( size_t langIdx = 0; langIdx < langsToWork.size(); ++langIdx )
     {
-        b->WriteRaw( ( bitmapName + ".lz4" ).c_str(), !noalpha );
-    }
-    if( png > 0 )
-    {
-        b->Write( ( bitmapName + ".png" ).c_str(), !noalpha );
-    }
+        const std::string& lang = langsToWork[langIdx];
 
-    if( stats )
-    {
-        printf( "PNG size: %.2f Kpx\n", stats_png / 1000.f );
-        printf( "CSR size: %.2f Kpx\n", stats_csr / 1000.f );
-        printf( "CSR reduction: %.2f%%\n", float( stats_csr ) / stats_png * 100 );
-        auto as = b->Size().x * b->Size().y;
-        printf( "Atlas size: %.2f Kpx\n", as / 1000.f );
-        printf( "Atlas used: %.2f Kpx\n", stats_atl / 1000.f );
-        printf( "Atlas fill: %.2f%%\n", float( stats_atl ) / as * 100 );
-    }
+        for( int atlasIdx = 0; atlasIdx < numAtlases; ++atlasIdx )
+        {
+            std::string xmlName;
+            std::string bitmapName;
+            std::string atlasNumStr( atlasIdx == 0 ? "" : std::to_string( atlasIdx + 1 ) );
+            if( lang.empty() )
+            {
+                xmlName = output + "/" + name + atlasNumStr + ".xml";
+                bitmapName = output + "/" + name + atlasNumStr;
+            }
+            else
+            {
+                xmlName = output + "/" + lang + "_" + name + atlasNumStr + ".xml";
+                bitmapName = output + "/" + lang + "_" + name + atlasNumStr;
+            }
 
-    delete b;
-    delete tree;
+            Atlas& atlas = atlases[langIdx][atlasIdx];
+            if( shrink )
+            {
+                while( atlas.Shrink() );
+            }
+
+            atlas.AdjustSize( atlasFlags );
+            benchData[4] = std::chrono::high_resolution_clock::now();
+            atlas.BlitImages();
+            benchData[5] = std::chrono::high_resolution_clock::now();
+            if( !atlas.Output( bitmapName, xmlName, pathStripPrefix, path, atlasFlags ) ) return false;
+
+            if( stats )
+            {
+                printf( "[%s]\n", bitmapName.c_str() );
+                atlas.ReportStats();
+            }
+        }
+    }
 
     return true;
 }
 
 void Usage()
 {
-    printf( "Usage: TextureAtlas [options]\n\n" );
-    printf( "-i, --input        input text file with input files list\n" );
-    printf( "-o, --output       output path (default: current dir)\n" );
-    printf( "-s, --size         target atlas size (default: 1024)\n" );
-    printf( "-e, --edges        duplicate image edges (default: 0)\n" );
-    printf( "-n, --name         name of generated files (default: atlas)\n" );
-    printf( "-h, --help         prints this message\n" );
-    printf( "-P, --path         path strip depth\n" );
-    printf( "--strip-prefix PFX prefix to be stripped from all asset paths (makes -P option\n");
-    printf( "                   ineffective; executed before path prepending action)\n");
-    printf( "-W, --potw         make width of atlas a power of two\n" );
-    printf( "-H, --poth         make height of atlas a power of two\n" );
-    printf( "-a, --align        align textures (default: disabled)\n" );
-    printf( "-p, --prepend      prepend given string to all asset paths\n" );
-    printf( "-q, --square       make width equal to height\n" );
-    printf( "-N, --noalpha      no alpha channel\n" );
-    printf( "--nosplashfill     disable splash fill\n" );
-    printf( "--noflip           disable fragment flipping\n" );
-    printf( "--lz4              save lz4 compressed atlas\n" );
-    printf( "--png              save png atlas (default)\n" );
-    printf( "-c, --cascade      try bigger atlas size, if data does not fit\n" );
-    printf( "--stats            print stats\n" );
-    printf( "-O, --override     i18n override directory\n" );
+    printf( R"___(Usage: TextureAtlas [options]
+
+    -v, --version      displays version
+    -i, --input        input text file with input files list
+    -o, --output       output path (default: current dir)
+    -s, --size         target atlas size (default: 1024)
+    -e, --edges        duplicate image edges (default: 0)
+    -n, --name         name of generated files (default: atlas)
+    -d, --divide       creates up to N subatlases if images don't fit in a single one (default: 1)
+    -h, --help         prints this message
+    -P, --path         path strip depth
+    --strip-prefix PFX prefix to be stripped from all asset paths (makes -P option
+                       ineffective; executed before path prepending action)
+    -W, --potw         make width of atlas a power of two
+    -H, --poth         make height of atlas a power of two
+    -a, --align        align textures (default: disabled)
+    -p, --prepend      prepend given string to all asset paths
+    -q, --square       make width equal to height
+    -N, --noalpha      no alpha channel
+    --nosplashfill     disable splash fill
+    --noflip           disable fragment flipping
+    --raw              write raw data
+    --shrink           try to shrink the resulting atlases (only for square atlases)
+    -c, --cascade      try bigger atlas size, if data does not fit (disabled if -d is set)
+    --stats            print stats
+    -O, --override     i18n override directory
+    --groupdir         group assets by directory path
+    --bench            display timing statistics
+    --dryrun           do not generate atlas, only check if images fit in
+)___");
 }
 
 void Error()
@@ -455,6 +491,11 @@ int main( int argc, char** argv )
 
     for( int i=1; i<argc; i++ )
     {
+        if( CSTR( "-v" ) || CSTR( "--version" ) )
+        {
+            printf( "%s %u.%u.%u", APP_NAME, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH );
+            exit( 0 );
+        }
         if( CSTR( "-i" ) || CSTR( "--input" ) )
         {
             input = argv[i+1];
@@ -480,6 +521,11 @@ int main( int argc, char** argv )
             name = argv[i+1];
             i++;
         }
+        else if( CSTR( "-d" ) || CSTR( "--divide" ) )
+        {
+            numAtlases = atoi( argv[i+1] );
+            i++;
+        }
         else if( CSTR( "-h" ) || CSTR( "--help" ) )
         {
             Usage();
@@ -494,7 +540,7 @@ int main( int argc, char** argv )
         {
             if (argc <= i+1)
             {
-                fprintf(stderr, "ERROR: Missing --strip-prefix option argument.\n");
+                fprintf(stderr, "\nTextureAtlas: error: Missing --strip-prefix option argument.\n");
                 exit(1);
             }
 
@@ -503,11 +549,11 @@ int main( int argc, char** argv )
         }
         else if( CSTR( "-W" ) || CSTR( "--potw" ) )
         {
-            potw = true;
+            atlasFlags |= Atlas::POTWidth;
         }
         else if( CSTR( "-H" ) || CSTR( "--poth" ) )
         {
-            poth = true;
+            atlasFlags |= Atlas::POTHeight;
         }
         else if( CSTR( "-a" ) || CSTR( "--align" ) )
         {
@@ -521,28 +567,27 @@ int main( int argc, char** argv )
         }
         else if( CSTR( "-q" ) || CSTR( "--square" ) )
         {
-            square = true;
+            atlasFlags |= Atlas::Square;
         }
         else if( CSTR( "-N" ) || CSTR( "--noalpha" ) )
         {
-            noalpha = true;
+            atlasFlags |= Atlas::NoAlpha;
         }
         else if( CSTR( "--nosplashfill" ) )
         {
-            splashfill = false;
+            atlasFlags &= ~Atlas::SplashFill;
         }
         else if( CSTR( "--noflip" ) )
         {
             allowFlip = false;
         }
-        else if( CSTR( "--lz4" ) )
+        else if( CSTR( "--raw" ) )
         {
-            lz4 = true;
-            png--;
+            atlasFlags |= Atlas::WriteRaw;
         }
-        else if( CSTR( "--png" ) )
+        else if( CSTR( "--shrink" ) )
         {
-            png++;
+            shrink = true;
         }
         else if( CSTR( "-c" ) || CSTR( "--cascade" ) )
         {
@@ -562,21 +607,69 @@ int main( int argc, char** argv )
             }
             i++;
         }
+        else if( CSTR( "--groupdir" ) )
+        {
+            groupDir = true;
+        }
+        else if( CSTR( "--bench" ) )
+        {
+            bench = true;
+        }
+        else if( CSTR( "--dryrun" ) )
+        {
+            dryRun = true;
+        }
         else
         {
-            fprintf(stderr, "TextureAtlas: error: unknown argument: %s\n", argv[i]);
+            fprintf(stderr, "\nTextureAtlas: error: unknown argument: %s\n", argv[i]);
             Error();
         }
     }
 
 #undef CSTR
 
-    for( auto& v : i18nLangs )
+    benchData[0] = std::chrono::high_resolution_clock::now();
+    if( !ReadImageData( i18nLangs ) )
     {
-        if( !DoWork( v ) )
-        {
-            return 1;
-        }
+        fprintf( stderr, "Unable to read image data, exiting now...\n" );
+        return 1;
     }
+    benchData[1] = std::chrono::high_resolution_clock::now();
+
+    if( !DoWork() )
+    {
+        fprintf( stderr, "Atlas creation failed\n" );
+
+        for( const std::string& lang : i18nLangs )
+        {
+            std::string base;
+            if( lang.empty() )
+            {
+                base = output + "/" + name;
+            }
+            else
+            {
+                base = output + "/" + lang + "_" + name;
+            }
+            unlink( ( base + ".png" ).c_str() );
+            unlink( ( base + ".raw" ).c_str() );
+            unlink( ( base + ".xml" ).c_str() );
+        }
+
+        return 1;
+    }
+
+    printf( "done!\n" );
+
+    if( bench )
+    {
+        printf( "Benchmark data:\n" );
+        printf( "  Images loading time: %.3f ms\n", std::chrono::duration_cast<std::chrono::microseconds>( benchData[1] - benchData[0] ).count() * 0.001f );
+        printf( "  Fitting: %.3f ms\n", std::chrono::duration_cast<std::chrono::microseconds>( benchData[3] - benchData[2] ).count() * 0.001f );
+        printf( "  Blitting: %.3f ms\n", std::chrono::duration_cast<std::chrono::microseconds>( benchData[5] - benchData[4] ).count() * 0.001f );
+        printf( "  Splash fill: %.3f ms\n", std::chrono::duration_cast<std::chrono::microseconds>( benchData[7] - benchData[6] ).count() * 0.001f );
+        printf( "  Saving atlas: %.3f ms\n", std::chrono::duration_cast<std::chrono::microseconds>( benchData[9] - benchData[8] ).count() * 0.001f );
+    }
+
     return 0;
 }

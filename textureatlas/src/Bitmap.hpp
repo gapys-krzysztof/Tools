@@ -1,8 +1,8 @@
 #ifndef __DARKRL__BITMAP_HPP__
 #define __DARKRL__BITMAP_HPP__
 
+#include <stdint.h>
 #include "Rect.hpp"
-#include "Types.hpp"
 #include "Vector.hpp"
 
 class Bitmap
@@ -16,13 +16,13 @@ public:
     bool Write( const char* fn, bool alpha = true );
     bool WriteRaw( const char* fn, bool alpha = true );
 
-    uint32* Data() const { return m_data; }
+    uint32_t* Data() const { return m_data; }
     const v2i& Size() const { return m_size; }
 
     Bitmap& operator=( const Bitmap& bmp );
 
 private:
-    uint32* m_data;
+    uint32_t* m_data;
     v2i m_size;
 };
 

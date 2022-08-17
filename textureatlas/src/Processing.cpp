@@ -5,9 +5,9 @@ void SplashFill( Bitmap* bmp )
     Bitmap* tmp = new Bitmap( *bmp );
 
     const v2i s = bmp->Size();
-    const int32 offsetTable[8] = { -1, 1, -s.x-1, -s.x, -s.x+1, s.x-1, s.x, s.x+1 };
+    const int32_t offsetTable[8] = { -1, 1, -s.x-1, -s.x, -s.x+1, s.x-1, s.x, s.x+1 };
 
-    uint32* ptr = tmp->Data();
+    uint32_t* ptr = tmp->Data();
     for( int i=0; i<s.x*s.y; i++ )
     {
         if( ( *ptr & 0xFF000000 ) != 0 )
@@ -23,8 +23,8 @@ void SplashFill( Bitmap* bmp )
     {
         int modified = 0;
 
-        uint32* src = old.Data() + s.x + 1;
-        uint32* ptr = tmp->Data() + s.x + 1;
+        uint32_t* src = old.Data() + s.x + 1;
+        uint32_t* ptr = tmp->Data() + s.x + 1;
 
         for( int i=1; i<s.y-1; i++ )
         {
@@ -33,13 +33,13 @@ void SplashFill( Bitmap* bmp )
                 if( ( *ptr & 0xFF000000 ) != 0xFF000000 )
                 {
                     int t = 0;
-                    uint32 r = 0;
-                    uint32 g = 0;
-                    uint32 b = 0;
+                    uint32_t r = 0;
+                    uint32_t g = 0;
+                    uint32_t b = 0;
 
-                    for( int k=0; k < sizeof( offsetTable ) / sizeof( int32 ); k++ )
+                    for( int k=0; k < sizeof( offsetTable ) / sizeof( int32_t ); k++ )
                     {
-                        uint32* p = src + offsetTable[k];
+                        uint32_t* p = src + offsetTable[k];
                         if( ( *p & 0xFF000000 ) != 0 )
                         {
                             t++;
@@ -75,7 +75,7 @@ void SplashFill( Bitmap* bmp )
     }
 
     ptr = tmp->Data();
-    uint32* dst = bmp->Data();
+    uint32_t* dst = bmp->Data();
 
     for( int i=0; i<s.x*s.y; i++ )
     {

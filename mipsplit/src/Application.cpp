@@ -1,15 +1,18 @@
 #include <algorithm>
 #include <assert.h>
+#include <functional>
+#include <math.h>
+#include <memory>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <string.h>
-#include <cmath>
 
 #include "libpng/png.h"
 
 #include "Bitmap.hpp"
+#include "DdsHeader.hpp"
 #include "PvrHeader.hpp"
 #include "VFS.hpp"
 
@@ -17,7 +20,7 @@ static std::string out;
 
 void Error()
 {
-    fprintf( stderr, "Usage: mipsplit image.[etc|etc+|pvr|pvr+] [params]\n\n" );
+    fprintf( stderr, "Usage: mipsplit image.[etc|etc+|pvr|pvr+|dds] [params]\n\n" );
     fprintf( stderr, "Params:\n" );
     fprintf( stderr, " -o   output directory\n" );
     exit( 1 );
@@ -29,6 +32,164 @@ void ErrSplit()
     exit( 1 );
 }
 
+struct StreamingImageHeader
+{
+    uint32_t w, h;
+    uint32_t mips;
+    uint32_t fmt;
+};
+
+struct StreamingImageCallbackData
+{
+    uint32_t w, h;
+    int index;
+    FILE* output;
+};
+
+using StreamingImageCallback = std::function<bool( StreamingImageCallbackData& data )>;
+
+bool CreateStreamingImage( const std::string& path, const StreamingImageHeader& header, const StreamingImageCallback& callback, uint32_t mw = 1, uint32_t mh = 1 )
+{
+    FILE* o = fopen( ( path + "meta" ).c_str(), "wb" );
+    fwrite( &header.w, 1, 4, o );
+    fwrite( &header.h, 1, 4, o );
+    fwrite( &header.mips, 1, 4, o );
+    fwrite( &header.fmt, 1, 4, o );
+    fclose( o );
+
+    auto w = header.w;
+    auto h = header.h;
+    char mip_path[4096];
+
+    for( uint32_t i = 0; i <= header.mips; i++ )
+    {
+        StreamingImageCallbackData data;
+        sprintf( mip_path, "%s%d", out.c_str(), i );
+        data.output = fopen( mip_path, "wb" );
+        data.w = w;
+        data.h = h;
+        data.index = i;
+
+        bool result = callback( data );
+
+        fclose( data.output );
+
+        if( !result )
+            return false;
+
+        w = std::max( mw, w / 2 );
+        h = std::max( mh, h / 2 );
+    }
+
+    return true;
+}
+
+void SplitDDS( FILE* f )
+{
+    enum { hCaps        = 0x00000001 };
+    enum { hPixelFormat = 0x00001000 };
+    enum { hMipMapCount = 0x00020000 };
+    enum { hLinearSize  = 0x00080000 };
+    enum { fFourCC      = 0x00000004 };
+
+    DdsHeader header;
+    auto read = fread( &header, 1, sizeof( DdsHeader ), f );
+    if( read != sizeof( DdsHeader ) )
+        ErrSplit();
+
+    if( header.Size != 124 )
+        ErrSplit();
+    if( ( header.PixelFormat.Flags & fFourCC ) == 0 )
+        ErrSplit();
+
+    uint32_t w, h, mips;
+    uint32_t fmt;
+    uint32_t bpp;
+
+    w = header.Width;
+    h = header.Height;
+    mips = 0;
+    if( !( ( header.Flags & hMipMapCount ) == 0 ) )
+    {
+        mips = header.MipMapCount - 1;
+    }
+
+    auto size = ( w / 4 ) * ( h / 4 ) * 8;
+
+    if( strncmp( "DXT1", header.PixelFormat.FourCC, 4 ) == 0 )
+    {
+        fmt = 0x83F0; //GL_COMPRESSED_RGB_S3TC_DXT1_EXT
+        bpp = 4;
+    }
+    else if( strncmp( "DXT5", header.PixelFormat.FourCC, 4 ) == 0 )
+    {
+        fmt = 0x83F3; //GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
+        bpp = 8;
+        size *= 2;
+    }
+    else if( strncmp( "DX10", header.PixelFormat.FourCC, 4 ) == 0 )
+    {
+        enum { dTexture2D    = 3 };
+        enum { fBC1Typeless  = 70 };
+        enum { fBC1UNorm     = 71 };
+        enum { fBC1UNormSRGB = 72 };
+        enum { fBC3Typeless  = 76 };
+        enum { fBC3UNorm     = 77 };
+        enum { fBC3UNormSRGB = 78 };
+
+        DdsHeader10 header10;
+        if( fread( &header10, 1, sizeof( DdsHeader10 ), f ) != sizeof( DdsHeader10 ) )
+            ErrSplit();
+
+        if( header10.Dimension != dTexture2D )
+            ErrSplit();
+
+        switch( header10.Format )
+        {
+        case fBC1Typeless:
+        case fBC1UNorm:
+        case fBC1UNormSRGB:
+            fmt = 0x83F0; //GL_COMPRESSED_RGB_S3TC_DXT1_EXT
+            bpp = 4;
+            break;
+        case fBC3Typeless:
+        case fBC3UNorm:
+        case fBC3UNormSRGB:
+            fmt = 0x83F3; //GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
+            bpp = 8;
+            size *= 2;
+            break;
+        default:
+            ErrSplit();
+            break;
+        }
+    }
+    else
+    {
+        ErrSplit();
+    }
+
+    auto mipmapCallback = [bpp, f]( StreamingImageCallbackData& data )
+    {
+        auto size = ( data.w * data.h * bpp ) / 8;
+        auto buffer = std::make_unique<char[]>( size );
+
+        auto ret = fread( buffer.get(), 1, size, f );
+        if( ret != size )
+            return false;
+
+        fwrite( buffer.get(), 1, size, data.output );
+
+        return true;
+    };
+
+    StreamingImageHeader outheader{ w, h, mips, fmt };
+    if( !CreateStreamingImage( out, outheader, mipmapCallback ) )
+    {
+        ErrSplit();
+    }
+}
+
 void SplitPVR( FILE* f )
 {
     uint32_t version;
@@ -36,10 +197,10 @@ void SplitPVR( FILE* f )
     if( read != 4 ) ErrSplit();
     fseek( f, -4, SEEK_CUR );
 
-    int32_t w, h, mips;
-    int32_t fmt;
-    int32_t bpp;
-    int32_t mw, mh;
+    uint32_t w, h, mips;
+    uint32_t fmt;
+    uint32_t bpp;
+    uint32_t mw, mh;
 
     if( version == 52 )
     {
@@ -81,8 +242,7 @@ void SplitPVR( FILE* f )
         PvrHeaderV3 hdr;
         read = fread( &hdr, 1, sizeof( PvrHeaderV3 ), f );
         if( read != sizeof( PvrHeaderV3 ) ) ErrSplit();
-        if( !( hdr.PixelFormat[1] == 0 && hdr.PixelFormat[0] == 6 ) && !( hdr.PixelFormat[1] == 0 && hdr.PixelFormat[0] <= 3 ) )
-            ErrSplit();
+        if( hdr.PixelFormat[1] != 0 ) ErrSplit();
         if( hdr.Depth != 1 || hdr.NumSurfs != 1 || hdr.NumFaces != 1 ) ErrSplit();
         w = hdr.Width;
         h = hdr.Height;
@@ -91,27 +251,32 @@ void SplitPVR( FILE* f )
         switch( hdr.PixelFormat[0] )
         {
         case 0:
-            fmt = 0x8C01;
+            fmt = 0x8C01;   // GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
             bpp = 2;
             break;
         case 1:
-            fmt = 0x8C03;
+            fmt = 0x8C03;   // GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
             bpp = 2;
             break;
         case 2:
-            fmt = 0x8C00;
+            fmt = 0x8C00;   // GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG
             bpp = 4;
             break;
         case 3:
-            fmt = 0x8C02;
+            fmt = 0x8C02;   // GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
             bpp = 4;
             break;
-        case 6:
-            fmt = 0x9274;
+        case 6:             // etc1
+        case 22:
+            fmt = 0x9274;   // GL_COMPRESSED_RGB8_ETC2
             bpp = 4;
+            break;
+        case 23:
+            fmt = 0x9278;   // GL_COMPRESSED_RGBA8_ETC2_EAC
+            bpp = 8;
             break;
         default:
-            assert( false );
+            ErrSplit();
         }
     }
     else
@@ -131,32 +296,47 @@ void SplitPVR( FILE* f )
         mh = 8;
         break;
     case 0x9274:
+    case 0x9278:
         mw = mh = 4;
         break;
     default:
         assert( false );
     }
 
-    FILE* o = fopen( ( out + "meta" ).c_str(), "wb" );
-    fwrite( &w, 1, 4, o );
-    fwrite( &h, 1, 4, o );
-    fwrite( &mips, 1, 4, o );
-    fwrite( &fmt, 1, 4, o );
-    fclose( o );
+    StreamingImageHeader header{ w, h, mips, fmt };
 
-    for( int i=0; i<=mips; i++ )
+    auto mipmapCallback = [bpp, f]( StreamingImageCallbackData& data )
     {
-        FILE* o = fopen( ( out + std::to_string( i ) ).c_str(), "wb" );
-        const auto size = ( w * h * bpp ) / 8;
-        char* buf = new char[size];
-        auto ret = fread( buf, 1, size, f );
-        if( ret != size ) ErrSplit();
-        fwrite( buf, 1, size, o );
-        delete[] buf;
-        fclose( o );
+        auto size = ( data.w * data.h * bpp ) / 8;
+        auto buffer = std::make_unique<char[]>( size );
 
-        w = std::max( mw, w/2 );
-        h = std::max( mh, h/2 );
+        auto ret = fread( buffer.get(), 1, size, f );
+        if ( ret != size ) return false;
+
+        fwrite( buffer.get(), 1, size, data.output );
+
+        return true;
+    };
+
+    if( !CreateStreamingImage( out, header, mipmapCallback, mw, mh ) )
+    {
+        ErrSplit();
+    }
+}
+
+void WriteImageDataPNG( FILE* f, uint32_t* data, int32_t w, int32_t h, int32_t fmt )
+{
+    if( fmt == 0x1908 )
+    {
+        fwrite( data, 1, w * h * sizeof( uint32_t ), f );
+    }
+    else
+    {
+        auto ptr = data;
+        for( int i = 0; i < w * h; i++ )
+        {
+            fwrite( ptr++, 1, 3, f );
+        }
     }
 }
 
@@ -165,51 +345,33 @@ void SplitPNG( const char* fn )
     Bitmap bmp( fn );
 
     bool alpha = bmp.Alpha();
-    int32_t w = bmp.Size().x;
-    int32_t h = bmp.Size().y;
-    int32_t fmt = alpha ? 0x1908 : 0x1907;    // GL_RGBA, GL_RGB
-    int32_t mips = (int)floor( log2( std::max( w, h ) ) );
+    uint32_t w = bmp.Size().x;
+    uint32_t h = bmp.Size().y;
+    uint32_t fmt = alpha ? 0x1908 : 0x1907;    // GL_RGBA, GL_RGB
+    uint32_t mips = (int)floor( log2( std::max( w, h ) ) );
 
-    FILE* o = fopen( ( out + "meta" ).c_str(), "wb" );
-    fwrite( &w, 1, 4, o );
-    fwrite( &h, 1, 4, o );
-    fwrite( &mips, 1, 4, o );
-    fwrite( &fmt, 1, 4, o );
-    fclose( o );
-
-    FILE* f = fopen( ( out + "0" ).c_str(), "wb" );
-    if( fmt == 0x1908 )
+    auto mipmapCallback = [fmt, &bmp]( StreamingImageCallbackData& data )
     {
-        fwrite( bmp.Data(), 1, w * h * sizeof( uint32_t ), f );
-    }
-    else
-    {
-        auto ptr = bmp.Data();
-        for( int i=0; i<w*h; i++ )
+        if( data.index == 0 )
         {
-            fwrite( ptr++, 1, 3, f );
+            WriteImageDataPNG( data.output, bmp.Data(), data.w, data.h, fmt );
+            return true;
         }
-    }
-    fclose( f );
 
-    for( int i=1; i<=mips; i++ )
-    {
-        w = std::max( 1, w / 2 );
-        h = std::max( 1, h / 2 );
-        Bitmap tmp( w, h );
+        Bitmap tmp( data.w, data.h );
 
-        if( w < 2 || h < 2 )
+        if( data.w < 2 || data.h < 2 )
         {
-            memset( tmp.Data(), 0, sizeof( uint32 ) * w * h );
+            memset( tmp.Data(), 0, sizeof( uint32 ) * data.w * data.h );
         }
         else
         {
             auto dst = tmp.Data();
             auto src1 = bmp.Data();
             auto src2 = src1 + bmp.Size().x;
-            for( int j=0; j<h; j++ )
+            for( uint32_t j=0; j<data.h; j++ )
             {
-                for( int i=0; i<w; i++ )
+                for( uint32_t i=0; i<data.w; i++ )
                 {
                     int r = ( ( *src1 & 0x000000FF ) + ( *(src1+1) & 0x000000FF ) + ( *src2 & 0x000000FF ) + ( *(src2+1) & 0x000000FF ) ) / 4;
                     int g = ( ( ( *src1 & 0x0000FF00 ) + ( *(src1+1) & 0x0000FF00 ) + ( *src2 & 0x0000FF00 ) + ( *(src2+1) & 0x0000FF00 ) ) / 4 ) & 0x0000FF00;
@@ -225,20 +387,17 @@ void SplitPNG( const char* fn )
         }
 
         auto ptr = tmp.Data();
-        FILE* f = fopen( ( out + "/" + std::to_string( i ) ).c_str(), "wb" );
-        if( fmt == 0x1908 )
-        {
-            fwrite( ptr, 1, w * h * sizeof( uint32_t ), f );
-        }
-        else
-        {
-            for( int i=0; i<w*h; i++ )
-            {
-                fwrite( ptr++, 1, 3, f );
-            }
-        }
-        fclose( f );
+        WriteImageDataPNG( data.output, ptr, data.w, data.h, fmt );
         bmp = std::move( tmp );
+
+        return true;
+    };
+
+    StreamingImageHeader header{ w, h, mips, fmt };
+
+    if( !CreateStreamingImage( out, header, mipmapCallback ) )
+    {
+        ErrSplit();
     }
 }
 
@@ -304,6 +463,10 @@ int main( int argc, char** argv )
     if( png_sig_cmp( (png_bytep)sig, 0, 4 ) == 0 )
     {
         SplitPNG( argv[1] );
+    }
+    else if( strncmp( sig, "DDS ", 4 ) == 0 )
+    {
+        SplitDDS( f );
     }
     else
     {
