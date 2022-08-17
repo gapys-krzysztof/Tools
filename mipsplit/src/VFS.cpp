@@ -7,6 +7,7 @@
 #  include <direct.h>
 #  include <windows.h>
 #else
+#  include <errno.h>
 #  include <dirent.h>
 #endif
 

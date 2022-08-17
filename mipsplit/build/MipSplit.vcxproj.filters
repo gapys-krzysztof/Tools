@@ -102,6 +102,24 @@
     <ClCompile Include="..\src\Bitmap.cpp">
       <Filter>MipSplit</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\zlib\inffas8664.c">
+      <Filter>MipSplit\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\arm_init.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\filter_neon_intrinsics.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\filter_sse2_intrinsics.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\intel_init.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\libpng\palette_neon_intrinsics.c">
+      <Filter>MipSplit\libpng</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\VFS.hpp">
@@ -173,5 +191,21 @@
     <ClInclude Include="..\src\Bitmap.hpp">
       <Filter>MipSplit</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\DdsHeader.hpp">
+      <Filter>MipSplit</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\common\zlib\gvmat64.obj">
+      <Filter>MipSplit\zlib</Filter>
+    </Object>
+    <Object Include="..\..\common\zlib\inffasx64.obj">
+      <Filter>MipSplit\zlib</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\common\libpng\LICENSE">
+      <Filter>MipSplit\libpng</Filter>
+    </None>
   </ItemGroup>
 </Project>

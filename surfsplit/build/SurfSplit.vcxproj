@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,33 +21,34 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{32011C46-F7F4-4084-AD75-FC60005B24C2}</ProjectGuid>
     <RootNamespace>SurfSplit</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -64,7 +65,9 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
+    <CommonLinkerFlags>/LTCG:OFF</CommonLinkerFlags>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -77,48 +80,54 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src;$(SDL2_ROOT)\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SDL2_ROOT)\lib\x86\sdl2.lib;$(SDL2_ROOT)\lib\x86\sdl2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src;$(SDL2_ROOT)\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SDL2_ROOT)\lib\x64\sdl2.lib;$(SDL2_ROOT)\lib\x64\sdl2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src;$(SDL2_ROOT)\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SDL2_ROOT)\lib\x86\sdl2.lib;$(SDL2_ROOT)\lib\x86\sdl2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>copy $(TargetPath) $(ProjectDir)\..\..\..\bin\</Command>
@@ -130,22 +139,28 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src;$(SDL2_ROOT)\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PNG_INTEL_SSE;ASMV;ASMINF;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SDL2_ROOT)\lib\x64\sdl2.lib;$(SDL2_ROOT)\lib\x64\sdl2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(TargetPath) $(ProjectDir)\..\..\..\bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\common\libpng\arm_init.c" />
+    <ClCompile Include="..\..\common\libpng\filter_neon_intrinsics.c" />
+    <ClCompile Include="..\..\common\libpng\filter_sse2_intrinsics.c" />
+    <ClCompile Include="..\..\common\libpng\intel_init.c" />
+    <ClCompile Include="..\..\common\libpng\palette_neon_intrinsics.c" />
     <ClCompile Include="..\..\common\libpng\png.c" />
     <ClCompile Include="..\..\common\libpng\pngerror.c" />
     <ClCompile Include="..\..\common\libpng\pngget.c" />
@@ -161,13 +176,13 @@
     <ClCompile Include="..\..\common\libpng\pngwrite.c" />
     <ClCompile Include="..\..\common\libpng\pngwtran.c" />
     <ClCompile Include="..\..\common\libpng\pngwutil.c" />
-    <ClCompile Include="..\..\common\lz4\lz4.c" />
     <ClCompile Include="..\..\common\zlib\adler32.c" />
     <ClCompile Include="..\..\common\zlib\compress.c" />
     <ClCompile Include="..\..\common\zlib\crc32.c" />
     <ClCompile Include="..\..\common\zlib\deflate.c" />
     <ClCompile Include="..\..\common\zlib\gzlib.c" />
     <ClCompile Include="..\..\common\zlib\infback.c" />
+    <ClCompile Include="..\..\common\zlib\inffas8664.c" />
     <ClCompile Include="..\..\common\zlib\inffast.c" />
     <ClCompile Include="..\..\common\zlib\inflate.c" />
     <ClCompile Include="..\..\common\zlib\inftrees.c" />
@@ -191,7 +206,6 @@
     <ClInclude Include="..\..\common\libpng\pnglibconf.h" />
     <ClInclude Include="..\..\common\libpng\pngpriv.h" />
     <ClInclude Include="..\..\common\libpng\pngstruct.h" />
-    <ClInclude Include="..\..\common\lz4\lz4.h" />
     <ClInclude Include="..\..\common\zlib\crc32.h" />
     <ClInclude Include="..\..\common\zlib\deflate.h" />
     <ClInclude Include="..\..\common\zlib\gzguts.h" />
@@ -215,18 +229,13 @@
     <ClInclude Include="..\src\Video.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Object Include="..\..\common\zlib\gvmat64.obj" />
+    <Object Include="..\..\common\zlib\inffasx64.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\common\libpng\LICENSE" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets" Condition="Exists('packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets')" />
-    <Import Project="packages\sdl2.v140.2.0.4\build\native\sdl2.v140.targets" Condition="Exists('packages\sdl2.v140.2.0.4\build\native\sdl2.v140.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets'))" />
-    <Error Condition="!Exists('packages\sdl2.v140.2.0.4\build\native\sdl2.v140.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2.v140.2.0.4\build\native\sdl2.v140.targets'))" />
-  </Target>
 </Project>

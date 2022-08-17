@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,33 +21,34 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D4663B29-2C69-4CE0-AB49-EE83B1F22BD8}</ProjectGuid>
     <RootNamespace>TextureAtlas</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -64,7 +65,9 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
+    <CommonLinkerFlags>/LTCG:OFF</CommonLinkerFlags>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -81,10 +84,12 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -95,10 +100,12 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,16 +117,17 @@
       <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(TargetPath) $(ProjectDir)\..\..\..\bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,20 +138,26 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\common\zlib;..\..\common;..\src</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PNG_INTEL_SSE;ASMV;ASMINF;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>$(CommonLinkerFlags)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(TargetPath) $(ProjectDir)\..\..\..\bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\common\libpng\arm_init.c" />
+    <ClCompile Include="..\..\common\libpng\filter_neon_intrinsics.c" />
+    <ClCompile Include="..\..\common\libpng\filter_sse2_intrinsics.c" />
+    <ClCompile Include="..\..\common\libpng\intel_init.c" />
+    <ClCompile Include="..\..\common\libpng\palette_neon_intrinsics.c" />
     <ClCompile Include="..\..\common\libpng\png.c" />
     <ClCompile Include="..\..\common\libpng\pngerror.c" />
     <ClCompile Include="..\..\common\libpng\pngget.c" />
@@ -159,19 +173,20 @@
     <ClCompile Include="..\..\common\libpng\pngwrite.c" />
     <ClCompile Include="..\..\common\libpng\pngwtran.c" />
     <ClCompile Include="..\..\common\libpng\pngwutil.c" />
-    <ClCompile Include="..\..\common\lz4\lz4.c" />
     <ClCompile Include="..\..\common\zlib\adler32.c" />
     <ClCompile Include="..\..\common\zlib\compress.c" />
     <ClCompile Include="..\..\common\zlib\crc32.c" />
     <ClCompile Include="..\..\common\zlib\deflate.c" />
     <ClCompile Include="..\..\common\zlib\gzlib.c" />
     <ClCompile Include="..\..\common\zlib\infback.c" />
+    <ClCompile Include="..\..\common\zlib\inffas8664.c" />
     <ClCompile Include="..\..\common\zlib\inffast.c" />
     <ClCompile Include="..\..\common\zlib\inflate.c" />
     <ClCompile Include="..\..\common\zlib\inftrees.c" />
     <ClCompile Include="..\..\common\zlib\trees.c" />
     <ClCompile Include="..\..\common\zlib\uncompr.c" />
     <ClCompile Include="..\..\common\zlib\zutil.c" />
+    <ClCompile Include="..\src\Atlas.cpp" />
     <ClCompile Include="..\src\Application.cpp" />
     <ClCompile Include="..\src\Bitmap.cpp" />
     <ClCompile Include="..\src\Filesystem.cpp" />
@@ -187,7 +202,6 @@
     <ClInclude Include="..\..\common\libpng\pnglibconf.h" />
     <ClInclude Include="..\..\common\libpng\pngpriv.h" />
     <ClInclude Include="..\..\common\libpng\pngstruct.h" />
-    <ClInclude Include="..\..\common\lz4\lz4.h" />
     <ClInclude Include="..\..\common\zlib\crc32.h" />
     <ClInclude Include="..\..\common\zlib\deflate.h" />
     <ClInclude Include="..\..\common\zlib\gzguts.h" />
@@ -199,14 +213,21 @@
     <ClInclude Include="..\..\common\zlib\zconf.h" />
     <ClInclude Include="..\..\common\zlib\zlib.h" />
     <ClInclude Include="..\..\common\zlib\zutil.h" />
+    <ClInclude Include="..\src\Atlas.hpp" />
     <ClInclude Include="..\src\Bitmap.hpp" />
     <ClInclude Include="..\src\Filesystem.hpp" />
     <ClInclude Include="..\src\Node.hpp" />
     <ClInclude Include="..\src\Processing.hpp" />
     <ClInclude Include="..\src\Rect.hpp" />
     <ClInclude Include="..\src\String.hpp" />
-    <ClInclude Include="..\src\Types.hpp" />
     <ClInclude Include="..\src\Vector.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\common\zlib\gvmat64.obj" />
+    <Object Include="..\..\common\zlib\inffasx64.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\common\libpng\LICENSE" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

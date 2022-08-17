@@ -1,45 +1,51 @@
-CFLAGS = -g3 -O3
-CXXFLAGS = $(CFLAGS) --std=c++14
-DEFINES =
-INCLUDES = $(shell sdl-config --cflags) -I../common
-LIBS = $(shell sdl-config --libs) -lGL
+UNAME := $(shell uname)
+CFLAGS = -O3 -s -DPNG_INTEL_SSE
+
+ifeq ($(UNAME), Darwin)
+# XCode cannot into std=c++17 yet (Aug 2018)
+CPPSTD = --std=c++1z
+else
+CPPSTD = --std=c++17
+endif
+
+CXXFLAGS = $(CFLAGS) $(CPPSTD)
+INCLUDES = -I../common
 
 IMAGE = rgbasplit
 
 SRC = $(shell egrep 'ClCompile.*cpp"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
 CSRC = $(shell egrep 'ClCompile.*c"' build/$(IMAGE).vcxproj | sed -e 's/.*\"\(.*\)\".*/\1/' | sed -e 's@\\@/@g' | sed -e 's@../@@')
-CSRC += $(wildcard ../common/libpng/*.c)
-CSRC += $(wildcard ../common/lz4/*.c)
 OBJ = $(SRC:%.cpp=%.o) $(CSRC:%.c=%.o)
 
 all: $(IMAGE)
 
 %.o: %.cpp
-	$(CXX) -c $(INCLUDES) $(CXXFLAGS) $(DEFINES) $< -o $@
+	$(CXX) -c $(INCLUDES) $(CXXFLAGS) $< -o $@
 
 %.o: %.c
-	$(CC) -c $(INCLUDES) $(CFLAGS) $(DEFINES) $< -o $@
+	$(CC) -c $(INCLUDES) $(CFLAGS) $< -o $@
 
 %.d : %.cpp
 	@echo Resolving dependencies of $<
 	@mkdir -p $(@D)
-	@$(CXX) -MM $(INCLUDES) $(CXXFLAGS) $(DEFINES) $< > $@.$$$$; \
+	@$(CXX) -MM $(INCLUDES) $(CXXFLAGS) $< > $@.$$$$; \
 	sed 's,.*\.o[ :]*,$(<:.cpp=.o) $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
 %.d : %.c
 	@echo Resolving dependencies of $<
 	@mkdir -p $(@D)
-	@$(CC) -MM $(INCLUDES) $(CFLAGS) $(DEFINES) $< > $@.$$$$; \
+	@$(CC) -MM $(INCLUDES) $(CFLAGS) $< > $@.$$$$; \
 	sed 's,.*\.o[ :]*,$(<:.c=.o) $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
 $(IMAGE): $(OBJ)
-	$(CXX) $(CFLAGS) $(DEFINES) $(OBJ) $(LIBS) -o $@
+	$(CXX) $(CFLAGS) $(OBJ) -o $@
+	cp $(IMAGE) ../../bin
 
 -include $(SRC:.cpp=.d) $(CSRC:.c=.d)
 
 clean:
-	rm -f $(OBJ) $(SRC:.cpp=.d) $(CSRC:.c=.d) $(IMAGE)
+	rm -f $(OBJ) $(SRC:.cpp=.d) $(CSRC:.c=.d) $(IMAGE) ../../bin/$(IMAGE)
 
 .PHONY: clean all

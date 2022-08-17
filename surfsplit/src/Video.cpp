@@ -1,12 +1,9 @@
-#include "Video.hpp"
-
-#ifdef BUILD_VIS
-
 #include <algorithm>
 #include <map>
 #include <SDL.h>
 
 #include "Texture.hpp"
+#include "Video.hpp"
 
 struct SurfRect
 {
@@ -407,11 +404,3 @@ void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<
         SDL_GL_SwapWindow( win );
     }
 }
-
-#else
-
-void ShowBitmap( Bitmap* bmp, const std::vector<Rect>& rects, const std::vector<DupRect>& duprects )
-{
-}
-
-#endif
