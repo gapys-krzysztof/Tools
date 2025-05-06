@@ -41,11 +41,10 @@ all: $(IMAGE)
 
 $(IMAGE): $(OBJ)
 	$(CXX) $(CFLAGS) $(OBJ) $(LIBS) -o $@
-	cp $(IMAGE) ../../bin
 
 -include $(SRC:.cpp=.d) $(CSRC:.c=.d)
 
 clean:
-	rm -f $(OBJ) $(SRC:.cpp=.d) $(CSRC:.c=.d) $(IMAGE) ../../bin/$(IMAGE)
+	rm -f $(OBJ) $(SRC:.cpp=.d) $(CSRC:.c=.d) $(IMAGE)
 
 .PHONY: clean all
